@@ -6,8 +6,8 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
 @Entity(name = "user")
+@Data
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

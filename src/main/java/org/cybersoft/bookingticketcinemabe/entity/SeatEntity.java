@@ -6,16 +6,12 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity(name = "hall_seat")
+@Entity(name = "seat")
 @Data
-public class HallSeatEntity {
+public class SeatEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @ManyToOne
-    @JoinColumn(name = "hall_id")
-    private HallEntity hall;
 
     @Column(name = "is_active")
     private boolean isActive;
@@ -38,7 +34,11 @@ public class HallSeatEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "hallSeat")
+    @ManyToOne
+    @JoinColumn(name = "hall_id")
+    private HallEntity hall;
+
+    @OneToMany(mappedBy = "seat")
     private List<SeatReservationEntity> seatReservations;
 
 }

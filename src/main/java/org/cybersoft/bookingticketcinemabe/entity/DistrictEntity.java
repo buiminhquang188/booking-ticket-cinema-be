@@ -7,16 +7,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
-@Data
 @Entity(name = "districts")
+@Data
 public class DistrictEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @ManyToOne
-    @JoinColumn(name = "province_id")
-    private ProvinceEntity province;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -41,4 +37,8 @@ public class DistrictEntity {
 
     @OneToMany(mappedBy = "district")
     private List<BranchEntity> branches;
+
+    @ManyToOne
+    @JoinColumn(name = "province_id")
+    private ProvinceEntity province;
 }

@@ -14,14 +14,6 @@ public class ReservationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "screening_id")
-    private ScreeningEntity screening;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -33,6 +25,14 @@ public class ReservationEntity {
 
     @Column(name = "status")
     private String status;
+
+    @ManyToOne
+    @JoinColumn(name = "screening_id")
+    private ScreeningEntity screening;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     @OneToMany(mappedBy = "reservation")
     private List<SeatReservationEntity> seatReservations;

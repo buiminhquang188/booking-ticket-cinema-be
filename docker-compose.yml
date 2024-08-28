@@ -2,7 +2,7 @@ services:
   db:
     image: mysql
     container_name: capstone
-    restart: always
+    restart: no
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./src/main/resources/sql/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql

@@ -13,10 +13,6 @@ public class HallEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "branch_id")
-    private BranchEntity branch;
-
     @Column(name = "total_seats")
     private int totalSeats;
 
@@ -29,8 +25,12 @@ public class HallEntity {
     @Column(name = "name")
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "branch_id")
+    private BranchEntity branch;
+
     @OneToMany(mappedBy = "hall")
-    private List<HallSeatEntity> hallSeats;
+    private List<SeatEntity> seats;
 
     @OneToMany(mappedBy = "hall")
     private List<ScreeningEntity> screenings;

@@ -5,9 +5,10 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
-@Data
 @Entity(name = "movie")
+@Data
 public class MovieEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +37,14 @@ public class MovieEntity {
 
     @Column(name = "trailer")
     private String trailer;
+
+    @ManyToMany
+    @JoinTable(
+            name = "branch_movie",
+            joinColumns = @JoinColumn(name = "branch_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    private Set<BranchEntity> branches;
 
     @OneToMany(mappedBy = "movie")
     private List<ScreeningEntity> screenings;

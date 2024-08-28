@@ -6,22 +6,14 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
-@Data
 @Entity(name = "branch")
+@Data
 public class BranchEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-
-    @ManyToOne
-    @JoinColumn(name = "cinema_id")
-    private CinemaEntity cinema;
-
-    @ManyToOne
-    @JoinColumn(name = "district_id")
-    private DistrictEntity district;
 
     @Column(name = "distance")
     private BigDecimal distance;
@@ -59,8 +51,19 @@ public class BranchEntity {
     @Column(name = "name")
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "cinema_id")
+    private CinemaEntity cinema;
+
+    @ManyToOne
+    @JoinColumn(name = "district_id")
+    private DistrictEntity district;
+
     @OneToMany(mappedBy = "branch")
     private List<HallEntity> halls;
+
+    @ManyToMany(mappedBy = "branches")
+    private Set<MovieEntity> movies;
 
 
 }

@@ -13,15 +13,21 @@ public class SeatReservationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "hall_seat_id" )
-    private HallSeatEntity hallSeat;
-
     @Column(name = "is_reserved")
     private boolean isReserved;
 
     @Column(name = "price")
     private double price;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "seat_id" )
+    private SeatEntity seat;
 
     @ManyToOne
     @JoinColumn(name = "reservation_id")
@@ -30,12 +36,5 @@ public class SeatReservationEntity {
     @ManyToOne
     @JoinColumn(name = "screening_id")
     private ScreeningEntity screening;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
 
 }

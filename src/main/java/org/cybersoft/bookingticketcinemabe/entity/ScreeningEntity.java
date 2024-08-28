@@ -14,14 +14,6 @@ public class ScreeningEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "hall_id")
-    private HallEntity hall;
-
-    @ManyToOne
-    @JoinColumn(name = "movie_id")
-    private MovieEntity movie;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -33,6 +25,14 @@ public class ScreeningEntity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "hall_id")
+    private HallEntity hall;
+
+    @ManyToOne
+    @JoinColumn(name = "movie_id")
+    private MovieEntity movie;
 
     @OneToMany(mappedBy = "screening")
     private List<ReservationEntity> reservations;

@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
 @Entity(name = "cinema")
+@Data
 public class CinemaEntity {
 
     @Id
