@@ -64,7 +64,7 @@ ALTER TABLE hall
     ADD CONSTRAINT FK_branch_id_hall
         FOREIGN KEY (branch_id) REFERENCES branch (id);
 
-CREATE TABLE IF NOT EXISTS hall_seat
+CREATE TABLE IF NOT EXISTS seat
 (
     hall_id     INT         NULL,
     id          INT AUTO_INCREMENT
@@ -78,8 +78,8 @@ CREATE TABLE IF NOT EXISTS hall_seat
     updated_at  DATETIME(6) NULL
     );
 
-ALTER TABLE hall_seat
-    ADD CONSTRAINT FK_hall_id_hall_seat
+ALTER TABLE seat
+    ADD CONSTRAINT FK_hall_id_seat
         FOREIGN KEY (hall_id) REFERENCES hall (id);
 
 CREATE TABLE IF NOT EXISTS districts
@@ -113,6 +113,23 @@ CREATE TABLE IF NOT EXISTS movie
     poster     VARCHAR(255) NULL,
     trailer    VARCHAR(255) NULL
     );
+
+CREATE TABLE IF NOT EXISTS branch_movie
+(
+    branch_id   INT NOT NULL,
+    movie_id    INT NOT NULL
+);
+
+ALTER TABLE branch_movie
+    ADD PRIMARY KEY (branch_id, movie_id);
+
+ALTER TABLE branch_movie
+    ADD CONSTRAINT FK_branch_id_branch_movie
+        FOREIGN KEY (branch_id) REFERENCES branch (id);
+
+ALTER TABLE branch_movie
+    ADD CONSTRAINT FK_movie_id_branch_movie
+        FOREIGN KEY (movie_id) REFERENCES movie (id);
 
 CREATE TABLE IF NOT EXISTS provinces
 (
@@ -173,7 +190,7 @@ ALTER TABLE screening
 
 CREATE TABLE IF NOT EXISTS seat_reservation
 (
-    hall_seat_id   INT         NULL,
+    seat_id   INT         NULL,
     id             INT AUTO_INCREMENT
     PRIMARY KEY,
     is_reserved    BIT         NULL,
@@ -193,8 +210,8 @@ ALTER TABLE seat_reservation
         FOREIGN KEY (screening_id) REFERENCES screening (id);
 
 ALTER TABLE seat_reservation
-    ADD CONSTRAINT FK_hall_seat_id_seat_reservation
-        FOREIGN KEY (hall_seat_id) REFERENCES hall_seat (id);
+    ADD CONSTRAINT FK_seat_id_seat_reservation
+        FOREIGN KEY (seat_id) REFERENCES seat (id);
 
 CREATE TABLE IF NOT EXISTS user
 (
