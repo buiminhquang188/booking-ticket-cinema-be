@@ -23,4 +23,10 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
         return userRepository.findAll(pageable).stream().map(userMapper::toUserDto).toList();
     }
+
+    @Override
+    public UserDTO getUser(int id) {
+        return userRepository.findById(id).map(user -> userMapper.toUserDto(user)).orElseThrow(() -> new RuntimeException("Can't find user"));
+
+    }
 }

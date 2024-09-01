@@ -17,4 +17,9 @@ public class UserControllerImpl implements UserController {
         BaseResponse response = BaseResponse.builder().data(userService.getAllUsers(pageNo, pageLimit, sortBy)).build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<?> getUser(int id) {
+        return new ResponseEntity<>(BaseResponse.builder().data(userService.getUser(id)).build(), HttpStatus.OK );
+    }
 }
