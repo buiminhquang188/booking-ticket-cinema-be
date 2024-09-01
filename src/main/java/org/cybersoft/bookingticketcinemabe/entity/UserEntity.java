@@ -3,7 +3,9 @@ package org.cybersoft.bookingticketcinemabe.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity(name = "user")
@@ -51,4 +53,11 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user")
     private List<ReservationEntity> reservations;
+
+    @PrePersist
+    protected void prePersist() {
+        if (this.createdAt == null){
+            createdAt = LocalDateTime.now();
+        } else this.updatedAt = LocalDateTime.now();
+    }
 }
