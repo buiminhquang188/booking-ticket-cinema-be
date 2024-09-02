@@ -26,7 +26,7 @@ public class SeatReservationEntity {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "seat_id" )
+    @JoinColumn(name = "seat_id")
     private SeatEntity seat;
 
     @ManyToOne

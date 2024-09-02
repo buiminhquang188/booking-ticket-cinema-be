@@ -9,6 +9,6 @@ import lombok.Data;
 @Builder
 public class BaseResponse<T> {
     private int statusCode = 200;
-    private  String message;
+    private String message;
     private T data;
 }
