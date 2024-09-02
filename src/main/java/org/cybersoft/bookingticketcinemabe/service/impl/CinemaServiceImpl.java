@@ -1,5 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.mapper.CinemaMapper;
 import org.cybersoft.bookingticketcinemabe.repository.CinemaRepository;
 import org.cybersoft.bookingticketcinemabe.service.CinemaService;
@@ -9,14 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CinemaServiceImpl implements CinemaService {
     private final CinemaRepository cinemaRepository;
     private final CinemaMapper cinemaMapper;
-
-    public CinemaServiceImpl(CinemaRepository cinemaRepository, CinemaMapper cinemaMapper) {
-        this.cinemaRepository = cinemaRepository;
-        this.cinemaMapper = cinemaMapper;
-    }
 
     @Override
     public Page<?> getCinemas(int pageNo, int pageSize, String name) {

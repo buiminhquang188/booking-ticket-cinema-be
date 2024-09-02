@@ -1,5 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.controller.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.CinemaController;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.CinemaService;
@@ -9,12 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class CinemaControllerImpl implements CinemaController {
     private final CinemaService cinemaService;
-
-    public CinemaControllerImpl(CinemaService cinemaService) {
-        this.cinemaService = cinemaService;
-    }
 
     @Override
     public ResponseEntity<BaseResponse<?>> getCinemas(int pageNo, int pageSize, String name) {
