@@ -23,7 +23,7 @@ public class SeatEntity {
     private String seatRow;
 
     @Column(name = "seat_number")
-    private  int seatNumber;
+    private int seatNumber;
 
     @Column(name = "seat_code")
     private String seatCode;

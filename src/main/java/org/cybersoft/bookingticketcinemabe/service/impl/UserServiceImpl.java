@@ -18,6 +18,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
     @Override
     public List<UserDTO> getAllUsers(int pageNo, int pageLimit, String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));

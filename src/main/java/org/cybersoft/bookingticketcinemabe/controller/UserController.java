@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface UserController {
     @GetMapping
     ResponseEntity<?> getAllUsers(@RequestParam(defaultValue = "0") int pageNo,
-                                         @RequestParam(defaultValue = "10") int pageLimit,
-                                         @RequestParam(defaultValue = "id") String sortBy);
+                                  @RequestParam(defaultValue = "10") int pageLimit,
+                                  @RequestParam(defaultValue = "id") String sortBy);
+
     @GetMapping("/{id}")
     ResponseEntity<?> getUser(@PathVariable int id);
 

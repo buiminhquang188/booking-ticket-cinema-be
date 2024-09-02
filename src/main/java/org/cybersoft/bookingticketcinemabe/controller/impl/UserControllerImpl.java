@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserControllerImpl implements UserController {
     private final UserService userService;
+
     @Override
     public ResponseEntity<?> getAllUsers(int pageNo, int pageLimit, String sortBy) {
         BaseResponse response = BaseResponse.builder().data(userService.getAllUsers(pageNo, pageLimit, sortBy)).build();
@@ -20,6 +21,6 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public ResponseEntity<?> getUser(int id) {
-        return new ResponseEntity<>(BaseResponse.builder().data(userService.getUser(id)).build(), HttpStatus.OK );
+        return new ResponseEntity<>(BaseResponse.builder().data(userService.getUser(id)).build(), HttpStatus.OK);
     }
 }

@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface UserService {
     List<UserDTO> getAllUsers(int pageNo, int pageLimit, String sortBy);
+
     UserDTO getUser(int id);
 }
