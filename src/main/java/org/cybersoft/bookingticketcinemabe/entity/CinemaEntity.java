@@ -5,7 +5,6 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Entity(name = "cinema")
 @Data
@@ -18,20 +17,20 @@ public class CinemaEntity {
     @Column(name = "total_cinema_hall")
     private int totalCinemaHall;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
     @Column(name = "image")
     private String image;
 
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "cinemas")
-    private Set<ProvinceEntity> provinces;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "cinema")
+    private List<CinemaProvinceEntity> cinemaProvinces;
 
     @OneToMany(mappedBy = "cinema")
     private List<BranchEntity> branches;
