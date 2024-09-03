@@ -3,23 +3,15 @@ package org.cybersoft.bookingticketcinemabe.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
 @Entity(name = "provinces")
 @Data
-public class ProvinceEntity {
-
+public class ProvinceEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private Integer id;
 
     @Column(name = "code_name")
     private String codeName;
