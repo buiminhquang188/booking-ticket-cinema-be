@@ -1,4 +1,4 @@
-package org.cybersoft.bookingticketcinemabe.exception;
+package org.cybersoft.bookingticketcinemabe.exception.runtime;
 
 public class CinemaNotFoundException extends RuntimeException {
     public CinemaNotFoundException(Integer id) {

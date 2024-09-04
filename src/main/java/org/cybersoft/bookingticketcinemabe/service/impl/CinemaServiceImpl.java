@@ -3,7 +3,7 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.CinemaDetailDTO;
 import org.cybersoft.bookingticketcinemabe.entity.CinemaEntity;
-import org.cybersoft.bookingticketcinemabe.exception.CinemaNotFoundException;
+import org.cybersoft.bookingticketcinemabe.exception.runtime.CinemaNotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.CinemaMapper;
 import org.cybersoft.bookingticketcinemabe.repository.CinemaRepository;
 import org.cybersoft.bookingticketcinemabe.service.CinemaService;

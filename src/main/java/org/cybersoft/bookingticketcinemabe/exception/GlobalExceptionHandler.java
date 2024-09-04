@@ -2,6 +2,7 @@ package org.cybersoft.bookingticketcinemabe.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.cybersoft.bookingticketcinemabe.enums.Status;
+import org.cybersoft.bookingticketcinemabe.exception.runtime.CinemaNotFoundException;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.payload.response.ErrorDetailResponse;
 import org.cybersoft.bookingticketcinemabe.payload.response.ErrorResponse;
