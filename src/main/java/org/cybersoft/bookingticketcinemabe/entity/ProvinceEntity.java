@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Set;
 
 @Entity(name = "provinces")
 @Data
@@ -31,12 +30,7 @@ public class ProvinceEntity extends BaseEntity {
     @OneToMany(mappedBy = "province")
     private List<DistrictEntity> districts;
 
-    @ManyToMany
-    @JoinTable(
-            name = "cinema_provinces",
-            joinColumns = @JoinColumn(name = "cinema_id"),
-            inverseJoinColumns = @JoinColumn(name = "province_id")
-    )
-    private Set<CinemaEntity> cinemas;
+    @OneToMany(mappedBy = "province")
+    private List<CinemaProvinceEntity> provinceCinemas;
 }
 
