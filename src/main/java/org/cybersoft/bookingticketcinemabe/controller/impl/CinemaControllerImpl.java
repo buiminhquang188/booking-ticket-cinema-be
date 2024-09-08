@@ -2,6 +2,7 @@ package org.cybersoft.bookingticketcinemabe.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.CinemaController;
+import org.cybersoft.bookingticketcinemabe.dto.CinemaDetailDTO;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.CinemaService;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,19 @@ public class CinemaControllerImpl implements CinemaController {
     @Override
     public ResponseEntity<BaseResponse<?>> getCinemas(int pageNo, int pageSize, String name) {
         Page<?> cinema = this.cinemaService.getCinemas(pageNo, pageSize, name);
+
+        return ResponseEntity.ok(
+                BaseResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(cinema)
+                        .build()
+        );
+    }
+
+    @Override
+    public ResponseEntity<?> getCinema(int id) {
+        CinemaDetailDTO cinema = this.cinemaService.getCinema(id);
 
         return ResponseEntity.ok(
                 BaseResponse.builder()

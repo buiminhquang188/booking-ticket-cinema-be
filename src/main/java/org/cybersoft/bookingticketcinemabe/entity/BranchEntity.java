@@ -28,7 +28,7 @@ public class BranchEntity {
     private BigDecimal rating;
 
     @Column(name = "total_cineplex_hall")
-    private int totalCineplexHall;
+    private Integer totalCineplexHall;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -64,6 +64,4 @@ public class BranchEntity {
 
     @ManyToMany(mappedBy = "branches")
     private Set<MovieEntity> movies;
-
-
 }
