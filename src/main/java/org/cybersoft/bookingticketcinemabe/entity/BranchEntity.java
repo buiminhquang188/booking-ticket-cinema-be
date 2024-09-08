@@ -4,16 +4,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
 @Entity(name = "branch")
 @Data
-public class BranchEntity {
+public class BranchEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "distance")
     private BigDecimal distance;
@@ -29,12 +28,6 @@ public class BranchEntity {
 
     @Column(name = "total_cineplex_hall")
     private Integer totalCineplexHall;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @Column(name = "address")
     private String address;
