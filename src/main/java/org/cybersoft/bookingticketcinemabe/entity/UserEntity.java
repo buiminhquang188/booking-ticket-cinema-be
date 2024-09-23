@@ -1,63 +1,51 @@
 package org.cybersoft.bookingticketcinemabe.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Entity(name = "user")
 @Data
-public class UserEntity {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class UserEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    Integer id;
 
     @Column(name = "is_email_verified")
-    private boolean isEmailVerified;
+    Boolean isEmailVerified;
 
     @Column(name = "is_phone_verified")
-    private boolean isPhoneVerified;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    Boolean isPhoneVerified;
 
     @Column(name = "phone")
-    private String phone;
+    String phone;
 
     @Column(name = "role")
-    private String role;
+    String role;
 
     @Column(name = "email")
-    private String email;
+    String email;
 
     @Column(name = "first_name")
-    private String firstName;
+    String firstName;
 
     @Column(name = "last_name")
-    private String lastName;
+    String lastName;
 
     @Column(name = "full_name")
-    private String fullName;
+    String fullName;
 
     @Column(name = "avatar")
-    private String avatar;
+    String avatar;
 
     @Column(name = "password")
-    private String password;
+    String password;
 
     @OneToMany(mappedBy = "user")
-    private List<ReservationEntity> reservations;
+    List<ReservationEntity> reservations;
 
-    @PrePersist
-    protected void prePersist() {
-        if (this.createdAt == null){
-            createdAt = LocalDateTime.now();
-        } else this.updatedAt = LocalDateTime.now();
-    }
 }
