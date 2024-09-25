@@ -12,7 +12,7 @@ public interface UserMapper extends EntityMapper<UserDTO, UserEntity> {
     @Mapping(target = "role", defaultValue = "user")
     @Mapping(target = "isEmailVerified", defaultValue = "false")
     @Mapping(target = "isPhoneVerified", defaultValue = "false")
-    UserEntity toUserEntity(UserCreationRequest request);
+    UserEntity toEntity(UserCreationRequest request);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void update(@MappingTarget UserEntity user, UserUpdateRequest request);

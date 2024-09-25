@@ -1,5 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
 import org.cybersoft.bookingticketcinemabe.entity.UserEntity;
@@ -36,15 +37,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO createUser(UserCreationRequest request) {
         UserEntity user = userRepository.findUserEntityByEmail(request.email());
         if (user != null) throw new UserException("Email existed");
         UserDTO dto = null;
         try {
-            UserEntity userCreated = this.userRepository.save(userMapper.toUserEntity(request));
-            if (userCreated != null) {
-                dto = userMapper.toDTO(userCreated);
-            }
+            UserEntity userCreated = this.userRepository.save(userMapper.toEntity(request));
+            dto = userMapper.toDTO(userCreated);
         } catch (Exception e) {
             throw new UserException("Fail to create user");
         }
@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO updateUser(UserUpdateRequest request) {
         UserEntity userUpdate = this.userRepository.findById(request.id())
                 .orElseThrow(() -> new UserException("Can't find user"));
@@ -60,11 +61,9 @@ public class UserServiceImpl implements UserService {
         if (userUpdate != null) {
             try {
                 userMapper.update(userUpdate, request);
-                System.out.println(userUpdate.toString());
+                System.out.println(userUpdate);
                 UserEntity userUpdated = userRepository.save(userUpdate);
-                if (userUpdated != null) {
-                    dto = userMapper.toDTO(userUpdated);
-                }
+                dto = userMapper.toDTO(userUpdated);
             } catch (Exception e) {
                 throw new UserException("Fail to update user");
             }
@@ -74,6 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO deleteUser(int id) {
         UserEntity userDelete = userRepository.findById(id).orElseThrow(() -> new UserException("Can't find user"));
         UserDTO userDeleteDTO = new UserDTO();
