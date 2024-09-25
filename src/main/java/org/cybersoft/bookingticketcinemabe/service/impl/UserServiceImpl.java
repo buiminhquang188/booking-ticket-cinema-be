@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO createUser(UserCreationRequest request) {
         UserEntity user = userRepository.findUserEntityByEmail(request.email());
         if (user != null) throw new UserException("Email existed");
-        UserDTO dto = null;
+        UserDTO dto;
         try {
             UserEntity userCreated = this.userRepository.save(userMapper.toEntity(request));
             dto = userMapper.toDTO(userCreated);
@@ -61,7 +61,6 @@ public class UserServiceImpl implements UserService {
         if (userUpdate != null) {
             try {
                 userMapper.update(userUpdate, request);
-                System.out.println(userUpdate);
                 UserEntity userUpdated = userRepository.save(userUpdate);
                 dto = userMapper.toDTO(userUpdated);
             } catch (Exception e) {
