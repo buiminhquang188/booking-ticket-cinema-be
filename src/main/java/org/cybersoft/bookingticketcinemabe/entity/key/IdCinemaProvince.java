@@ -2,15 +2,15 @@ package org.cybersoft.bookingticketcinemabe.entity.key;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
-@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Embeddable
 public class IdCinemaProvince implements Serializable {
     @Column(name = "cinema_id")
