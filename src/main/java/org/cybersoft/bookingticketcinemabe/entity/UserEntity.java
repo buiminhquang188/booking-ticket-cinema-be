@@ -3,29 +3,20 @@ package org.cybersoft.bookingticketcinemabe.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Entity(name = "user")
 @Data
-public class UserEntity {
+public class UserEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "is_email_verified")
-    private boolean isEmailVerified;
+    private Boolean isEmailVerified;
 
     @Column(name = "is_phone_verified")
-    private boolean isPhoneVerified;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private Boolean isPhoneVerified;
 
     @Column(name = "phone")
     private String phone;
@@ -54,10 +45,4 @@ public class UserEntity {
     @OneToMany(mappedBy = "user")
     private List<ReservationEntity> reservations;
 
-    @PrePersist
-    protected void prePersist() {
-        if (this.createdAt == null){
-            createdAt = LocalDateTime.now();
-        } else this.updatedAt = LocalDateTime.now();
-    }
 }

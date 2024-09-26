@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Set;
 
 @Entity(name = "cinema")
 @Data
@@ -22,8 +21,8 @@ public class CinemaEntity extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "cinemas")
-    private Set<ProvinceEntity> provinces;
+    @OneToMany(mappedBy = "cinema")
+    private List<CinemaProvinceEntity> cinemaProvinces;
 
     @OneToMany(mappedBy = "cinema")
     private List<BranchEntity> branches;

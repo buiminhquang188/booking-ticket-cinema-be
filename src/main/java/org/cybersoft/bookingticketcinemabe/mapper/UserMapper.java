@@ -3,15 +3,18 @@ package org.cybersoft.bookingticketcinemabe.mapper;
 import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
 import org.cybersoft.bookingticketcinemabe.entity.UserEntity;
 import org.cybersoft.bookingticketcinemabe.payload.request.UserCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.cybersoft.bookingticketcinemabe.payload.request.UserUpdateRequest;
+import org.mapstruct.*;
 
-import java.util.List;
+@Mapper(componentModel = "spring")
+public interface UserMapper extends EntityMapper<UserDTO, UserEntity> {
 
-@Mapper
-public interface UserMapper {
-    UserDTO toUserDto(UserEntity user);
+    @Mapping(target = "role", defaultValue = "user")
+    @Mapping(target = "isEmailVerified", defaultValue = "false")
+    @Mapping(target = "isPhoneVerified", defaultValue = "false")
+    UserEntity toEntity(UserCreationRequest request);
 
-    UserEntity toUserEntity(UserCreationRequest request);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void update(@MappingTarget UserEntity user, UserUpdateRequest request);
+
 }

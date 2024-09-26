@@ -8,7 +8,7 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 public class BaseResponse<T> {
-    private int statusCode = 200;
+    private int statusCode;
     private String message;
     private T data;
 }
