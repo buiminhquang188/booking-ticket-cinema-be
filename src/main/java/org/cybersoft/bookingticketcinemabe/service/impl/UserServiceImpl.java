@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,7 +45,10 @@ public class UserServiceImpl implements UserService {
         if (user != null) throw new UserException("Email existed");
         UserDTO dto;
         try {
-            UserEntity userCreated = this.userRepository.save(userMapper.toEntity(request));
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            user = userMapper.toEntity(request);
+            user.setPassword(passwordEncoder.encode(request.password()));
+            UserEntity userCreated = this.userRepository.save(user);
             dto = userMapper.toDTO(userCreated);
         } catch (Exception e) {
             throw new UserException("Fail to create user");
@@ -61,6 +66,8 @@ public class UserServiceImpl implements UserService {
         if (userUpdate != null) {
             try {
                 userMapper.update(userUpdate, request);
+                PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                userUpdate.setPassword(passwordEncoder.encode(request.password()));
                 UserEntity userUpdated = userRepository.save(userUpdate);
                 dto = userMapper.toDTO(userUpdated);
             } catch (Exception e) {
