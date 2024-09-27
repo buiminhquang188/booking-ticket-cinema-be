@@ -1,13 +1,11 @@
 package org.cybersoft.bookingticketcinemabe.mapper;
 
 import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
-@Mapper
 public interface EntityMapper<D, E> {
     D toDTO(E entity);
 
