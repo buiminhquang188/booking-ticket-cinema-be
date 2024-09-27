@@ -1,12 +1,18 @@
 package org.cybersoft.bookingticketcinemabe.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity(name = "provinces")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ProvinceEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
