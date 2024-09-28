@@ -2,9 +2,11 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
 import org.cybersoft.bookingticketcinemabe.entity.UserEntity;
 import org.cybersoft.bookingticketcinemabe.exception.UserException;
+import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.UserMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.UserCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.UserUpdateRequest;
@@ -26,9 +28,11 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public Page<?> getUsers(int pageNo, int pageLimit, String sortBy) {
+    public PageableDTO<?> getUsers(int pageNo, int pageLimit, String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
-        return this.userRepository.findAll(pageable).map(userMapper::toDTO);
+        Page<?> page = this.userRepository.findAll(pageable).map(userMapper::toDTO);
+        PageableMapper<?> pageableMapper = new PageableMapper<>();
+        return pageableMapper.toDTO(page);
     }
 
     @Override
