@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -26,7 +27,7 @@ public class MovieDTO {
 
     private String trailer;
 
-//    private Set<BranchDTO> branches = new HashSet<>();
-//
-//    private List<ScreeningDTO> screenings;
+    private List<BranchDetailDTO> branches;
+
+    private List<ScreeningDTO> screenings;
 }

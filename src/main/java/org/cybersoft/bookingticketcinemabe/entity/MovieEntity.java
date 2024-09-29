@@ -1,15 +1,16 @@
 package org.cybersoft.bookingticketcinemabe.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity(name = "movie")
-@Data
+@Getter
+@Setter
 public class MovieEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +40,7 @@ public class MovieEntity extends BaseEntity {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "branch_id")
     )
-    private Set<BranchEntity> branches = new HashSet<>();
+    private Set<BranchEntity> branches;
 
     @OneToMany(mappedBy = "movie")
     private List<ScreeningEntity> screenings;

@@ -3,7 +3,7 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.BranchDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
-import org.cybersoft.bookingticketcinemabe.exception.UserException;
+import org.cybersoft.bookingticketcinemabe.exception.BranchException;
 import org.cybersoft.bookingticketcinemabe.mapper.BranchMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.repository.BranchRepository;
@@ -30,6 +30,6 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public BranchDTO getBranch(int id) {
         return this.branchRepository.findById(id).map(branchMapper::toDTO)
-                .orElseThrow(() -> new UserException("Can't find branch"));
+                .orElseThrow(() -> new BranchException("Can't find branch"));
     }
 }

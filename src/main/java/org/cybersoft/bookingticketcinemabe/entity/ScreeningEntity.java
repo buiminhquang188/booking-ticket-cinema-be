@@ -1,13 +1,15 @@
 package org.cybersoft.bookingticketcinemabe.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity(name = "screening")
-@Data
+@Getter
+@Setter
 public class ScreeningEntity extends BaseEntity {
 
     @Id

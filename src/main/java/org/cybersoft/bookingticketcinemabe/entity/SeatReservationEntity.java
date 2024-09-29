@@ -1,10 +1,12 @@
 package org.cybersoft.bookingticketcinemabe.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity(name = "seat_reservation")
-@Data
+@Getter
+@Setter
 public class SeatReservationEntity extends BaseEntity {
 
     @Id

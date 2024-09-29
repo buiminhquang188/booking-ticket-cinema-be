@@ -20,7 +20,9 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(value = UserException.class)
+    @ExceptionHandler(value = {UserException.class,
+            BranchException.class,
+            MovieException.class})
     ResponseEntity<?> handlingUserException(UserException exception) {
         return new ResponseEntity<>(BaseResponse.builder().message(exception.getMessage()).statusCode(HttpStatus.BAD_REQUEST.value()).build(), HttpStatus.OK);
     }

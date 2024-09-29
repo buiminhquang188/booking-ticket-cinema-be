@@ -1,16 +1,16 @@
 package org.cybersoft.bookingticketcinemabe.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity(name = "branch")
-@Data
+@Getter
+@Setter
 public class BranchEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,6 +59,5 @@ public class BranchEntity extends BaseEntity {
 
     @ManyToMany(cascade = CascadeType.ALL,
             mappedBy = "branches")
-    @JsonIgnore
-    private Set<MovieEntity> movies = new HashSet<>();
+    private Set<MovieEntity> movies;
 }

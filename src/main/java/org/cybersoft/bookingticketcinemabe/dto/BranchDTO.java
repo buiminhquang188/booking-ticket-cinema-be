@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -35,11 +36,11 @@ public class BranchDTO {
 
     private String name;
 
-//    private CinemaDTO cinema;
+    private CinemaDetailBranchDTO cinema;
 
-//    private DistrictDTO district;
-//
-//    private List<HallDTO> halls;
+    private DistrictDTO district;
+
+    private List<HallDTO> halls;
 
     private Set<MovieDetailDTO> movies;
 }
