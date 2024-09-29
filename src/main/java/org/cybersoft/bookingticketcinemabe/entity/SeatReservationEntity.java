@@ -3,11 +3,9 @@ package org.cybersoft.bookingticketcinemabe.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Entity(name = "seat_reservation")
 @Data
-public class SeatReservationEntity {
+public class SeatReservationEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,12 +16,6 @@ public class SeatReservationEntity {
 
     @Column(name = "price")
     private double price;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "seat_id")

@@ -8,20 +8,14 @@ import java.util.List;
 
 @Entity(name = "reservation")
 @Data
-public class ReservationEntity {
+public class ReservationEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private Integer id;
 
     @Column(name = "time_reservation")
     private LocalDateTime timeReservation;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @Column(name = "status")
     private String status;

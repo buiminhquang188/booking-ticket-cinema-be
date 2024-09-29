@@ -31,8 +31,7 @@ public class UserServiceImpl implements UserService {
     public PageableDTO<?> getUsers(int pageNo, int pageLimit, String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
         Page<?> page = this.userRepository.findAll(pageable).map(userMapper::toDTO);
-        PageableMapper<?> pageableMapper = new PageableMapper<>();
-        return pageableMapper.toDTO(page);
+        return new PageableMapper<>().toDTO(page);
     }
 
     @Override
