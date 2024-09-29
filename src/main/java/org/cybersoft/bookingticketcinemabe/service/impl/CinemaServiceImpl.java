@@ -7,10 +7,12 @@ import org.cybersoft.bookingticketcinemabe.entity.BranchEntity;
 import org.cybersoft.bookingticketcinemabe.entity.CinemaEntity;
 import org.cybersoft.bookingticketcinemabe.entity.CinemaProvinceEntity;
 import org.cybersoft.bookingticketcinemabe.entity.ProvinceEntity;
+import org.cybersoft.bookingticketcinemabe.entity.key.IdCinemaProvince;
 import org.cybersoft.bookingticketcinemabe.exception.runtime.CinemaNotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.CinemaMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.CinemaProvinceMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.CinemaUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.repository.BranchRepository;
 import org.cybersoft.bookingticketcinemabe.repository.CinemaProvinceRepository;
 import org.cybersoft.bookingticketcinemabe.repository.CinemaRepository;
@@ -91,11 +93,87 @@ public class CinemaServiceImpl implements CinemaService {
         return this.cinemaMapper.toCinemaDetailDto(savedCinema);
     }
 
+    @Override
+    public CinemaDetailDTO updateCinema(Integer id, CinemaUpdateRequest cinemaUpdateRequest) {
+        CinemaEntity cinema = this.cinemaRepository.findById(id)
+                .orElseThrow(() -> new CinemaNotFoundException(id));
+
+        cinema.setName(cinemaUpdateRequest.name());
+        cinema.setImage(cinemaUpdateRequest.image());
+
+        if (cinemaUpdateRequest.branches() != null && !cinemaUpdateRequest.branches()
+                .isEmpty()) {
+            List<BranchEntity> branches = this.branchRepository.findAllByIdInOrCinemaId(cinemaUpdateRequest.branches(), id);
+
+            branches.forEach(branch -> {
+                if (!cinemaUpdateRequest.branches()
+                        .contains(branch.getId())) {
+                    branch.setCinema(null);
+                    return;
+                }
+                branch.setCinema(cinema);
+            });
+
+            cinema.setBranches(branches);
+        }
+
+        CinemaEntity savedCinema = this.cinemaRepository.save(cinema);
+
+        if (cinemaUpdateRequest.provinces() != null && !cinemaUpdateRequest.provinces()
+                .isEmpty()) {
+            List<CinemaProvinceEntity> existCinemaProvinces = this.cinemaProvinceRepository.findAllByCinemaId(id);
+
+            List<CinemaProvinceEntity> updatedCinemaProvinceEntities = cinemaUpdateRequest.provinces()
+                    .stream()
+                    .map(provinceId -> this.provinceRepository.findById(provinceId)
+                            .orElse(null))
+                    .filter(Objects::nonNull)
+                    .map(provinceEntity -> this.updateCinemaProvinceEntity(id, provinceEntity.getId(), savedCinema, provinceEntity))
+                    .collect(Collectors.toList());
+
+            this.removeExistCinemaProvinceEntity(
+                    existCinemaProvinces,
+                    cinemaUpdateRequest.provinces(),
+                    id
+            );
+            this.cinemaProvinceRepository.saveAll(updatedCinemaProvinceEntities);
+            cinema.setCinemaProvinces(updatedCinemaProvinceEntities);
+        }
+
+        return this.cinemaMapper.toCinemaDetailDto(savedCinema);
+    }
+
     private CinemaProvinceEntity toCinemaProvinceEntity(ProvinceEntity province, CinemaEntity cinema) {
         return this.cinemaProvinceMapper.cinemaAndProvinceToCinemaProvinceEntity(
                 cinema,
                 province,
                 this.cinemaProvinceMapper.toIdCinemaProvince(cinema, province)
         );
+    }
+
+    private CinemaProvinceEntity updateCinemaProvinceEntity(Integer cinemaId, Integer provinceId, CinemaEntity cinema, ProvinceEntity provinceEntity) {
+        IdCinemaProvince idCinemaProvince = IdCinemaProvince.builder()
+                .cinemaId(cinemaId)
+                .provinceId(provinceId)
+                .build();
+        return CinemaProvinceEntity.builder()
+                .id(idCinemaProvince)
+                .cinema(cinema)
+                .province(provinceEntity)
+                .build();
+    }
+
+    private void removeExistCinemaProvinceEntity(List<CinemaProvinceEntity> existCinemaProvinces, List<Integer> requestProvinceIds, Integer cinemaId) {
+        existCinemaProvinces.stream()
+                .map(cinemaProvinceEntity -> cinemaProvinceEntity.getProvince()
+                        .getId())
+                .filter(provinceId -> !requestProvinceIds
+                        .contains(provinceId))
+                .forEach(provinceId ->
+                        this.cinemaProvinceRepository.deleteById(IdCinemaProvince.builder()
+                                .cinemaId(cinemaId)
+                                .provinceId(provinceId)
+                                .build()
+                        ));
     }
 }
