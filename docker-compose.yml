@@ -12,6 +12,8 @@ services:
       - ./src/main/resources/sql/cinema-province.sql:/docker-entrypoint-initdb.d/5-cinema-province.sql
       - ./src/main/resources/sql/branch.sql:/docker-entrypoint-initdb.d/6-branch.sql
       - ./src/main/resources/sql/user.sql:/docker-entrypoint-initdb.d/7-user.sql
+      - ./src/main/resources/sql/movie.sql:/docker-entrypoint-initdb.d/8-movie.sql
+      - ./src/main/resources/sql/branch_movie.sql:/docker-entrypoint-initdb.d/9-branch_movie.sql
     env_file:
       - .env.properties
     ports:
