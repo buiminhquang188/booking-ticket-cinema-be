@@ -1,6 +1,7 @@
 package org.cybersoft.bookingticketcinemabe.controller;
 
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.CinemaUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,4 +15,7 @@ public interface CinemaController {
 
     @PostMapping("/cinema")
     ResponseEntity<?> createCinema(@RequestBody CinemaCreationRequest cinemaCreationRequest);
+
+    @PatchMapping("/cinema/{id}")
+    ResponseEntity<?> updateCinema(@PathVariable Integer id, @RequestBody CinemaUpdateRequest cinemaUpdateRequest);
 }
