@@ -18,4 +18,7 @@ public interface CinemaController {
 
     @PatchMapping("/cinema/{id}")
     ResponseEntity<?> updateCinema(@PathVariable Integer id, @RequestBody CinemaUpdateRequest cinemaUpdateRequest);
+
+    @DeleteMapping("/cinema/{id}")
+    ResponseEntity<?> deleteCinema(@PathVariable Integer id);
 }

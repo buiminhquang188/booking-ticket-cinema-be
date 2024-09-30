@@ -143,6 +143,26 @@ public class CinemaServiceImpl implements CinemaService {
         return this.cinemaMapper.toCinemaDetailDto(savedCinema);
     }
 
+    @Transactional
+    @Override
+    public void deleteCinema(Integer id) {
+        CinemaEntity cinema = this.cinemaRepository.findById(id)
+                .orElseThrow(() -> new CinemaNotFoundException(id));
+
+        List<CinemaProvinceEntity> cinemaProvinceEntities = cinema.getCinemaProvinces();
+        List<IdCinemaProvince> idCinemaProvince = cinemaProvinceEntities.stream()
+                .map(cinemaProvinceEntity -> cinemaProvinceEntity.getId())
+                .collect(Collectors.toList());
+
+        cinema.getBranches()
+                .forEach(branch -> {
+                    branch.setCinema(null);
+                });
+
+        this.cinemaProvinceRepository.deleteAllById(idCinemaProvince);
+        this.cinemaRepository.delete(cinema);
+    }
+
     private CinemaProvinceEntity toCinemaProvinceEntity(ProvinceEntity province, CinemaEntity cinema) {
         return this.cinemaProvinceMapper.cinemaAndProvinceToCinemaProvinceEntity(
                 cinema,
