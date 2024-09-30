@@ -34,7 +34,7 @@ public class MovieEntity extends BaseEntity {
     @Column(name = "trailer")
     private String trailer;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "branch_movie",
             joinColumns = @JoinColumn(name = "movie_id"),

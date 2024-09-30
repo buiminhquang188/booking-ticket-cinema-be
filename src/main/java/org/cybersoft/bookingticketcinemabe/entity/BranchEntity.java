@@ -57,7 +57,6 @@ public class BranchEntity extends BaseEntity {
     @OneToMany(mappedBy = "branch")
     private List<HallEntity> halls;
 
-    @ManyToMany(cascade = CascadeType.ALL,
-            mappedBy = "branches")
+    @ManyToMany(mappedBy = "branches")
     private Set<MovieEntity> movies;
 }

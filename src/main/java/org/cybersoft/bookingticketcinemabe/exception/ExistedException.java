@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserException extends RuntimeException{
+public class ExistedException extends RuntimeException {
     private String message;
 }

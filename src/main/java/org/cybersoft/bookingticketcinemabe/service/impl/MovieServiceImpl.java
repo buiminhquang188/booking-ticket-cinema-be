@@ -3,7 +3,7 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.MovieDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
-import org.cybersoft.bookingticketcinemabe.exception.MovieException;
+import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.MovieMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.repository.MovieRepository;
@@ -31,6 +31,6 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieDTO getMovie(int id) {
         return this.movieRepository.findById(id).map(movieMapper::toDTO)
-                .orElseThrow(() -> new MovieException("Can't find branch"));
+                .orElseThrow(() -> new NotFoundException("Not found movie"));
     }
 }

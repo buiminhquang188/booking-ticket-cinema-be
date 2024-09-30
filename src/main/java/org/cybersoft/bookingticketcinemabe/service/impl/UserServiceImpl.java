@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
 import org.cybersoft.bookingticketcinemabe.entity.UserEntity;
-import org.cybersoft.bookingticketcinemabe.exception.UserException;
+import org.cybersoft.bookingticketcinemabe.exception.BadRequestException;
+import org.cybersoft.bookingticketcinemabe.exception.ExistedException;
+import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.UserMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.UserCreationRequest;
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUser(int id) {
         return this.userRepository.findById(id).map(userMapper::toDTO)
-                .orElseThrow(() -> new UserException("Can't find user"));
+                .orElseThrow(() -> new NotFoundException("Not found user"));
 
     }
 
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO createUser(UserCreationRequest request) {
         UserEntity user = userRepository.findUserEntityByEmail(request.email());
-        if (user != null) throw new UserException("Email existed");
+        if (user != null) throw new ExistedException("User existed");
         UserDTO dto;
         try {
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
             UserEntity userCreated = this.userRepository.save(user);
             dto = userMapper.toDTO(userCreated);
         } catch (Exception e) {
-            throw new UserException("Fail to create user");
+            throw new BadRequestException("Fail to create user");
         }
 
         return dto;
@@ -64,7 +66,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO updateUser(UserUpdateRequest request) {
         UserEntity userUpdate = this.userRepository.findById(request.id())
-                .orElseThrow(() -> new UserException("Can't find user"));
+                .orElseThrow(() -> new NotFoundException("Not found user"));
         UserDTO dto = null;
         if (userUpdate != null) {
             try {
@@ -74,7 +76,7 @@ public class UserServiceImpl implements UserService {
                 UserEntity userUpdated = userRepository.save(userUpdate);
                 dto = userMapper.toDTO(userUpdated);
             } catch (Exception e) {
-                throw new UserException("Fail to update user");
+                throw new BadRequestException("Fail to update user");
             }
         }
 
@@ -84,7 +86,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDTO deleteUser(int id) {
-        UserEntity userDelete = userRepository.findById(id).orElseThrow(() -> new UserException("Can't find user"));
+        UserEntity userDelete = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found user"));
         UserDTO userDeleteDTO = new UserDTO();
         if (userDelete != null) {
             userDeleteDTO = userMapper.toDTO(userDelete);
