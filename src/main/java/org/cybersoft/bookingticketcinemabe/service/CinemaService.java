@@ -13,4 +13,6 @@ public interface CinemaService {
     CinemaDetailDTO createCinema(CinemaCreationRequest cinemaCreationRequest);
 
     CinemaDetailDTO updateCinema(Integer id, CinemaUpdateRequest cinemaUpdateRequest);
+
+    void deleteCinema(Integer id);
 }
