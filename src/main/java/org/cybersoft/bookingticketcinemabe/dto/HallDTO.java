@@ -9,18 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class HallDTO {
     private Integer id;
 
-    private String avatar;
+    private Integer totalSeats;
 
-    private String email;
+    private String name;
 
-    private String firstName;
-
-    private String lastName;
-
-    private String fullName;
-
-    private String role;
 }

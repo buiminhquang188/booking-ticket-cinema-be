@@ -2,12 +2,12 @@ package org.cybersoft.bookingticketcinemabe.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.UserController;
+import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.UserCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.UserUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.UserService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +19,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public ResponseEntity<?> getUsers(int pageNo, int pageLimit, String sortBy) {
-        Page<?> users = userService.getUsers(pageNo, pageLimit, sortBy);
+        PageableDTO<?> users = userService.getUsers(pageNo, pageLimit, sortBy);
         return ResponseEntity.ok(BaseResponse.builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

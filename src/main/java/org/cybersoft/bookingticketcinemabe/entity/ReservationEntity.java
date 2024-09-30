@@ -1,27 +1,23 @@
 package org.cybersoft.bookingticketcinemabe.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity(name = "reservation")
-@Data
-public class ReservationEntity {
+@Getter
+@Setter
+public class ReservationEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private Integer id;
 
     @Column(name = "time_reservation")
     private LocalDateTime timeReservation;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @Column(name = "status")
     private String status;

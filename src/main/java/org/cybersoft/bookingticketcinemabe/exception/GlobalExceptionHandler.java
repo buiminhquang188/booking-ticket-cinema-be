@@ -20,8 +20,18 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(value = UserException.class)
-    ResponseEntity<?> handlingUserException(UserException exception) {
+    @ExceptionHandler(value = {NotFoundException.class})
+    ResponseEntity<?> handlingUserException(NotFoundException exception) {
+        return new ResponseEntity<>(BaseResponse.builder().message(exception.getMessage()).statusCode(HttpStatus.BAD_REQUEST.value()).build(), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(value = {ExistedException.class})
+    ResponseEntity<?> handlingUserException(ExistedException exception) {
+        return new ResponseEntity<>(BaseResponse.builder().message(exception.getMessage()).statusCode(HttpStatus.BAD_REQUEST.value()).build(), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(value = {BadRequestException.class})
+    ResponseEntity<?> handlingUserException(BadRequestException exception) {
         return new ResponseEntity<>(BaseResponse.builder().message(exception.getMessage()).statusCode(HttpStatus.BAD_REQUEST.value()).build(), HttpStatus.OK);
     }
 

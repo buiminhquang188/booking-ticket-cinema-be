@@ -9,18 +9,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class BranchDetailDTO {
     private Integer id;
 
-    private String avatar;
+    private String name;
 
-    private String email;
+    private String address;
 
-    private String firstName;
+    private String district;
 
-    private String lastName;
-
-    private String fullName;
-
-    private String role;
 }

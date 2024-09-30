@@ -1,33 +1,29 @@
 package org.cybersoft.bookingticketcinemabe.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
 @Entity(name = "movie")
-@Data
-public class MovieEntity {
+@Getter
+@Setter
+public class MovieEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "rating")
-    private byte rating;
+    private Byte rating;
 
     @Column(name = "time")
-    private int time;  // Time in minutes or another appropriate unit
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private Integer time;  // Time in minutes or another appropriate unit
 
     @Column(name = "start_date")
     private LocalDateTime startDate;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @Column(name = "movie_name")
     private String movieName;
@@ -41,8 +37,8 @@ public class MovieEntity {
     @ManyToMany
     @JoinTable(
             name = "branch_movie",
-            joinColumns = @JoinColumn(name = "branch_id"),
-            inverseJoinColumns = @JoinColumn(name = "movie_id")
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "branch_id")
     )
     private Set<BranchEntity> branches;
 

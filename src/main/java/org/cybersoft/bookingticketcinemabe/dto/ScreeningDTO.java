@@ -5,22 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class ScreeningDTO {
+
     private Integer id;
 
-    private String avatar;
+    private LocalDateTime startTime;
 
-    private String email;
+    private LocalDateTime endTime;
 
-    private String firstName;
-
-    private String lastName;
-
-    private String fullName;
-
-    private String role;
 }
