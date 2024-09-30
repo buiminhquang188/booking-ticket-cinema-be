@@ -71,8 +71,10 @@ public class UserServiceImpl implements UserService {
         if (userUpdate != null) {
             try {
                 userMapper.update(userUpdate, request);
-                PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                userUpdate.setPassword(passwordEncoder.encode(request.password()));
+                if (request.password() != null) {
+                    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                    userUpdate.setPassword(passwordEncoder.encode(request.password()));
+                }
                 UserEntity userUpdated = userRepository.save(userUpdate);
                 dto = userMapper.toDTO(userUpdated);
             } catch (Exception e) {
