@@ -7,6 +7,9 @@ import jakarta.persistence.criteria.*;
 import jakarta.persistence.metamodel.SingularAttribute;
 import org.cybersoft.bookingticketcinemabe.query.SelectQuery;
 import org.cybersoft.bookingticketcinemabe.query.utils.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +49,16 @@ public class SelectQueryImpl<R> extends BaseQueryImpl<R, SelectQueryImpl<R>> imp
     public List<R> findAll() {
         return buildQuery(root)
                 .getResultList();
+    }
+
+    @Override
+    public Page<R> findAll(Pageable pageable) {
+        List<R> content = buildQuery(root)
+                .setFirstResult((pageable.getPageNumber() - 1) * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+
+        return new PageImpl<>(content);
     }
 
     @Override
