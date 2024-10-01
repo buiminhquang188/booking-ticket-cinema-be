@@ -8,7 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,10 +17,10 @@ public abstract class BaseEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     @JsonIgnore
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     @UpdateTimestamp
     @JsonIgnore
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 }
