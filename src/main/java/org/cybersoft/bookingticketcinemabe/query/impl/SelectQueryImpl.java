@@ -190,6 +190,42 @@ public class SelectQueryImpl<R> extends BaseQueryImpl<R, SelectQueryImpl<R>> imp
     }
 
     @Override
+    public SelectQuery<R, SelectQueryImpl<R>> order(String attribute, Order sort) {
+        jakarta.persistence.criteria.Order order = sort == Order.ASC ? cb.asc(root.get(attribute)) : cb.desc(root.get(attribute));
+        orderList.add(order);
+        return this;
+    }
+
+    @Override
+    public SelectQuery<R, SelectQueryImpl<R>> order(String attribute1, String attribute2) {
+        return order(attribute1, attribute2, Order.ASC);
+    }
+
+    @Override
+    public SelectQuery<R, SelectQueryImpl<R>> order(String attribute1, String attribute2, Order sort) {
+        Path<?> path = root.get(attribute1)
+                .get(attribute2);
+        jakarta.persistence.criteria.Order order = sort == Order.ASC ? cb.asc(path) : cb.desc(path);
+        orderList.add(order);
+        return this;
+    }
+
+    @Override
+    public SelectQuery<R, SelectQueryImpl<R>> order(String attribute1, String attribute2, String attribute3) {
+        return order(attribute1, attribute2, attribute3, Order.ASC);
+    }
+
+    @Override
+    public SelectQuery<R, SelectQueryImpl<R>> order(String attribute1, String attribute2, String attribute3, Order sort) {
+        Path<?> path = root.get(attribute1)
+                .get(attribute2)
+                .get(attribute3);
+        jakarta.persistence.criteria.Order order = sort == Order.ASC ? cb.asc(path) : cb.desc(path);
+        orderList.add(order);
+        return this;
+    }
+
+    @Override
     public <P> SelectQueryImpl<R> fetch(SingularAttribute<R, P> attribute) {
         root.fetch(attribute);
         return this;

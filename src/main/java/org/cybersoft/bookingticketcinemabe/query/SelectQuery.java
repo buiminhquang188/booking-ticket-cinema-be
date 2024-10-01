@@ -47,6 +47,16 @@ public interface SelectQuery<R, Q extends SelectQuery<R, Q>> extends BaseQuery<R
 
     <P1, P2, P3> SelectQuery<R, Q> order(SingularAttribute<R, P1> attribute1, SingularAttribute<P1, P2> attribute2, SingularAttribute<P2, P3> attribute3, Order order);
 
+    SelectQuery<R, Q> order(String attribute, Order sort);
+
+    SelectQuery<R, Q> order(String attribute1, String attribute2);
+
+    SelectQuery<R, Q> order(String attribute1, String attribute2, Order sort);
+
+    SelectQuery<R, Q> order(String attribute1, String attribute2, String attribute3);
+
+    SelectQuery<R, Q> order(String attribute1, String attribute2, String attribute3, Order sort);
+
     <P> SelectQuery<R, Q> fetch(SingularAttribute<R, P> attribute);
 
     <P1, P2> SelectQuery<R, Q> fetch(SingularAttribute<R, P1> attribute1, SingularAttribute<P1, P2> attribute2);
