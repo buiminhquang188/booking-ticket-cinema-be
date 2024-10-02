@@ -68,4 +68,17 @@ public class CinemaControllerImpl implements CinemaController {
                         .build()
         );
     }
+
+    @Override
+    public ResponseEntity<?> deleteCinema(Integer id) {
+        this.cinemaService.deleteCinema(id);
+
+        return ResponseEntity.ok(
+                BaseResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(null)
+                        .build()
+        );
+    }
 }
