@@ -9,7 +9,7 @@ public class PageableMapper<T> {
         pageableDTO.setContent((T) page.getContent());
         pageableDTO.setPageSize(page.getSize());
         pageableDTO.setPageNo(page.getNumber() + 1);
-        pageableDTO.setTotal(page.getTotalPages());
+        pageableDTO.setTotal(page.getTotalPages() + 1);
         return pageableDTO;
     }
 }

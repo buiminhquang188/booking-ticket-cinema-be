@@ -42,7 +42,10 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Override
     public PageableDTO<?> getCinemas(CinemaCriteria cinemaCriteria) {
-        Pageable pageable = PageRequest.of(cinemaCriteria.pageNo(), cinemaCriteria.pageSize());
+        Pageable pageable = PageRequest.of(
+                cinemaCriteria.pageNo(),
+                cinemaCriteria.pageSize()
+        );
 
         SelectQueryImpl<CinemaEntity> cinemas = this.criteriaApiHelper.select(CinemaEntity.class);
 
@@ -52,6 +55,18 @@ public class CinemaServiceImpl implements CinemaService {
 
         if (cinemaCriteria.totalCinemaHall() != null) {
             cinemas.equal(CinemaEntity_.totalCinemaHall, cinemaCriteria.totalCinemaHall());
+        }
+
+        if (cinemaCriteria.sort() != null && cinemaCriteria.order() != null) {
+            cinemas.order(cinemaCriteria.sort(), cinemaCriteria.order());
+        }
+
+        if (cinemaCriteria.createdAt() != null && cinemaCriteria.updatedAt() != null) {
+            // TODO: Add criteria
+        } else if (cinemaCriteria.createdAt() != null && cinemaCriteria.updatedAt() == null) {
+            // TODO: Add criteria
+        } else if (cinemaCriteria.createdAt() == null && cinemaCriteria.updatedAt() != null) {
+            // TODO: Add criteria
         }
 
         return new PageableMapper<>().toDTO(
