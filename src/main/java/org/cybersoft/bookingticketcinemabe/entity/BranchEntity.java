@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -58,5 +59,15 @@ public class BranchEntity extends BaseEntity {
     private List<HallEntity> halls;
 
     @ManyToMany(mappedBy = "branches")
-    private Set<MovieEntity> movies;
+    private Set<MovieEntity> movies = new HashSet<>();
+
+    public void addMovie(MovieEntity movie) {
+        movies.add(movie);
+        movie.getBranches().add(this);
+    }
+
+    public void reamoveMovie(MovieEntity movie) {
+        movies.remove(movie);
+        movie.getBranches().remove(this);
+    }
 }
