@@ -61,7 +61,7 @@ public class BranchServiceImpl implements BranchService {
         if (request.totalCineplexHall() != null && request.totalCineplexHall() > 0) {
             branch.setHalls(new ArrayList<>());
             for (int i = 0; i < request.totalCineplexHall(); i++) {
-                branch.getHalls().add(hallRepository.save(new HallEntity()));
+                branch.addHall(hallRepository.save(new HallEntity()));
             }
         }
         branchRepository.save(branch);
