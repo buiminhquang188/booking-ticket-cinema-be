@@ -66,8 +66,18 @@ public class BranchEntity extends BaseEntity {
         movie.getBranches().add(this);
     }
 
-    public void reamoveMovie(MovieEntity movie) {
+    public void removeMovie(MovieEntity movie) {
         movies.remove(movie);
         movie.getBranches().remove(this);
+    }
+
+    public void addHall(HallEntity hall) {
+        halls.add(hall);
+        hall.setBranch(this);
+    }
+
+    public void removeHall(HallEntity hall) {
+        halls.remove(hall);
+        hall.setBranch(null);
     }
 }
