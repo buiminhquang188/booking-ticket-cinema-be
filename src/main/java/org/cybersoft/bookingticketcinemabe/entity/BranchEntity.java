@@ -75,7 +75,6 @@ public class BranchEntity extends BaseEntity {
         halls.add(hall);
         hall.setBranch(this);
     }
-
     public void removeHall(HallEntity hall) {
         halls.remove(hall);
         hall.setBranch(null);
