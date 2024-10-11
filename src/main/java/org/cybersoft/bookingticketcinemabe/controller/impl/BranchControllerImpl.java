@@ -5,6 +5,7 @@ import org.cybersoft.bookingticketcinemabe.controller.BranchController;
 import org.cybersoft.bookingticketcinemabe.dto.BranchDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.BranchCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.BranchUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.BranchService;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,18 @@ public class BranchControllerImpl implements BranchController {
                 BaseResponse.builder()
                         .statusCode(HttpStatus.CREATED.value())
                         .message(HttpStatus.CREATED.getReasonPhrase())
+                        .data(branch)
+                        .build()
+        );
+    }
+
+    @Override
+    public ResponseEntity<?> updateBranch(int id, BranchUpdateRequest request) {
+        BranchDTO branch = branchService.updateBranch(id, request);
+        return ResponseEntity.ok(
+                BaseResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
                         .data(branch)
                         .build()
         );

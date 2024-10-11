@@ -1,6 +1,7 @@
 package org.cybersoft.bookingticketcinemabe.controller;
 
 import org.cybersoft.bookingticketcinemabe.payload.request.BranchCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.BranchUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,4 +17,7 @@ public interface BranchController {
 
     @PostMapping("/branch")
     ResponseEntity<?> createBranch(@RequestBody BranchCreationRequest request);
+
+    @PutMapping("/branch/{id}")
+    ResponseEntity<?> updateBranch(@PathVariable int id, @RequestBody BranchUpdateRequest request);
 }
