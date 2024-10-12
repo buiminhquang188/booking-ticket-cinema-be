@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.BranchController;
 import org.cybersoft.bookingticketcinemabe.dto.BranchDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
+import org.cybersoft.bookingticketcinemabe.payload.request.BranchCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.BranchUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.BranchService;
 import org.springframework.http.HttpStatus;
@@ -27,7 +29,7 @@ public class BranchControllerImpl implements BranchController {
     }
 
     @Override
-    public ResponseEntity<?> getBranch(int id) {
+    public ResponseEntity<?> getBranch(Integer id) {
         BranchDTO branch = branchService.getBranch(id);
         return ResponseEntity.ok(
                 BaseResponse.builder()
@@ -37,5 +39,42 @@ public class BranchControllerImpl implements BranchController {
                         .build()
         );
 
+    }
+
+    @Override
+    public ResponseEntity<?> createBranch(BranchCreationRequest request) {
+        BranchDTO branch = branchService.createBranch(request);
+        return ResponseEntity.ok(
+                BaseResponse.builder()
+                        .statusCode(HttpStatus.CREATED.value())
+                        .message(HttpStatus.CREATED.getReasonPhrase())
+                        .data(branch)
+                        .build()
+        );
+    }
+
+    @Override
+    public ResponseEntity<?> updateBranch(Integer id, BranchUpdateRequest request) {
+        BranchDTO branch = branchService.updateBranch(id, request);
+        return ResponseEntity.ok(
+                BaseResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(branch)
+                        .build()
+        );
+    }
+
+    @Override
+    public ResponseEntity<?> deleteBranch(Integer id) {
+        this.branchService.deleteBranch(id);
+
+        return ResponseEntity.ok(
+                BaseResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(null)
+                        .build()
+        );
     }
 }

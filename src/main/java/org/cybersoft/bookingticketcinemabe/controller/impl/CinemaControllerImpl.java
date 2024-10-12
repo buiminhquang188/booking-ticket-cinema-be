@@ -63,8 +63,8 @@ public class CinemaControllerImpl implements CinemaController {
 
         return ResponseEntity.ok(
                 BaseResponse.builder()
-                        .statusCode(HttpStatus.CREATED.value())
-                        .message(HttpStatus.CREATED.getReasonPhrase())
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
                         .data(cinema)
                         .build()
         );
