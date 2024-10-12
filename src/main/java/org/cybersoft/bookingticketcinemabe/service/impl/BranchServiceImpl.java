@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +43,7 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public BranchDTO getBranch(int id) {
+    public BranchDTO getBranch(Integer id) {
         return this.branchRepository.findById(id).map(branchMapper::toDTO)
                 .orElseThrow(() -> new NotFoundException("Not found branch"));
     }
@@ -57,7 +58,7 @@ public class BranchServiceImpl implements BranchService {
         if (request.districtId() != null)
             branch.setDistrict(districtRepository.findById(request.districtId())
                     .orElseThrow(() -> new NotFoundException("Not found district")));
-        if (request.movieIds() != null && !request.movieIds().isEmpty()) {
+        if (request.movieIds() != null && !request.movieIds().isEmpty() && request.movieIds().contains(null)) {
             request.movieIds().forEach((id) -> branch.addMovie(movieRepository.findById(id)
                     .orElseThrow(() -> new NotFoundException("Not found movie with id: " + id))));
 
@@ -74,57 +75,80 @@ public class BranchServiceImpl implements BranchService {
 
     @Transactional
     @Override
-    public BranchDTO updateBranch(int id, BranchUpdateRequest request) {
-        BranchEntity branch = branchRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found branch"));
+    public BranchDTO updateBranch(Integer id, BranchUpdateRequest request) {
+        BranchEntity branch = branchRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Not found branch"));
+
         if (branch != null) branchMapper.update(branch, request);
 
         if (request.cinemaId() != null)
             branch.setCinema(cinemaRepository.findById(request.cinemaId())
                     .orElseThrow(() -> new NotFoundException("Not found cinema")));
+
         if (request.districtId() != null)
             branch.setDistrict(districtRepository.findById(request.districtId())
                     .orElseThrow(() -> new NotFoundException("Not found district")));
-        if (request.movieIds() != null && !request.movieIds().isEmpty() && branch.getMovies() != null) {
+
+        if (request.movieIds() != null && !request.movieIds().isEmpty() && branch.getMovies() != null && !request.movieIds().contains(null)) {
+            //Remove movie not exist in request
             List<Integer> moviesRemove = new ArrayList<>(branch.getMovies().stream().filter((movie) -> !request.movieIds().contains(movie.getId()))
                     .map(MovieEntity::getId)
                     .toList());
-
-            for (MovieEntity movie : branch.getMovies()) {
-                for (int i = 0; i < request.movieIds().size(); i++) {
-                    if (Objects.equals(request.movieIds().get(i), movie.getId())) {
-                        request.movieIds().remove(i);
-                        break;
-                    }
+            if (!moviesRemove.isEmpty()) {
+                moviesRemove.forEach((movieId) -> {
+                    branch.getMovies().stream()
+                            .filter(movieEntity -> Objects.equals(movieEntity.getId(), movieId))
+                            .findFirst()
+                            .ifPresent(branch::removeMovie);
+                });
+                //Add new movie exist in request
+                List<Integer> moviesAdd = request.movieIds().stream()
+                        .filter((movieId) -> !branch.getMovies()
+                                .stream().map(MovieEntity::getId)
+                                .collect(Collectors.toSet())
+                                .contains(movieId)).toList();
+                if (!moviesAdd.isEmpty()) {
+                    moviesAdd.forEach((movieId) -> branch.addMovie(movieRepository.findById(movieId)
+                            .orElseThrow(() -> new NotFoundException("Not found movie with id: " + movieId))));
                 }
-                if (request.movieIds().isEmpty()) break;
+
             }
-            for (MovieEntity movie : branch.getMovies()) {
-                for (int i = 0; i < moviesRemove.size(); i++) {
-                    if (Objects.equals(moviesRemove.get(i), movie.getId())) {
-                        branch.removeMovie(movie);
-                        moviesRemove.remove(i);
-                        break;
-                    }
-                }
-                if (moviesRemove.isEmpty()) break;
-            }
-
-
-            request.movieIds().forEach((movieId) -> branch.addMovie(movieRepository.findById(movieId)
-                    .orElseThrow(() -> new NotFoundException("Not found movie with id: " + movieId))));
-
         }
-        for (int i = 0; i < Objects.requireNonNull(branch).getHalls().size(); i++) {
-            System.out.println(branch.getHalls().get(i).getId());
-            branch.removeHall(branch.getHalls().get(i));
-            i--;
+
+        if (request.hallIds() != null && !request.hallIds().isEmpty() && branch.getHalls() != null && !request.hallIds().contains(null)) {
+
+            int hallSize = Objects.requireNonNull(branch).getHalls().size();
+            for (int i = 0; i < hallSize; i++) branch.removeHall(branch.getHalls().get(0));
+
+            request.hallIds().forEach(hallId -> {
+                HallEntity hallEntity = hallRepository.findById(hallId)
+                        .orElseThrow(() -> new NotFoundException("Not found hall with id: " + hallId));
+                if (hallEntity != null) branch.addHall(hallEntity);
+            });
         }
-        request.hallIds().forEach(hallId -> {
-            HallEntity hallEntity = hallRepository.findById(hallId)
-                    .orElseThrow(() -> new NotFoundException("Not found hall with id: " + hallId));
-            if (hallEntity != null) branch.addHall(hallEntity);
-        });
+
         branchRepository.save(branch);
         return branchMapper.toDTO(branch);
+    }
+
+    @Transactional
+    @Override
+    public void deleteBranch(Integer id) {
+        BranchEntity branchDelete = branchRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Not found branch"));
+
+        if (branchDelete != null) {
+            branchDelete.getCinema().getBranches().remove(branchDelete);
+            branchDelete.getDistrict().getBranches().remove(branchDelete);
+
+            int hallSize = Objects.requireNonNull(branchDelete).getHalls().size();
+            for (int i = 0; i < hallSize; i++) branchDelete.removeHall(branchDelete.getHalls().get(0));
+
+            for (MovieEntity movie : branchDelete.getMovies()) {
+                movie.getBranches().remove(branchDelete);
+            }
+            branchDelete.setMovies(null);
+            branchRepository.delete(branchDelete);
+        }
     }
 }

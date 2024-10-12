@@ -8,9 +8,11 @@ import org.cybersoft.bookingticketcinemabe.payload.request.BranchUpdateRequest;
 public interface BranchService {
     PageableDTO<?> getBranches(int pageNo, int pageLimit, String sortBy);
 
-    BranchDTO getBranch(int id);
+    BranchDTO getBranch(Integer id);
 
     BranchDTO createBranch(BranchCreationRequest request);
 
-    BranchDTO updateBranch(int id, BranchUpdateRequest request);
+    BranchDTO updateBranch(Integer id, BranchUpdateRequest request);
+
+    void deleteBranch(Integer id);
 }
