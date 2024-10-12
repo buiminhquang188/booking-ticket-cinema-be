@@ -29,7 +29,7 @@ public class BranchControllerImpl implements BranchController {
     }
 
     @Override
-    public ResponseEntity<?> getBranch(int id) {
+    public ResponseEntity<?> getBranch(Integer id) {
         BranchDTO branch = branchService.getBranch(id);
         return ResponseEntity.ok(
                 BaseResponse.builder()
@@ -54,13 +54,26 @@ public class BranchControllerImpl implements BranchController {
     }
 
     @Override
-    public ResponseEntity<?> updateBranch(int id, BranchUpdateRequest request) {
+    public ResponseEntity<?> updateBranch(Integer id, BranchUpdateRequest request) {
         BranchDTO branch = branchService.updateBranch(id, request);
         return ResponseEntity.ok(
                 BaseResponse.builder()
                         .statusCode(HttpStatus.OK.value())
                         .message(HttpStatus.OK.getReasonPhrase())
                         .data(branch)
+                        .build()
+        );
+    }
+
+    @Override
+    public ResponseEntity<?> deleteBranch(Integer id) {
+        this.branchService.deleteBranch(id);
+
+        return ResponseEntity.ok(
+                BaseResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(null)
                         .build()
         );
     }

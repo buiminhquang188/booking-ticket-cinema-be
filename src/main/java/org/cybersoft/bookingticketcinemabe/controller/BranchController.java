@@ -13,11 +13,14 @@ public interface BranchController {
                                   @RequestParam(defaultValue = "id") String sortBy);
 
     @GetMapping("/branch/{id}")
-    ResponseEntity<?> getBranch(@PathVariable int id);
+    ResponseEntity<?> getBranch(@PathVariable Integer id);
 
     @PostMapping("/branch")
     ResponseEntity<?> createBranch(@RequestBody BranchCreationRequest request);
 
     @PutMapping("/branch/{id}")
-    ResponseEntity<?> updateBranch(@PathVariable int id, @RequestBody BranchUpdateRequest request);
+    ResponseEntity<?> updateBranch(@PathVariable Integer id, @RequestBody BranchUpdateRequest request);
+
+    @DeleteMapping("/branch/{id}")
+    ResponseEntity<?> deleteBranch(@PathVariable Integer id);
 }
