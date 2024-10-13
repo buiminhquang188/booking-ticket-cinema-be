@@ -58,7 +58,7 @@ public class BranchServiceImpl implements BranchService {
         if (request.districtId() != null)
             branch.setDistrict(districtRepository.findById(request.districtId())
                     .orElseThrow(() -> new NotFoundException("Not found district")));
-        if (request.movieIds() != null && !request.movieIds().isEmpty() && request.movieIds().contains(null)) {
+        if (request.movieIds() != null && !request.movieIds().isEmpty() && !request.movieIds().contains(null)) {
             request.movieIds().forEach((id) -> branch.addMovie(movieRepository.findById(id)
                     .orElseThrow(() -> new NotFoundException("Not found movie with id: " + id))));
 
