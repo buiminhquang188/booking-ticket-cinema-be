@@ -45,4 +45,24 @@ public class MovieEntity extends BaseEntity {
     @OneToMany(mappedBy = "movie")
     private List<ScreeningEntity> screenings;
 
+    public void addBranch(BranchEntity branch) {
+        branches.add(branch);
+        branch.getMovies().add(this);
+    }
+
+    public void removeBranch(BranchEntity branch) {
+        branches.remove(branch);
+        branch.getMovies().remove(this);
+    }
+
+    public void addScreening(ScreeningEntity screening) {
+        screenings.add(screening);
+        screening.setMovie(this);
+    }
+
+    public void removeScreening(ScreeningEntity screening) {
+        screenings.remove(screening);
+        screening.setMovie(null);
+    }
+
 }
