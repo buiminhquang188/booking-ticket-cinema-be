@@ -14,14 +14,13 @@ import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCreationRequest
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
+import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
 import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
 import org.cybersoft.bookingticketcinemabe.repository.BranchRepository;
 import org.cybersoft.bookingticketcinemabe.repository.CinemaProvinceRepository;
 import org.cybersoft.bookingticketcinemabe.repository.CinemaRepository;
 import org.cybersoft.bookingticketcinemabe.repository.ProvinceRepository;
 import org.cybersoft.bookingticketcinemabe.service.CinemaService;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,10 +41,11 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Override
     public PageableDTO<?> getCinemas(CinemaCriteria cinemaCriteria) {
-        Pageable pageable = PageRequest.of(
-                cinemaCriteria.pageNo(),
-                cinemaCriteria.pageSize()
-        );
+        Pageable pageable = Pageable.builder()
+                .pageNumber(cinemaCriteria.pageNo())
+                .pageSize(cinemaCriteria.pageSize())
+                .sortDefinition(Pageable.sort(cinemaCriteria.sort(), cinemaCriteria.order()))
+                .build();
 
         SelectQueryImpl<CinemaEntity> cinemas = this.criteriaApiHelper.select(CinemaEntity.class);
 
@@ -61,18 +61,16 @@ public class CinemaServiceImpl implements CinemaService {
             cinemas.order(cinemaCriteria.sort(), cinemaCriteria.order());
         }
 
-        if (cinemaCriteria.createdAt() != null && cinemaCriteria.updatedAt() != null) {
-            // TODO: Add criteria
-        } else if (cinemaCriteria.createdAt() != null && cinemaCriteria.updatedAt() == null) {
-            // TODO: Add criteria
-        } else if (cinemaCriteria.createdAt() == null && cinemaCriteria.updatedAt() != null) {
-            // TODO: Add criteria
+        if (cinemaCriteria.createdAtFrom() != null && cinemaCriteria.createdAtTo() != null) {
+            cinemas.between(CinemaEntity_.createdAt.getName(), cinemaCriteria.createdAtFrom(), cinemaCriteria.createdAtTo());
         }
 
-        return new PageableMapper<>().toDTO(
-                cinemas.findAll(pageable)
-                        .map(cinemaMapper::toDTO)
-        );
+        if (cinemaCriteria.updatedAtFrom() != null && cinemaCriteria.updatedAtTo() != null) {
+            cinemas.between(CinemaEntity_.updatedAt.getName(), cinemaCriteria.updatedAtFrom(), cinemaCriteria.updatedAtTo());
+        }
+
+        return new PageableMapper<>().toDTO(cinemas.findAll(pageable)
+                .map(cinemaMapper::toDTO));
     }
 
     @Override

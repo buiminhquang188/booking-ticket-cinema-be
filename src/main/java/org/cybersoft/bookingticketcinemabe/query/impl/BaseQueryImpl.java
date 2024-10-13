@@ -8,6 +8,7 @@ import jakarta.persistence.metamodel.SingularAttribute;
 import org.cybersoft.bookingticketcinemabe.query.BaseQuery;
 import org.cybersoft.bookingticketcinemabe.query.QueryPredicate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -446,6 +447,11 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
         return self();
     }
 
+    @Override
+    public Q between(String attribute, LocalDateTime from, LocalDateTime to) {
+        predicates.add((criteria, cb, root) -> cb.between(root.get(attribute), from, to));
+        return self();
+    }
 
     protected <T> Predicate[] buildPredicates(CommonAbstractCriteria criteria, Collection<QueryPredicate<T>> predicates,
                                               CriteriaBuilder cb, Path<T> path) {

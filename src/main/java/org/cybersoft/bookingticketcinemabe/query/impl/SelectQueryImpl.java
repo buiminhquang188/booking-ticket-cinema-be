@@ -5,11 +5,11 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import jakarta.persistence.metamodel.SingularAttribute;
+import org.cybersoft.bookingticketcinemabe.exception.runtime.NotFoundColumnException;
 import org.cybersoft.bookingticketcinemabe.query.SelectQuery;
-import org.cybersoft.bookingticketcinemabe.query.utils.Order;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
+import org.cybersoft.bookingticketcinemabe.query.enums.Order;
+import org.cybersoft.bookingticketcinemabe.query.utils.Helpers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +52,13 @@ public class SelectQueryImpl<R> extends BaseQueryImpl<R, SelectQueryImpl<R>> imp
     }
 
     @Override
-    public Page<R> findAll(Pageable pageable) {
+    public CustomPageListHolder<R> findAll(Pageable pageable) {
         List<R> content = buildQuery(root)
                 .setFirstResult((pageable.getPageNumber() - 1) * pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
 
-        return new PageImpl<>(content);
+        return new CustomPageListHolder<>(content, pageable.getSortDefinition(), count(), pageable);
     }
 
     @Override
@@ -190,7 +190,8 @@ public class SelectQueryImpl<R> extends BaseQueryImpl<R, SelectQueryImpl<R>> imp
     }
 
     @Override
-    public SelectQuery<R, SelectQueryImpl<R>> order(String attribute, Order sort) {
+    public SelectQuery<R, SelectQueryImpl<R>> order(String attribute, Order sort) throws NotFoundColumnException {
+        Helpers.isValidColumn(this.em, this.root, attribute);
         jakarta.persistence.criteria.Order order = sort == Order.ASC ? cb.asc(root.get(attribute)) : cb.desc(root.get(attribute));
         orderList.add(order);
         return this;
