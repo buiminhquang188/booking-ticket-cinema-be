@@ -1,12 +1,13 @@
 package org.cybersoft.bookingticketcinemabe.service;
 
 import org.cybersoft.bookingticketcinemabe.dto.CinemaDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaUpdateRequest;
-import org.springframework.data.domain.Page;
 
 public interface CinemaService {
-    Page<?> getCinemas(int pageNo, int pageSize, String name);
+    PageableDTO<?> getCinemas(CinemaCriteria cinemaCriteria);
 
     CinemaDetailDTO getCinema(int id);
 

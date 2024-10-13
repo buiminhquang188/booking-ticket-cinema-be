@@ -32,13 +32,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageableDTO<?> getUsers(int pageNo, int pageLimit, String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
-        Page<?> page = this.userRepository.findAll(pageable).map(userMapper::toDTO);
+        Page<?> page = this.userRepository.findAll(pageable)
+                .map(userMapper::toDTO);
         return new PageableMapper<>().toDTO(page);
     }
 
     @Override
     public UserDTO getUser(int id) {
-        return this.userRepository.findById(id).map(userMapper::toDTO)
+        return this.userRepository.findById(id)
+                .map(userMapper::toDTO)
                 .orElseThrow(() -> new NotFoundException("Not found user"));
 
     }
@@ -88,7 +90,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDTO deleteUser(int id) {
-        UserEntity userDelete = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found user"));
+        UserEntity userDelete = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Not found user"));
         UserDTO userDeleteDTO = new UserDTO();
         if (userDelete != null) {
             userDeleteDTO = userMapper.toDTO(userDelete);

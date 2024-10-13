@@ -3,24 +3,24 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.CinemaDetailDTO;
-import org.cybersoft.bookingticketcinemabe.entity.BranchEntity;
-import org.cybersoft.bookingticketcinemabe.entity.CinemaEntity;
-import org.cybersoft.bookingticketcinemabe.entity.CinemaProvinceEntity;
-import org.cybersoft.bookingticketcinemabe.entity.ProvinceEntity;
+import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
+import org.cybersoft.bookingticketcinemabe.entity.*;
 import org.cybersoft.bookingticketcinemabe.entity.key.IdCinemaProvince;
 import org.cybersoft.bookingticketcinemabe.exception.runtime.CinemaNotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.CinemaMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.CinemaProvinceMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
+import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
+import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
 import org.cybersoft.bookingticketcinemabe.repository.BranchRepository;
 import org.cybersoft.bookingticketcinemabe.repository.CinemaProvinceRepository;
 import org.cybersoft.bookingticketcinemabe.repository.CinemaRepository;
 import org.cybersoft.bookingticketcinemabe.repository.ProvinceRepository;
 import org.cybersoft.bookingticketcinemabe.service.CinemaService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,13 +37,40 @@ public class CinemaServiceImpl implements CinemaService {
     private final CinemaProvinceRepository cinemaProvinceRepository;
     private final CinemaMapper cinemaMapper;
     private final CinemaProvinceMapper cinemaProvinceMapper;
+    private final CriteriaApiHelper criteriaApiHelper;
 
     @Override
-    public Page<?> getCinemas(int pageNo, int pageSize, String name) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+    public PageableDTO<?> getCinemas(CinemaCriteria cinemaCriteria) {
+        Pageable pageable = Pageable.builder()
+                .pageNumber(cinemaCriteria.pageNo())
+                .pageSize(cinemaCriteria.pageSize())
+                .sortDefinition(Pageable.sort(cinemaCriteria.sort(), cinemaCriteria.order()))
+                .build();
 
-        return this.cinemaRepository.findAll(pageable)
-                .map(cinemaMapper::toCinemaDTO);
+        SelectQueryImpl<CinemaEntity> cinemas = this.criteriaApiHelper.select(CinemaEntity.class);
+
+        if (cinemaCriteria.name() != null) {
+            cinemas.like(CinemaEntity_.name, cinemaCriteria.name());
+        }
+
+        if (cinemaCriteria.totalCinemaHall() != null) {
+            cinemas.equal(CinemaEntity_.totalCinemaHall, cinemaCriteria.totalCinemaHall());
+        }
+
+        if (cinemaCriteria.sort() != null && cinemaCriteria.order() != null) {
+            cinemas.order(cinemaCriteria.sort(), cinemaCriteria.order());
+        }
+
+        if (cinemaCriteria.createdAtFrom() != null && cinemaCriteria.createdAtTo() != null) {
+            cinemas.between(CinemaEntity_.createdAt.getName(), cinemaCriteria.createdAtFrom(), cinemaCriteria.createdAtTo());
+        }
+
+        if (cinemaCriteria.updatedAtFrom() != null && cinemaCriteria.updatedAtTo() != null) {
+            cinemas.between(CinemaEntity_.updatedAt.getName(), cinemaCriteria.updatedAtFrom(), cinemaCriteria.updatedAtTo());
+        }
+
+        return new PageableMapper<>().toDTO(cinemas.findAll(pageable)
+                .map(cinemaMapper::toDTO));
     }
 
     @Override

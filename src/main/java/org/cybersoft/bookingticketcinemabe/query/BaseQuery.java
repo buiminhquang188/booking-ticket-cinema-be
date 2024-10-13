@@ -3,6 +3,7 @@ package org.cybersoft.bookingticketcinemabe.query;
 import jakarta.persistence.metamodel.SingularAttribute;
 import org.cybersoft.bookingticketcinemabe.query.impl.QueryPart;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 public interface BaseQuery<R, Q extends BaseQuery<R, Q>> {
@@ -99,4 +100,7 @@ public interface BaseQuery<R, Q extends BaseQuery<R, Q>> {
     <P, V> Q in(SingularAttribute<R, P> attribute1, SingularAttribute<P, V> attribute2, Collection<V> values);
 
     <P1, P2, V> Q in(SingularAttribute<R, P1> attribute1, SingularAttribute<P1, P2> attribute2, SingularAttribute<P2, V> attribute3, Collection<V> values);
+
+    Q between(String attribute, LocalDateTime from, LocalDateTime to);
+
 }

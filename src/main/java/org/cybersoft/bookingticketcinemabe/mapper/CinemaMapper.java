@@ -9,9 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper
-public interface CinemaMapper {
-    CinemaDTO toCinemaDTO(CinemaEntity cinema);
-
+public interface CinemaMapper extends EntityMapper<CinemaDTO, CinemaEntity> {
     @Mapping(source = "cinemaProvinces", target = "provinces")
     CinemaDetailDTO toCinemaDetailDto(CinemaEntity cinemaEntity);
 

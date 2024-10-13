@@ -1,9 +1,9 @@
 package org.cybersoft.bookingticketcinemabe.query;
 
 import jakarta.persistence.metamodel.SingularAttribute;
-import org.cybersoft.bookingticketcinemabe.query.utils.Order;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
+import org.cybersoft.bookingticketcinemabe.query.enums.Order;
+import org.cybersoft.bookingticketcinemabe.query.impl.CustomPageListHolder;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface SelectQuery<R, Q extends SelectQuery<R, Q>> extends BaseQuery<R, Q> {
     List<R> findAll();
 
-    Page<R> findAll(Pageable pageable);
+    CustomPageListHolder<R> findAll(Pageable pageable);
 
     <P> List<P> findAll(SingularAttribute<R, P> attribute);
 

@@ -3,11 +3,12 @@ package org.cybersoft.bookingticketcinemabe.controller.impl;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.CinemaController;
 import org.cybersoft.bookingticketcinemabe.dto.CinemaDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.CinemaService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +19,8 @@ public class CinemaControllerImpl implements CinemaController {
     private final CinemaService cinemaService;
 
     @Override
-    public ResponseEntity<BaseResponse<?>> getCinemas(int pageNo, int pageSize, String name) {
-        Page<?> cinema = this.cinemaService.getCinemas(pageNo, pageSize, name);
+    public ResponseEntity<BaseResponse<?>> getCinemas(CinemaCriteria cinemaCriteria) {
+        PageableDTO<?> cinema = this.cinemaService.getCinemas(cinemaCriteria);
 
         return ResponseEntity.ok(
                 BaseResponse.builder()

@@ -7,5 +7,6 @@ public class PageableDTO<T> {
     private T content;
     private int pageSize;
     private int pageNo;
-    private int total;
+    private int totalPages;
+    private long totalItems;
 }
