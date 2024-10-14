@@ -5,6 +5,7 @@ import org.cybersoft.bookingticketcinemabe.controller.MovieController;
 import org.cybersoft.bookingticketcinemabe.dto.MovieDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.MovieCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.MovieUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.MovieService;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class MovieControllerImpl implements MovieController {
     }
 
     @Override
-    public ResponseEntity<?> getMovie(int id) {
+    public ResponseEntity<?> getMovie(Integer id) {
         MovieDTO movie = movieService.getMovie(id);
         return ResponseEntity.ok(
                 BaseResponse.builder()
@@ -46,6 +47,18 @@ public class MovieControllerImpl implements MovieController {
                 BaseResponse.builder()
                         .statusCode(HttpStatus.CREATED.value())
                         .message(HttpStatus.CREATED.getReasonPhrase())
+                        .data(movie)
+                        .build()
+        );
+    }
+
+    @Override
+    public ResponseEntity<?> updateMovie(Integer id, MovieUpdateRequest request) {
+        MovieDTO movie = movieService.updateMovie(id, request);
+        return ResponseEntity.ok(
+                BaseResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
                         .data(movie)
                         .build()
         );
