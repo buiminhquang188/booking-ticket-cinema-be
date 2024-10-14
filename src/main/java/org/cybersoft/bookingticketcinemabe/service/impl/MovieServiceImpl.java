@@ -121,4 +121,22 @@ public class MovieServiceImpl implements MovieService {
         movieRepository.save(movie);
         return movieMapper.toDTO(movie);
     }
+
+    @Override
+    public void deleteMovie(Integer id) {
+        MovieEntity movieDelete = movieRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Not found movie"));
+
+        if (movieDelete != null) {
+
+            int screeningSize = Objects.requireNonNull(movieDelete).getScreenings().size();
+            for (int i = 0; i < screeningSize; i++) movieDelete.removeScreening(movieDelete.getScreenings().get(0));
+
+            for (BranchEntity branch : movieDelete.getBranches()) {
+                branch.getMovies().remove(movieDelete);
+            }
+            movieDelete.setBranches(null);
+            movieRepository.delete(movieDelete);
+        }
+    }
 }

@@ -63,4 +63,16 @@ public class MovieControllerImpl implements MovieController {
                         .build()
         );
     }
+
+    @Override
+    public ResponseEntity<?> deleteMovie(Integer id) {
+        movieService.deleteMovie(id);
+        return ResponseEntity.ok(
+                BaseResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(null)
+                        .build()
+        );
+    }
 }

@@ -20,4 +20,7 @@ public interface MovieController {
 
     @PutMapping("/movie/{id}")
     ResponseEntity<?> updateMovie(@PathVariable Integer id, @RequestBody MovieUpdateRequest request);
+
+    @DeleteMapping("/movie/{id}")
+    ResponseEntity<?> deleteMovie(@PathVariable Integer id);
 }
