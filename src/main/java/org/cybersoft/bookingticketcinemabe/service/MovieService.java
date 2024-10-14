@@ -13,4 +13,7 @@ public interface MovieService {
     MovieDTO createMovie(MovieCreationRequest request);
 
     MovieDTO updateMovie(Integer id, MovieUpdateRequest request);
+
+    void deleteMovie(Integer id);
+
 }
