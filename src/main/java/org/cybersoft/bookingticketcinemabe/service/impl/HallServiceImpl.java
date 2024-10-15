@@ -7,19 +7,22 @@ import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.entity.BranchEntity;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity_;
+import org.cybersoft.bookingticketcinemabe.entity.SeatEntity;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.HallMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
-import org.cybersoft.bookingticketcinemabe.payload.request.HallCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.HallCriteria;
-import org.cybersoft.bookingticketcinemabe.payload.request.HallUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.*;
 import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
 import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
 import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
 import org.cybersoft.bookingticketcinemabe.repository.BranchRepository;
 import org.cybersoft.bookingticketcinemabe.repository.HallRepository;
+import org.cybersoft.bookingticketcinemabe.repository.SeatRepository;
 import org.cybersoft.bookingticketcinemabe.service.HallService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +30,8 @@ public class HallServiceImpl implements HallService {
     private final HallRepository hallRepository;
 
     private final BranchRepository branchRepository;
+
+    private final SeatRepository seatRepository;
 
     private final CriteriaApiHelper criteriaApiHelper;
 
@@ -83,7 +88,13 @@ public class HallServiceImpl implements HallService {
                 .branch(branch)
                 .build();
 
-        // TODO: Create hall's seats
+        if (!request.seats()
+                .isEmpty()) {
+            List<SeatEntity> seats = this.createSeats(hall, request.seats());
+            hall.setTotalSeats(seats.size());
+            hall.setSeats(seats);
+            this.seatRepository.saveAll(seats);
+        }
 
         return this.hallMapper.toHallDetailDto(this.hallRepository.save(hall));
     }
@@ -101,7 +112,12 @@ public class HallServiceImpl implements HallService {
         hall.setTotalSeats(request.totalSeats());
         hall.setBranch(branch);
 
-        // TODO: Update hall's seats
+        if (!request.seats()
+                .isEmpty()) {
+            List<SeatEntity> seats = this.seatRepository.findAllByHallId(id);
+            List<SeatEntity> seatEntities = this.updateSeats(request.seats(), seats, hall);
+            this.seatRepository.saveAll(seatEntities);
+        }
 
         HallEntity savedHall = this.hallRepository.save(hall);
 
@@ -114,8 +130,73 @@ public class HallServiceImpl implements HallService {
         HallEntity hall = this.hallRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Hall " + id + " not found"));
 
-        // TODO: Delete hall's seats
+        List<SeatEntity> seats = this.seatRepository.findAllByHallId(id);
+        this.seatRepository.deleteAllInBatch(seats);
 
         this.hallRepository.delete(hall);
+    }
+
+    private List<SeatEntity> createSeats(HallEntity hall, List<HallCreateSeat> seats) {
+        List<SeatEntity> seatEntities = seats
+                .stream()
+                .map((seat) -> this.createSeat(hall, seat))
+                .collect(Collectors.toList());
+
+        return this.seatRepository.saveAll(seatEntities);
+    }
+
+    private SeatEntity createSeat(HallEntity hall, HallCreateSeat seat) {
+        StringBuilder stringBuilder = new StringBuilder();
+        return SeatEntity.builder()
+                .hall(hall)
+                .seatRow(seat.seatRow())
+                .seatColumn(seat.seatColumn())
+                .seatNumber(seat.seatNumber())
+                .isActive(seat.isActive())
+                .seatCode(
+                        stringBuilder.append(seat.seatRow())
+                                .append(seat.seatNumber())
+                                .toString()
+                )
+                .build();
+    }
+
+    private List<SeatEntity> updateSeats(List<HallUpdateSeat> requestSeats, List<SeatEntity> seats, HallEntity hall) {
+        return requestSeats
+                .stream()
+                .map(requestSeat -> this.enrichSeats(hall, seats, requestSeat))
+                .collect(Collectors.toList());
+    }
+
+    private boolean isMatch(SeatEntity seat, HallUpdateSeat requestSeat) {
+        return seat.getSeatRow()
+                       .equals(requestSeat.seatRow()) && seat.getSeatColumn()
+                       .equals(requestSeat.seatColumn()) && seat.getSeatNumber()
+                       .equals(requestSeat.seatNumber());
+    }
+
+    private SeatEntity enrichSeats(HallEntity hall, List<SeatEntity> seats, HallUpdateSeat requestSeat) {
+        SeatEntity seatEntity = seats.stream()
+                .filter((seat) -> this.isMatch(seat, requestSeat))
+                .findFirst()
+                .orElseGet(() -> this.updateSeat(hall, requestSeat));
+        seatEntity.setIsActive(requestSeat.isActive());
+        return seatEntity;
+    }
+
+    private SeatEntity updateSeat(HallEntity hall, HallUpdateSeat seat) {
+        StringBuilder stringBuilder = new StringBuilder();
+        return SeatEntity.builder()
+                .hall(hall)
+                .seatRow(seat.seatRow())
+                .seatColumn(seat.seatColumn())
+                .seatNumber(seat.seatNumber())
+                .isActive(seat.isActive())
+                .seatCode(
+                        stringBuilder.append(seat.seatRow())
+                                .append(seat.seatNumber())
+                                .toString()
+                )
+                .build();
     }
 }
