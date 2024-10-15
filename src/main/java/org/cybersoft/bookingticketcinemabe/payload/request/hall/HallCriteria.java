@@ -1,4 +1,4 @@
-package org.cybersoft.bookingticketcinemabe.payload.request;
+package org.cybersoft.bookingticketcinemabe.payload.request.hall;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

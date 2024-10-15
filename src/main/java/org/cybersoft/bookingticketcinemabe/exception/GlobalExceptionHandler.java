@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.cybersoft.bookingticketcinemabe.enums.Status;
 import org.cybersoft.bookingticketcinemabe.exception.runtime.CinemaNotFoundException;
 import org.cybersoft.bookingticketcinemabe.exception.runtime.NotFoundColumnException;
+import org.cybersoft.bookingticketcinemabe.exception.runtime.NotValidException;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.payload.response.ErrorDetailResponse;
 import org.cybersoft.bookingticketcinemabe.payload.response.ErrorResponse;
@@ -62,21 +63,60 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             NotFoundColumnException.class
     })
     public ResponseEntity<Object> handleNotFoundException(RuntimeException runtimeException, HttpServletRequest request) {
-        ErrorResponse<Object> errorResponse = ErrorResponse.builder()
+        ErrorResponse<Object> errorResponse = this.createExceptionResponse(
+                runtimeException,
+                request,
+                HttpStatus.NOT_FOUND,
+                runtimeException.getMessage(),
+                runtimeException.getMessage()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+
+    @ExceptionHandler(value = {
+            NotValidException.class
+    })
+    public ResponseEntity<Object> handleNotValidException(RuntimeException runtimeException, HttpServletRequest request) {
+        ErrorResponse<Object> errorResponse = this.createExceptionResponse(
+                runtimeException,
+                request,
+                HttpStatus.BAD_REQUEST,
+                runtimeException.getCause()
+                        .getMessage(),
+                runtimeException.getCause()
+                        .getMessage()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Help generate error exception response
+     *
+     * @param runtimeException
+     *         Provide the runtime exception
+     * @param request
+     *         Provide the httpServletRequest
+     * @param httpStatus
+     *         Provide the HttpStatus enum code
+     * @return ErrorResponse
+     */
+    private ErrorResponse<Object> createExceptionResponse(RuntimeException runtimeException, HttpServletRequest request, HttpStatus httpStatus, String message, String details) {
+        return ErrorResponse.builder()
                 .status(Status.ERROR.toString()
                         .toLowerCase())
-                .statusCode(HttpStatus.NOT_FOUND.getReasonPhrase())
+                .statusCode(httpStatus.getReasonPhrase())
                 .error(
                         ErrorDetailResponse.builder()
-                                .code(HttpStatus.NOT_FOUND.getReasonPhrase())
-                                .message(runtimeException.getMessage())
-                                .details(runtimeException.getMessage())
+                                .code(httpStatus.getReasonPhrase())
+                                .message(message)
+                                .details(details)
                                 .timestamp(LocalDateTime.now())
                                 .path(request.getRequestURI())
                                 .build()
                 )
                 .build();
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

@@ -1,4 +1,4 @@
-package org.cybersoft.bookingticketcinemabe.payload.request;
+package org.cybersoft.bookingticketcinemabe.payload.request.hall;
 
 import java.util.List;
 

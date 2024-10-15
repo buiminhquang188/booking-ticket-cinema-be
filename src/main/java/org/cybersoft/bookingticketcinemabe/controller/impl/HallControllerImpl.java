@@ -3,16 +3,19 @@ package org.cybersoft.bookingticketcinemabe.controller.impl;
 import lombok.AllArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.HallController;
 import org.cybersoft.bookingticketcinemabe.dto.HallDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.HallDetailSeatLayoutDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
-import org.cybersoft.bookingticketcinemabe.payload.request.HallCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.HallCriteria;
-import org.cybersoft.bookingticketcinemabe.payload.request.HallUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.hall.HallCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.hall.HallCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.hall.HallUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.HallService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -80,6 +83,19 @@ public class HallControllerImpl implements HallController {
                         .statusCode(HttpStatus.OK.value())
                         .message(HttpStatus.OK.getReasonPhrase())
                         .data(null)
+                        .build()
+        );
+    }
+
+    @Override
+    public ResponseEntity<?> getSeatsLayout(Integer id) {
+        List<List<HallDetailSeatLayoutDTO>> hallSeatLayout = this.hallService.getSeatsLayout(id);
+
+        return ResponseEntity.ok(
+                BaseResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(hallSeatLayout)
                         .build()
         );
     }

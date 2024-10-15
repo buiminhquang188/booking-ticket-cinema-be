@@ -1,7 +1,6 @@
-package org.cybersoft.bookingticketcinemabe.payload.request;
+package org.cybersoft.bookingticketcinemabe.payload.request.hall;
 
-public record HallUpdateSeat(
-        Integer id,
+public record HallCreateSeat(
         Integer seatColumn,
         String seatRow,
         Integer seatNumber,

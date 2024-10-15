@@ -3,6 +3,7 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.HallDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.HallDetailSeatLayoutDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.entity.BranchEntity;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
@@ -11,7 +12,7 @@ import org.cybersoft.bookingticketcinemabe.entity.SeatEntity;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.HallMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
-import org.cybersoft.bookingticketcinemabe.payload.request.*;
+import org.cybersoft.bookingticketcinemabe.payload.request.hall.*;
 import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
 import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
 import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
@@ -21,6 +22,7 @@ import org.cybersoft.bookingticketcinemabe.repository.SeatRepository;
 import org.cybersoft.bookingticketcinemabe.service.HallService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -134,6 +136,28 @@ public class HallServiceImpl implements HallService {
         this.seatRepository.deleteAllInBatch(seats);
 
         this.hallRepository.delete(hall);
+    }
+
+    @Override
+    public List<List<HallDetailSeatLayoutDTO>> getSeatsLayout(Integer id) {
+        List<List<HallDetailSeatLayoutDTO>> seatsLayout = new ArrayList<>();
+
+        List<SeatEntity> seats = this.seatRepository.findAllByHallId(id);
+        seats.forEach(seat -> {
+            HallDetailSeatLayoutDTO seatLayout = this.hallMapper.toHallDetailSeatLayoutDto(seat);
+
+            int seatRow = seatLayout.getSeatRow()
+                                  .charAt(0) - 'A';
+            int seatColumn = seatLayout.getSeatColumn() - 1;
+
+            if (seatColumn == 0) {
+                seatsLayout.add(seatRow, new ArrayList<>());
+            }
+            seatsLayout.get(seatRow)
+                    .add(seatColumn, seatLayout);
+        });
+
+        return seatsLayout;
     }
 
     private List<SeatEntity> createSeats(HallEntity hall, List<HallCreateSeat> seats) {
