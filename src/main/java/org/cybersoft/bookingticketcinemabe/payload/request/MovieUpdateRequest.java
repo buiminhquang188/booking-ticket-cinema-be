@@ -1,0 +1,14 @@
+package org.cybersoft.bookingticketcinemabe.payload.request;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+public record MovieUpdateRequest(Byte rating,
+                                 Integer time,
+                                 LocalDateTime startDate,
+                                 String movieName,
+                                 String poster,
+                                 String trailer,
+                                 List<Integer> branchIds,
+                                 List<Integer> screeningIds) {
+}

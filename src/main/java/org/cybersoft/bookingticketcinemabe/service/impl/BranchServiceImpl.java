@@ -91,8 +91,8 @@ public class BranchServiceImpl implements BranchService {
 
         if (request.movieIds() != null && !request.movieIds().isEmpty() && branch.getMovies() != null && !request.movieIds().contains(null)) {
             //Remove movie not exist in request
-            List<Integer> moviesRemove = new ArrayList<>(branch.getMovies().stream().filter((movie) -> !request.movieIds().contains(movie.getId()))
-                    .map(MovieEntity::getId)
+            List<Integer> moviesRemove = new ArrayList<>(branch.getMovies().stream().map(MovieEntity::getId)
+                    .filter(movieId -> !request.movieIds().contains(movieId))
                     .toList());
             if (!moviesRemove.isEmpty()) {
                 moviesRemove.forEach((movieId) -> {
