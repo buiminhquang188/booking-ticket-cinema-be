@@ -13,21 +13,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SeatDTO {
-
     private Integer id;
-
     private Boolean isActive;
-
     private Integer seatColumn;
-
     private String seatRow;
-
     private Integer seatNumber;
-
     private String seatCode;
-
     private HallDTO hall;
-
     private List<SeatReservationDTO> seatReservations;
-
 }
