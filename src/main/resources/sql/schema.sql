@@ -51,7 +51,7 @@ ALTER TABLE branch
 
 CREATE TABLE IF NOT EXISTS hall
 (
-    hall_id   INT         NULL,
+    branch_id   INT         NULL,
     id          INT AUTO_INCREMENT
     PRIMARY KEY,
     total_seats INT         NULL,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS hall
 
 ALTER TABLE hall
     ADD CONSTRAINT FK_branch_id_hall
-        FOREIGN KEY (hall_id) REFERENCES hall (id);
+        FOREIGN KEY (branch_id) REFERENCES hall (id);
 
 CREATE TABLE IF NOT EXISTS seat
 (
