@@ -35,4 +35,25 @@ public class ScreeningEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "screening")
     private List<SeatReservationEntity> seatReservations;
+
+
+    public void addReservation(ReservationEntity reservation) {
+        this.reservations.add(reservation);
+        reservation.setScreening(this);
+    }
+
+    public void removeReservation(ReservationEntity reservation) {
+        this.reservations.remove(reservation);
+        reservation.setScreening(null);
+    }
+
+    public void addSeatReservation(SeatReservationEntity seatReservation) {
+        this.seatReservations.add(seatReservation);
+        seatReservation.setScreening(this);
+    }
+
+    public void removeSeatReservation(SeatReservationEntity seatReservation) {
+        this.seatReservations.remove(seatReservation);
+        seatReservation.setScreening(null);
+    }
 }

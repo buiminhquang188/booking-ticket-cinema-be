@@ -12,19 +12,17 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ScreeningDTO {
+public class ReservationDTO {
 
     private Integer id;
 
-    private LocalDateTime startTime;
+    private LocalDateTime timeReservation;
 
-    private LocalDateTime endTime;
+    private String status;
 
-    private HallDTO hall;
+    private ScreeningDTO screening;
 
-    private MovieDetailDTO movie;
-
-    private List<ReservationDTO> reservations;
+    private UserDTO user;
 
     private List<SeatReservationDTO> seatReservations;
 
