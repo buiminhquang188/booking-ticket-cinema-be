@@ -14,4 +14,6 @@ public class MovieDetailDTO {
 
     private String movieName;
 
+    private Integer time;
+
 }

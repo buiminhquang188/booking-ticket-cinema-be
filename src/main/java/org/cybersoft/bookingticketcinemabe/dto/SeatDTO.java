@@ -5,26 +5,27 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ScreeningDTO {
+public class SeatDTO {
 
     private Integer id;
 
-    private LocalDateTime startTime;
+    private Boolean isActive;
 
-    private LocalDateTime endTime;
+    private Integer seatColumn;
+
+    private String seatRow;
+
+    private Integer seatNumber;
+
+    private String seatCode;
 
     private HallDTO hall;
-
-    private MovieDetailDTO movie;
-
-    private List<ReservationDTO> reservations;
 
     private List<SeatReservationDTO> seatReservations;
 
