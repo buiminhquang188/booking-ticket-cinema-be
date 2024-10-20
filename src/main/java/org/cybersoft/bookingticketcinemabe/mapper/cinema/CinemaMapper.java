@@ -1,10 +1,11 @@
-package org.cybersoft.bookingticketcinemabe.mapper;
+package org.cybersoft.bookingticketcinemabe.mapper.cinema;
 
-import org.cybersoft.bookingticketcinemabe.dto.CinemaDTO;
-import org.cybersoft.bookingticketcinemabe.dto.CinemaDetailDTO;
-import org.cybersoft.bookingticketcinemabe.dto.CinemaDetailProvinceDTO;
+import org.cybersoft.bookingticketcinemabe.dto.cinema.CinemaDTO;
+import org.cybersoft.bookingticketcinemabe.dto.cinema.CinemaDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.cinema.CinemaDetailProvinceDTO;
 import org.cybersoft.bookingticketcinemabe.entity.CinemaEntity;
 import org.cybersoft.bookingticketcinemabe.entity.CinemaProvinceEntity;
+import org.cybersoft.bookingticketcinemabe.mapper.EntityMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

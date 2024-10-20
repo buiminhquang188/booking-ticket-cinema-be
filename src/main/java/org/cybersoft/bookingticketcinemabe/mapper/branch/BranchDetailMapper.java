@@ -1,6 +1,6 @@
-package org.cybersoft.bookingticketcinemabe.mapper;
+package org.cybersoft.bookingticketcinemabe.mapper.branch;
 
-import org.cybersoft.bookingticketcinemabe.dto.BranchDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.branch.BranchDetailDTO;
 import org.cybersoft.bookingticketcinemabe.entity.BranchEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,7 +10,7 @@ public interface BranchDetailMapper {
 
     @Mapping(source = "district.name", target = "district")
     BranchDetailDTO toDTO(BranchEntity entity);
-    
+
     @Mapping(target = "district.name", source = "district")
     BranchEntity toEntity(BranchDetailDTO dto);
 }

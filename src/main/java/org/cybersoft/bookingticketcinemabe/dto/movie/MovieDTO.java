@@ -1,9 +1,11 @@
-package org.cybersoft.bookingticketcinemabe.dto;
+package org.cybersoft.bookingticketcinemabe.dto.movie;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.cybersoft.bookingticketcinemabe.dto.branch.BranchMinimalDTO;
+import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +29,7 @@ public class MovieDTO {
 
     private String trailer;
 
-    private List<BranchDetailDTO> branches;
+    private List<BranchMinimalDTO> branches;
 
     private List<ScreeningDTO> screenings;
 }

@@ -2,9 +2,9 @@ package org.cybersoft.bookingticketcinemabe.controller.impl;
 
 import lombok.AllArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.HallController;
-import org.cybersoft.bookingticketcinemabe.dto.HallDetailDTO;
-import org.cybersoft.bookingticketcinemabe.dto.HallDetailSeatLayoutDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
+import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailSeatLayoutDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.hall.HallCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.hall.HallCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.hall.HallUpdateRequest;

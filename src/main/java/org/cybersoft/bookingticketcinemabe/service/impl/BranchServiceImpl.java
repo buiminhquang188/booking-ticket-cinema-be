@@ -2,14 +2,15 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.cybersoft.bookingticketcinemabe.dto.BranchDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
+import org.cybersoft.bookingticketcinemabe.dto.branch.BranchDTO;
 import org.cybersoft.bookingticketcinemabe.entity.BranchEntity;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
 import org.cybersoft.bookingticketcinemabe.entity.MovieEntity;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
-import org.cybersoft.bookingticketcinemabe.mapper.BranchMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.branch.BranchDetailMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.branch.BranchMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.BranchCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.BranchUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.repository.*;
@@ -34,11 +35,12 @@ public class BranchServiceImpl implements BranchService {
     private final MovieRepository movieRepository;
     private final HallRepository hallRepository;
     private final BranchMapper branchMapper;
+    private final BranchDetailMapper branchDetailMapper;
 
     @Override
     public PageableDTO<?> getBranches(int pageNo, int pageLimit, String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
-        Page<?> page = this.branchRepository.findAll(pageable).map(branchMapper::toDTO);
+        Page<?> page = this.branchRepository.findAll(pageable).map(branchDetailMapper::toDTO);
         return new PageableMapper<>().toDTO(page);
     }
 
