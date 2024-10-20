@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request.anyRequest()
                         .permitAll())
+                .cors(cors -> cors.configurationSource(corsSource()))
                 .build();
     }
 }
