@@ -2,14 +2,14 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.cybersoft.bookingticketcinemabe.dto.CinemaDetailDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
+import org.cybersoft.bookingticketcinemabe.dto.cinema.CinemaDetailDTO;
 import org.cybersoft.bookingticketcinemabe.entity.*;
 import org.cybersoft.bookingticketcinemabe.entity.key.IdCinemaProvince;
 import org.cybersoft.bookingticketcinemabe.exception.runtime.CinemaNotFoundException;
-import org.cybersoft.bookingticketcinemabe.mapper.CinemaMapper;
-import org.cybersoft.bookingticketcinemabe.mapper.CinemaProvinceMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.cinema.CinemaMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.cinema.CinemaProvinceMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.CinemaUpdateRequest;

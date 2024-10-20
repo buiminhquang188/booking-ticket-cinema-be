@@ -2,8 +2,8 @@ package org.cybersoft.bookingticketcinemabe.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.BranchController;
-import org.cybersoft.bookingticketcinemabe.dto.BranchDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
+import org.cybersoft.bookingticketcinemabe.dto.branch.BranchDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.BranchCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.BranchUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;

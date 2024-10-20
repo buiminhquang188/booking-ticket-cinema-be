@@ -1,4 +1,4 @@
-package org.cybersoft.bookingticketcinemabe.dto;
+package org.cybersoft.bookingticketcinemabe.dto.branch;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MovieDetailDTO {
+public class BranchDetailDTO {
     private Integer id;
 
-    private String movieName;
+    private String name;
 
-    private Integer time;
+    private String address;
+
+    private String district;
 
 }

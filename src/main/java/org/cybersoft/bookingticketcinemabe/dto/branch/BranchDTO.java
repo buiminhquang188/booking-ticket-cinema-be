@@ -1,9 +1,13 @@
-package org.cybersoft.bookingticketcinemabe.dto;
+package org.cybersoft.bookingticketcinemabe.dto.branch;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.cybersoft.bookingticketcinemabe.dto.DistrictDTO;
+import org.cybersoft.bookingticketcinemabe.dto.cinema.CinemaDetailBranchDTO;
+import org.cybersoft.bookingticketcinemabe.dto.hall.HallDTO;
+import org.cybersoft.bookingticketcinemabe.dto.movie.MovieDetailDTO;
 
 import java.math.BigDecimal;
 import java.util.List;

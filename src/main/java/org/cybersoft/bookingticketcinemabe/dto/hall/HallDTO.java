@@ -1,4 +1,4 @@
-package org.cybersoft.bookingticketcinemabe.dto;
+package org.cybersoft.bookingticketcinemabe.dto.hall;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

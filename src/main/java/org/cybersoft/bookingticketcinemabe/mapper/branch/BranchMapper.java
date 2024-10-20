@@ -1,7 +1,11 @@
-package org.cybersoft.bookingticketcinemabe.mapper;
+package org.cybersoft.bookingticketcinemabe.mapper.branch;
 
-import org.cybersoft.bookingticketcinemabe.dto.BranchDTO;
+import org.cybersoft.bookingticketcinemabe.dto.branch.BranchDTO;
 import org.cybersoft.bookingticketcinemabe.entity.BranchEntity;
+import org.cybersoft.bookingticketcinemabe.mapper.DistrictMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.EntityMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.HallMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.movie.MovieDetailMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.BranchCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.BranchUpdateRequest;
 import org.mapstruct.BeanMapping;

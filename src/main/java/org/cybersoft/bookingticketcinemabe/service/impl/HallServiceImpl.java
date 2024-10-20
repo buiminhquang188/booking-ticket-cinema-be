@@ -2,9 +2,9 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.cybersoft.bookingticketcinemabe.dto.HallDetailDTO;
-import org.cybersoft.bookingticketcinemabe.dto.HallDetailSeatLayoutDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
+import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailSeatLayoutDTO;
 import org.cybersoft.bookingticketcinemabe.entity.BranchEntity;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity_;
@@ -147,7 +147,7 @@ public class HallServiceImpl implements HallService {
             HallDetailSeatLayoutDTO seatLayout = this.hallMapper.toHallDetailSeatLayoutDto(seat);
 
             int seatRow = seatLayout.getSeatRow()
-                                  .charAt(0) - 'A';
+                    .charAt(0) - 'A';
             int seatColumn = seatLayout.getSeatColumn() - 1;
 
             if (seatColumn == 0) {
@@ -194,9 +194,9 @@ public class HallServiceImpl implements HallService {
 
     private boolean isMatch(SeatEntity seat, HallUpdateSeat requestSeat) {
         return seat.getSeatRow()
-                       .equals(requestSeat.seatRow()) && seat.getSeatColumn()
-                       .equals(requestSeat.seatColumn()) && seat.getSeatNumber()
-                       .equals(requestSeat.seatNumber());
+                .equals(requestSeat.seatRow()) && seat.getSeatColumn()
+                .equals(requestSeat.seatColumn()) && seat.getSeatNumber()
+                .equals(requestSeat.seatNumber());
     }
 
     private SeatEntity enrichSeats(HallEntity hall, List<SeatEntity> seats, HallUpdateSeat requestSeat) {

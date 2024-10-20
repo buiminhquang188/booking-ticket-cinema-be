@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningDTO;
 import org.cybersoft.bookingticketcinemabe.entity.SeatEntity;
 
 @Data

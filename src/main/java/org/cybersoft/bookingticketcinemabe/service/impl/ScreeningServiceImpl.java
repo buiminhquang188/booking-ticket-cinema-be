@@ -3,7 +3,7 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
-import org.cybersoft.bookingticketcinemabe.dto.ScreeningDTO;
+import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningDTO;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
 import org.cybersoft.bookingticketcinemabe.entity.ReservationEntity;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity;
