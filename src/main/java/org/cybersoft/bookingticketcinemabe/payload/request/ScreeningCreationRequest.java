@@ -5,7 +5,6 @@ import java.util.List;
 
 public record ScreeningCreationRequest(
         LocalDateTime startTime,
-        Integer hallId,
         List<Integer> hallIds,
         Integer movieId
 ) {
