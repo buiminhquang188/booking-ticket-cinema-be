@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class Pagination {
     private Integer pageNo = 1;
-    private Integer pageSize = 10;
+    private Integer pageLimit = 10;
     private String sort = "id";
     private Order order = Order.ASC;
     private LocalDateTime createdAtFrom;
