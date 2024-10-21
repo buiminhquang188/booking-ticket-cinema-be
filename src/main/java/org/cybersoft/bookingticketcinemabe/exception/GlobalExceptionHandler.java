@@ -60,7 +60,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {
             CinemaNotFoundException.class,
-            NotFoundColumnException.class
+            NotFoundColumnException.class,
+            org.cybersoft.bookingticketcinemabe.exception.runtime.NotFoundException.class
     })
     public ResponseEntity<Object> handleNotFoundException(RuntimeException runtimeException, HttpServletRequest request) {
         ErrorResponse<Object> errorResponse = this.createExceptionResponse(

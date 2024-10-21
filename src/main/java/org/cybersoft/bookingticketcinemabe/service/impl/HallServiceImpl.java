@@ -43,7 +43,7 @@ public class HallServiceImpl implements HallService {
     public PageableDTO<?> getHalls(HallCriteria hallCriteria) {
         Pageable pageable = Pageable.builder()
                 .pageNumber(hallCriteria.getPageNo())
-                .pageSize(hallCriteria.getPageSize())
+                .pageSize(hallCriteria.getPageLimit())
                 .sortDefinition(Pageable.sort(hallCriteria.getSort(), hallCriteria.getOrder()))
                 .build();
 
@@ -147,7 +147,7 @@ public class HallServiceImpl implements HallService {
             HallDetailSeatLayoutDTO seatLayout = this.hallMapper.toHallDetailSeatLayoutDto(seat);
 
             int seatRow = seatLayout.getSeatRow()
-                    .charAt(0) - 'A';
+                                  .charAt(0) - 'A';
             int seatColumn = seatLayout.getSeatColumn() - 1;
 
             if (seatColumn == 0) {
@@ -194,9 +194,9 @@ public class HallServiceImpl implements HallService {
 
     private boolean isMatch(SeatEntity seat, HallUpdateSeat requestSeat) {
         return seat.getSeatRow()
-                .equals(requestSeat.seatRow()) && seat.getSeatColumn()
-                .equals(requestSeat.seatColumn()) && seat.getSeatNumber()
-                .equals(requestSeat.seatNumber());
+                       .equals(requestSeat.seatRow()) && seat.getSeatColumn()
+                       .equals(requestSeat.seatColumn()) && seat.getSeatNumber()
+                       .equals(requestSeat.seatNumber());
     }
 
     private SeatEntity enrichSeats(HallEntity hall, List<SeatEntity> seats, HallUpdateSeat requestSeat) {
