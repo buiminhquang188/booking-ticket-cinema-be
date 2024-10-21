@@ -9,6 +9,5 @@ public class SeatDetailDTO {
     private Integer seatColumn;
     private Integer seatNumber;
     private String seatCode;
-    private Boolean isActive;
     private SeatHallDTO hall;
 }

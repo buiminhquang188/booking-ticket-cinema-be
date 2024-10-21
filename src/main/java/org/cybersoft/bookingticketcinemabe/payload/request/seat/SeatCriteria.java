@@ -8,8 +8,6 @@ import org.cybersoft.bookingticketcinemabe.payload.request.pagination.Pagination
 @Data
 public class SeatCriteria extends Pagination {
     private String seatRow;
-    private String seatColumn;
+    private Integer seatColumn;
     private String seatType;
-    private String isActive;
-    private String hallId;
 }
