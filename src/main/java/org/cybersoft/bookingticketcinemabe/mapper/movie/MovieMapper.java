@@ -4,7 +4,7 @@ import org.cybersoft.bookingticketcinemabe.dto.branch.BranchMinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.movie.MovieDTO;
 import org.cybersoft.bookingticketcinemabe.entity.MovieEntity;
 import org.cybersoft.bookingticketcinemabe.mapper.EntityMapper;
-import org.cybersoft.bookingticketcinemabe.mapper.ScreeningMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.screening.ScreeningMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.MovieCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.MovieUpdateRequest;
 import org.mapstruct.BeanMapping;
