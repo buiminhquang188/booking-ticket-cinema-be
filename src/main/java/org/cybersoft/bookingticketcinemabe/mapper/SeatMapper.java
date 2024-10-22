@@ -1,8 +1,8 @@
 package org.cybersoft.bookingticketcinemabe.mapper;
 
-import org.cybersoft.bookingticketcinemabe.dto.SeatDTO;
-import org.cybersoft.bookingticketcinemabe.dto.SeatDetailDTO;
-import org.cybersoft.bookingticketcinemabe.dto.SeatHallDTO;
+import org.cybersoft.bookingticketcinemabe.dto.seat.SeatDTO;
+import org.cybersoft.bookingticketcinemabe.dto.seat.SeatDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.seat.SeatHallDTO;
 import org.cybersoft.bookingticketcinemabe.entity.SeatEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
