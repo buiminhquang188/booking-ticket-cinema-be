@@ -1,9 +1,10 @@
-package org.cybersoft.bookingticketcinemabe.dto;
+package org.cybersoft.bookingticketcinemabe.dto.seat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.cybersoft.bookingticketcinemabe.dto.SeatReservationDTO;
 import org.cybersoft.bookingticketcinemabe.dto.hall.HallDTO;
 
 import java.util.List;
