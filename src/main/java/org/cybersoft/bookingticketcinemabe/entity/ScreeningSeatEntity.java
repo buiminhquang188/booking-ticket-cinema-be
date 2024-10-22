@@ -3,13 +3,13 @@ package org.cybersoft.bookingticketcinemabe.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "seat")
+@Entity(name = "screening_seat")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SeatEntity extends BaseEntity {
+public class ScreeningSeatEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -33,10 +33,13 @@ public class SeatEntity extends BaseEntity {
     private Double price;
 
     @ManyToOne
-    @JoinColumn(name = "hall_id")
-    private HallEntity hall;
-
-    @ManyToOne
     @JoinColumn(name = "seat_type_id")
     private SeatTypeEntity seatType;
+
+    @ManyToOne
+    @JoinColumn(name = "screening_id")
+    private ScreeningEntity screening;
+
+    @OneToOne(mappedBy = "screeningSeat")
+    private SeatReservationEntity seatReservation;
 }

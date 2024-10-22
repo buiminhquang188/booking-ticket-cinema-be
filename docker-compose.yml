@@ -6,16 +6,7 @@ services:
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./src/main/resources/sql/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
-      - ./src/main/resources/sql/provinces.sql:/docker-entrypoint-initdb.d/2-provinces.sql
-      - ./src/main/resources/sql/districts.sql:/docker-entrypoint-initdb.d/3-districts.sql
-      - ./src/main/resources/sql/cinema.sql:/docker-entrypoint-initdb.d/4-cinema.sql
-      - ./src/main/resources/sql/cinema-province.sql:/docker-entrypoint-initdb.d/5-cinema-province.sql
-      - ./src/main/resources/sql/branch.sql:/docker-entrypoint-initdb.d/6-branch.sql
-      - ./src/main/resources/sql/user.sql:/docker-entrypoint-initdb.d/7-user.sql
-      - ./src/main/resources/sql/movie.sql:/docker-entrypoint-initdb.d/8-movie.sql
-      - ./src/main/resources/sql/branch_movie.sql:/docker-entrypoint-initdb.d/9-branch_movie.sql
-      - ./src/main/resources/sql/hall.sql:/docker-entrypoint-initdb.d/10-hall.sql
-      - ./src/main/resources/sql/seat.sql:/docker-entrypoint-initdb.d/11-seat.sql
+      - ./src/main/resources/sql/init-data.sql:/docker-entrypoint-initdb.d/2-init-data.sql
     env_file:
       - .env.properties
     ports:
