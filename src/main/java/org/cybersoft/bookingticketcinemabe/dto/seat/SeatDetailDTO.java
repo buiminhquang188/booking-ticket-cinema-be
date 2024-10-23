@@ -1,4 +1,4 @@
-package org.cybersoft.bookingticketcinemabe.dto;
+package org.cybersoft.bookingticketcinemabe.dto.seat;
 
 import lombok.Data;
 

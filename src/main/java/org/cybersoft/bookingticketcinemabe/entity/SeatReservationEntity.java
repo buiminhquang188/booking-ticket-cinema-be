@@ -8,20 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SeatReservationEntity extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "is_reserved")
-    private boolean isReserved;
+    private Integer id;
 
     @Column(name = "price")
-    private double price;
-
-    @ManyToOne
-    @JoinColumn(name = "seat_id")
-    private SeatEntity seat;
+    private Double price;
 
     @ManyToOne
     @JoinColumn(name = "reservation_id")
@@ -31,4 +23,7 @@ public class SeatReservationEntity extends BaseEntity {
     @JoinColumn(name = "screening_id")
     private ScreeningEntity screening;
 
+    @OneToOne
+    @JoinColumn(name = "screening_seat_id", referencedColumnName = "id")
+    private ScreeningSeatEntity screeningSeat;
 }

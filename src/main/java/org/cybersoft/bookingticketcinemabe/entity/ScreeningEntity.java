@@ -36,6 +36,8 @@ public class ScreeningEntity extends BaseEntity {
     @OneToMany(mappedBy = "screening")
     private List<SeatReservationEntity> seatReservations;
 
+    @OneToMany(mappedBy = "screening")
+    private List<ScreeningSeatEntity> screeningSeats;
 
     public void addReservation(ReservationEntity reservation) {
         this.reservations.add(reservation);

@@ -3,8 +3,9 @@ package org.cybersoft.bookingticketcinemabe.controller.impl;
 import lombok.AllArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.SeatController;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
-import org.cybersoft.bookingticketcinemabe.dto.SeatDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.seat.SeatDetailDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.seat.SeatCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.seat.SeatUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.SeatService;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,19 @@ public class SeatControllerImpl implements SeatController {
                         .statusCode(HttpStatus.OK.value())
                         .message(HttpStatus.OK.getReasonPhrase())
                         .data(seat)
+                        .build()
+        );
+    }
+
+    @Override
+    public ResponseEntity<BaseResponse<SeatDetailDTO>> updateSeat(Integer id, SeatUpdateRequest seatUpdateRequest) {
+        SeatDetailDTO seatDetailDTO = this.seatService.updateSeat(id, seatUpdateRequest);
+
+        return ResponseEntity.ok(
+                BaseResponse.<SeatDetailDTO>builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(seatDetailDTO)
                         .build()
         );
     }

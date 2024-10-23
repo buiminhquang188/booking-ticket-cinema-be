@@ -1,4 +1,5 @@
 SET NAMES utf8mb4;
+
 INSERT INTO capstone.branch_movie (branch_id, movie_id)
 VALUES (1, 1),
        (1, 2),

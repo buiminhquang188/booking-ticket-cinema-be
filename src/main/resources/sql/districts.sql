@@ -1,7 +1,7 @@
 SET NAMES utf8mb4;
 
 INSERT INTO capstone.districts (id, created_at, updated_at, code_name, full_name, full_name_en, name, name_en,
-                                        province_id)
+                                province_id)
 VALUES (1, '2023-03-17 06:09:41.526855', '2023-03-17 06:09:41.526855', 'ba_dinh', 'Quận Ba Đình', 'Ba Dinh District',
         'Ba Đình', 'Ba Dinh', 1),
        (2, '2023-03-17 06:09:41.526855', '2023-03-17 06:09:41.526855', 'hoan_kiem', 'Quận Hoàn Kiếm',
