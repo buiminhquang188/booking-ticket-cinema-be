@@ -1,8 +1,7 @@
 package org.cybersoft.bookingticketcinemabe.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,6 +9,9 @@ import java.util.List;
 @Entity(name = "reservation")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReservationEntity extends BaseEntity {
 
     @Id
@@ -21,6 +23,9 @@ public class ReservationEntity extends BaseEntity {
 
     @Column(name = "status")
     private String status;
+
+    @Column(name = "total_price")
+    private Double totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "screening_id")
