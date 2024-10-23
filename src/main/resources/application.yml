@@ -17,6 +17,10 @@ spring:
       base-path: /api
       default-page-size: 10
       default-media-type: application/json
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 10MB
 management:
   endpoints:
     web:
@@ -25,3 +29,10 @@ management:
 jwt:
   key:
   expirationMs: 5 * 60 * 1000
+cloudflare:
+  r2:
+    access-key: 8a5d7dbabcc13e17d6bc041aa0a0cc6d
+    secret-key: 67515dae407ce8e4132274b6973da166dce9d50efba0d9e50ef636157633d63f
+    region: auto
+    endpoint: https://7ec0bee3adfe47842c4c4edaeaf4c560.r2.cloudflarestorage.com
+    bucket: cybersoft-capstone
