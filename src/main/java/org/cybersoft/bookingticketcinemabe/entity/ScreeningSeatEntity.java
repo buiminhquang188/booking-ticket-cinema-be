@@ -17,6 +17,9 @@ public class ScreeningSeatEntity extends BaseEntity {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "is_booked")
+    private Boolean isBooked;
+
     @Column(name = "seat_column")
     private Integer seatColumn;
 
