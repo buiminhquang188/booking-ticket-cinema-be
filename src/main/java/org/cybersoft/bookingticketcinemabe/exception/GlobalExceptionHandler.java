@@ -75,7 +75,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-
     @ExceptionHandler(value = {
             NotValidException.class
     })
@@ -93,6 +92,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {
+            org.cybersoft.bookingticketcinemabe.exception.runtime.BadRequestException.class
+    })
+    public ResponseEntity<Object> handleBadRequestException(RuntimeException runtimeException, HttpServletRequest request) {
+        ErrorResponse<Object> errorResponse = this.createExceptionResponse(
+                runtimeException,
+                request,
+                HttpStatus.BAD_REQUEST,
+                runtimeException.getMessage(),
+                runtimeException.getMessage()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     /**
      * Help generate error exception response
      *
@@ -104,7 +118,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      *         Provide the HttpStatus enum code
      * @return ErrorResponse
      */
-    private ErrorResponse<Object> createExceptionResponse(RuntimeException runtimeException, HttpServletRequest request, HttpStatus httpStatus, String message, String details) {
+    private ErrorResponse<Object> createExceptionResponse(RuntimeException runtimeException, HttpServletRequest request, HttpStatus httpStatus, String message, Object details) {
         return ErrorResponse.builder()
                 .status(Status.ERROR.toString()
                         .toLowerCase())
