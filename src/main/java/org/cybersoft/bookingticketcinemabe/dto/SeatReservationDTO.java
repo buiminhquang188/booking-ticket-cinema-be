@@ -12,17 +12,9 @@ import org.cybersoft.bookingticketcinemabe.entity.SeatEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SeatReservationDTO {
-
-    private int id;
-
-    private boolean isReserved;
-
-    private double price;
-
+    private Integer id;
+    private Double price;
     private SeatEntity seat;
-
     private ReservationDTO reservation;
-
     private ScreeningDTO screening;
-
 }
