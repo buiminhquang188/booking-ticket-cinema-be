@@ -196,9 +196,6 @@ CREATE TABLE user
     CONSTRAINT pk_user PRIMARY KEY (id)
 );
 
-ALTER TABLE seat_reservation
-    ADD CONSTRAINT uc_seat_reservation_screening_seat UNIQUE (screening_seat_id);
-
 ALTER TABLE branch
     ADD CONSTRAINT FK_BRANCH_ON_CINEMA FOREIGN KEY (cinema_id) REFERENCES cinema (id);
 
