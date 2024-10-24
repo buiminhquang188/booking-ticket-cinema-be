@@ -1,6 +1,7 @@
 package org.cybersoft.bookingticketcinemabe.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.cybersoft.bookingticketcinemabe.dto.ReservationDTO;
 import org.cybersoft.bookingticketcinemabe.entity.ReservationEntity;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningSeatEntity;
@@ -35,7 +36,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public Object bookingTicket(Integer screeningId, ReservationBookingRequest reservationBookingRequest) {
+    public ReservationDTO bookingTicket(Integer screeningId, ReservationBookingRequest reservationBookingRequest) {
         ScreeningEntity screening = this.getScreeningById(screeningId);
         List<ScreeningSeatEntity> seats = this.getSeatsByIds(reservationBookingRequest.seatIds());
 
@@ -74,6 +75,28 @@ public class ReservationServiceImpl implements ReservationService {
         this.seatReservationRepository.saveAll(seatReservations);
 
         return this.reservationMapper.toDTO(savedReservation);
+    }
+
+    @Override
+    @Transactional
+    public ReservationDTO cancelBooking(Integer screeningId, Integer reservationId) {
+        ReservationEntity reservation = this.getReservationById(reservationId);
+
+        if (reservation.getStatus()
+                .equals("CANCELLED")) {
+            throw new NotFoundException("Reservation is already cancelled");
+        }
+
+        List<SeatReservationEntity> seatReservations = reservation.getSeatReservations();
+        List<ScreeningSeatEntity> screeningSeats = seatReservations.stream()
+                .map(SeatReservationEntity::getScreeningSeat)
+                .peek(seat -> seat.setIsBooked(false))
+                .collect(Collectors.toList());
+        this.screeningSeatRepository.saveAll(screeningSeats);
+
+        reservation.setStatus("CANCELLED");
+
+        return this.reservationMapper.toDTO(reservation);
     }
 
     private ScreeningEntity getScreeningById(Integer screeningId) {
@@ -123,5 +146,10 @@ public class ReservationServiceImpl implements ReservationService {
                 .screeningSeat(seat)
                 .reservation(savedReservation)
                 .build();
+    }
+
+    private ReservationEntity getReservationById(Integer reservationId) {
+        return this.reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new NotFoundException("Reservation not found"));
     }
 }

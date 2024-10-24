@@ -3,6 +3,8 @@ package org.cybersoft.bookingticketcinemabe.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity(name = "screening_seat")
 @Getter
 @Setter
@@ -43,6 +45,6 @@ public class ScreeningSeatEntity extends BaseEntity {
     @JoinColumn(name = "screening_id")
     private ScreeningEntity screening;
 
-    @OneToOne(mappedBy = "screeningSeat")
-    private SeatReservationEntity seatReservation;
+    @OneToMany(mappedBy = "screeningSeat")
+    private List<SeatReservationEntity> seatReservations;
 }

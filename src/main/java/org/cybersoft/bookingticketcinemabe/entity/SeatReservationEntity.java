@@ -25,7 +25,7 @@ public class SeatReservationEntity extends BaseEntity {
     @JoinColumn(name = "screening_id")
     private ScreeningEntity screening;
 
-    @OneToOne
-    @JoinColumn(name = "screening_seat_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "screening_seat_id")
     private ScreeningSeatEntity screeningSeat;
 }
