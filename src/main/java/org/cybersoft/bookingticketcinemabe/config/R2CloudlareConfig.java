@@ -32,11 +32,15 @@ public class R2CloudlareConfig {
 
     @Bean
     public S3Client s3Client() {
+        AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secrectKey);
+        StaticCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(credentials);
+        Region regionS3 = Region.of(region);
+        S3Configuration configuration = S3Configuration.builder().pathStyleAccessEnabled(true).build();
+
         return S3Client.builder()
-                .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create(accessKey, secrectKey)))
-                .region(Region.of(region))
-                .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
+                .credentialsProvider(credentialsProvider)
+                .region(regionS3)
+                .serviceConfiguration(configuration)
                 .endpointOverride(URI.create(endpoint))
                 .build();
     }

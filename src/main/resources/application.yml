@@ -36,3 +36,4 @@ cloudflare:
     region: auto
     endpoint: https://7ec0bee3adfe47842c4c4edaeaf4c560.r2.cloudflarestorage.com
     bucket: cybersoft-capstone
+    public-path: https://pub-0d5a54cec6684adea7b4dbadd976a403.r2.dev/

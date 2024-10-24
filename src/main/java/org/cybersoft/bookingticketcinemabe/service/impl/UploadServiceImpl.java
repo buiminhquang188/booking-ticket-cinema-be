@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.config.R2CloudlareConfig;
 import org.cybersoft.bookingticketcinemabe.exception.BadRequestException;
 import org.cybersoft.bookingticketcinemabe.service.UploadService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -20,6 +21,8 @@ public class UploadServiceImpl implements UploadService {
 
     private final S3Client s3Client;
     private final R2CloudlareConfig r2CloudlareConfig;
+    @Value("${cloudflare.r2.public-path}")
+    private String publicPath;
 
 
     @Override
@@ -36,7 +39,7 @@ public class UploadServiceImpl implements UploadService {
 
             s3Client.putObject(request, RequestBody.fromBytes(image.getBytes()));
 
-            return String.format("https://pub-0d5a54cec6684adea7b4dbadd976a403.r2.dev/%s", fileName);
+            return String.format(publicPath + fileName);
         } catch (S3Exception e) {
             throw new BadRequestException("Failed to upload image to Cloudflare");
         } catch (IOException e) {
