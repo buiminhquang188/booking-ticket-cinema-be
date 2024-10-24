@@ -17,6 +17,8 @@ services:
       - ./src/main/resources/sql/hall.sql:/docker-entrypoint-initdb.d/10-hall.sql
       - ./src/main/resources/sql/seat-type.sql:/docker-entrypoint-initdb.d/11-seat-type.sql
       - ./src/main/resources/sql/seat.sql:/docker-entrypoint-initdb.d/12-seat.sql
+      - ./src/main/resources/sql/screening.sql:/docker-entrypoint-initdb.d/13-screening.sql
+      - ./src/main/resources/sql/screening-seat.sql:/docker-entrypoint-initdb.d/14-screening-seat.sql
     env_file:
       - .env.properties
     ports:
