@@ -49,6 +49,16 @@ public class ScreeningEntity extends BaseEntity {
         reservation.setScreening(null);
     }
 
+    public void addScreeningSeat(ScreeningSeatEntity screeningSeat) {
+        this.screeningSeats.add(screeningSeat);
+        screeningSeat.setScreening(this);
+    }
+
+    public void removeScreeningSeat(ScreeningSeatEntity screeningSeat) {
+        this.screeningSeats.remove(screeningSeat);
+        screeningSeat.setScreening(null);
+    }
+
     public void addSeatReservation(SeatReservationEntity seatReservation) {
         this.seatReservations.add(seatReservation);
         seatReservation.setScreening(this);
