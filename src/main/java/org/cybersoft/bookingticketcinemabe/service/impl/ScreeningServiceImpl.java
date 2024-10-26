@@ -11,9 +11,9 @@ import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity;
 import org.cybersoft.bookingticketcinemabe.entity.SeatReservationEntity;
 import org.cybersoft.bookingticketcinemabe.exception.BadRequestException;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
+import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.screening.ScreeningMapper;
-import org.cybersoft.bookingticketcinemabe.mapper.screening.ScreeningMinimalMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.ScreeningCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.ScreeningUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.repository.*;
@@ -38,7 +38,7 @@ public class ScreeningServiceImpl implements ScreeningService {
     private final ReservationRepository reservationRepository;
     private final SeatReservationRepository seatReservationRepository;
     private final ScreeningMapper screeningMapper;
-    private final ScreeningMinimalMapper screeningMinimalMapper;
+    private final MinimalMapper minimalMapper;
 
     @Override
     public PageableDTO<?> getScreenings(int pageNo, int pageLimit, String sortBy) {
@@ -97,7 +97,7 @@ public class ScreeningServiceImpl implements ScreeningService {
         }
         screeningRepository.saveAll(screenings);
 
-        return screeningMinimalMapper.toDTO(screening);
+        return minimalMapper.toScreeningMinimalDTO(screening);
     }
 
     @Transactional
