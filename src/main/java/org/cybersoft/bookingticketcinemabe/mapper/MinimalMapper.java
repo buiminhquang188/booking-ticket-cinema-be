@@ -7,14 +7,16 @@ import org.cybersoft.bookingticketcinemabe.entity.BranchEntity;
 import org.cybersoft.bookingticketcinemabe.entity.MovieEntity;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface MinimalMapper {
 
 
-    ScreeningMinimalDTO toScreeningMinimalDTO(ScreeningEntity screeningEntity);
+    @Mapping(target = "totalSeat", expression = "java(screening.getScreeningSeats().size())")
+    ScreeningMinimalDTO toScreeningMinimalDTO(ScreeningEntity screening);
 
-    BranchMinimalDTO toBranchMinimalDTO(BranchEntity branchEntity);
+    BranchMinimalDTO toBranchMinimalDTO(BranchEntity branch);
 
-    MovieDetailDTO toMovieDetailDTO(MovieEntity movieEntity);
+    MovieDetailDTO toMovieDetailDTO(MovieEntity movie);
 }

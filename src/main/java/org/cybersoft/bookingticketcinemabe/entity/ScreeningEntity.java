@@ -22,6 +22,9 @@ public class ScreeningEntity extends BaseEntity {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
+    @Column(name = "status")
+    private String status;
+
     @ManyToOne
     @JoinColumn(name = "hall_id")
     private HallEntity hall;

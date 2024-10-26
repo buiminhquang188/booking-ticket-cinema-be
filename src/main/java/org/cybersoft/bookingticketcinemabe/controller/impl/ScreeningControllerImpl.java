@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.ScreeningController;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningDTO;
-import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningMinimalDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.ScreeningCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.ScreeningUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
@@ -43,7 +42,7 @@ public class ScreeningControllerImpl implements ScreeningController {
 
     @Override
     public ResponseEntity<?> createScreening(ScreeningCreationRequest request) {
-        ScreeningMinimalDTO screening = screeningService.createScreening(request);
+        ScreeningDTO screening = screeningService.createScreening(request);
         return ResponseEntity.ok(
                 BaseResponse.builder()
                         .statusCode(HttpStatus.CREATED.value())

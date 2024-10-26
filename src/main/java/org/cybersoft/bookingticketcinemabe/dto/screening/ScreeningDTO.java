@@ -5,8 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.ReservationDTO;
+import org.cybersoft.bookingticketcinemabe.dto.ScreeningSeatDTO;
 import org.cybersoft.bookingticketcinemabe.dto.SeatReservationDTO;
-import org.cybersoft.bookingticketcinemabe.dto.hall.HallDTO;
+import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailDTO;
 import org.cybersoft.bookingticketcinemabe.dto.movie.MovieDetailDTO;
 
 import java.time.LocalDateTime;
@@ -24,9 +25,11 @@ public class ScreeningDTO {
 
     private LocalDateTime endTime;
 
-    private HallDTO hall;
+    private HallDetailDTO hall;
 
     private MovieDetailDTO movie;
+
+    private List<ScreeningSeatDTO> screeningSeats;
 
     private List<ReservationDTO> reservations;
 
