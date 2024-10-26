@@ -1,7 +1,7 @@
 package org.cybersoft.bookingticketcinemabe.service;
 
-import org.cybersoft.bookingticketcinemabe.dto.MovieDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
+import org.cybersoft.bookingticketcinemabe.dto.movie.MovieDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.MovieCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.MovieUpdateRequest;
 

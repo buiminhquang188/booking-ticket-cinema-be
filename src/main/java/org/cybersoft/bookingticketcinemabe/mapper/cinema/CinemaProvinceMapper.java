@@ -1,4 +1,4 @@
-package org.cybersoft.bookingticketcinemabe.mapper;
+package org.cybersoft.bookingticketcinemabe.mapper.cinema;
 
 import org.cybersoft.bookingticketcinemabe.entity.CinemaEntity;
 import org.cybersoft.bookingticketcinemabe.entity.CinemaProvinceEntity;
