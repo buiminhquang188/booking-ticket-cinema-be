@@ -4,15 +4,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningDTO;
-import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningMinimalDTO;
-import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
-import org.cybersoft.bookingticketcinemabe.entity.ReservationEntity;
-import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity;
-import org.cybersoft.bookingticketcinemabe.entity.SeatReservationEntity;
+import org.cybersoft.bookingticketcinemabe.entity.*;
 import org.cybersoft.bookingticketcinemabe.exception.BadRequestException;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.SeatMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.screening.ScreeningMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.ScreeningCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.ScreeningUpdateRequest;
@@ -28,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,13 +35,17 @@ public class ScreeningServiceImpl implements ScreeningService {
     private final MovieRepository movieRepository;
     private final ReservationRepository reservationRepository;
     private final SeatReservationRepository seatReservationRepository;
+    private final ScreeningSeatRepository screeningSeatRepository;
+
+
     private final ScreeningMapper screeningMapper;
     private final MinimalMapper minimalMapper;
+    private final SeatMapper seatMapper;
 
     @Override
     public PageableDTO<?> getScreenings(int pageNo, int pageLimit, String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
-        Page<?> page = this.screeningRepository.findAll(pageable).map(screeningMapper::toDTO);
+        Page<?> page = this.screeningRepository.findAll(pageable).map(minimalMapper::toScreeningMinimalDTO);
         return new PageableMapper<>().toDTO(page);
     }
 
@@ -56,9 +58,8 @@ public class ScreeningServiceImpl implements ScreeningService {
 
     @Transactional
     @Override
-    public ScreeningMinimalDTO createScreening(ScreeningCreationRequest request) {
+    public ScreeningDTO createScreening(ScreeningCreationRequest request) {
         ScreeningEntity screening = screeningMapper.toEntity(request);
-        List<ScreeningEntity> screenings = new ArrayList<>();
 
         if (request.movieId() != null) {
             screening.setMovie(movieRepository.findById(request.movieId())
@@ -66,38 +67,53 @@ public class ScreeningServiceImpl implements ScreeningService {
             if (screening.getStartTime() != null)
                 screening.setEndTime(screening.getStartTime().plusMinutes(screening.getMovie().getTime()));
         }
-        if (request.hallIds() != null && !request.hallIds().isEmpty() && !request.hallIds().contains(null)) {
-            List<HallEntity> hallEntityList = request.hallIds().stream().map(hallId -> {
-                return hallRepository.findById(hallId)
-                        .orElseThrow(() -> new NotFoundException("Not found hall with id: " + hallId));
-            }).toList();
+        if (request.hallId() != null) {
+            HallEntity hall = hallRepository.findById(request.hallId())
+                    .orElseThrow(() -> new NotFoundException("Not found hall with id: " + request.hallId()));
 
-            hallEntityList.forEach(hall -> {
-                LocalDateTime startTime = screening.getStartTime();
-                LocalDateTime endTime = screening.getEndTime();
-                List<ScreeningEntity> overlapTimeScreenings = screeningRepository.findScreeningOverlapTimerInHall(startTime, endTime, hall.getId());
-                if (!overlapTimeScreenings.isEmpty()) {
-                    StringBuilder messageResponse = new StringBuilder("Hall " + hall.getName() + " has overlapping screenings with id(s): ");
+            if (hall.getSeats() == null && hall.getSeats().isEmpty() && hall.getSeats().contains(null))
+                throw new NotFoundException("Not found seats at hall with id: " + hall.getId());
 
-                    overlapTimeScreenings.forEach(overlapTimeScreening -> {
-                        messageResponse.append(overlapTimeScreening.getId())
-                                .append(" from ")
-                                .append(overlapTimeScreening.getStartTime())
-                                .append(" to ")
-                                .append(overlapTimeScreening.getEndTime())
-                                .append("; ");
-                    });
-                    throw new BadRequestException(messageResponse.toString());
-                } else {
-                    ScreeningEntity screeningCreate = screeningMapper.clone(screening);
-                    screeningCreate.setHall(hall);
-                    screenings.add(screeningCreate);
+            LocalDateTime startTime = screening.getStartTime();
+            LocalDateTime endTime = screening.getEndTime();
+            List<ScreeningEntity> overlapTimeScreenings = screeningRepository.findScreeningOverlapTimerInHall(startTime, endTime, hall.getId());
+            if (!overlapTimeScreenings.isEmpty()) {
+                StringBuilder messageResponse = new StringBuilder("Hall " + hall.getName() + " has overlapping screenings with id(s): ");
+
+                overlapTimeScreenings.forEach(overlapTimeScreening -> {
+                    messageResponse.append(overlapTimeScreening.getId())
+                            .append(" from ")
+                            .append(overlapTimeScreening.getStartTime())
+                            .append(" to ")
+                            .append(overlapTimeScreening.getEndTime())
+                            .append("; ");
+                });
+                throw new BadRequestException(messageResponse.toString());
+            } else {
+                try {
+                    screening.setHall(hall);
+                    screening.setScreeningSeats(new ArrayList<>());
+                    screening.setStatus("not_reserved");
+                    screening = screeningRepository.save(screening);
+                    final ScreeningEntity savedScreening = screening;
+                    List<ScreeningSeatEntity> screeningSeatsCreated = hall.getSeats()
+                            .stream()
+                            .map(seat -> {
+                                ScreeningSeatEntity screeningSeat = seatMapper.toScreeningSeatEntity(seat);
+                                screeningSeat.setIsBooked(false);
+                                screeningSeat.setScreening(savedScreening);
+                                return screeningSeat;
+                            })
+                            .collect(Collectors.toList());
+                    screeningSeatsCreated = screeningSeatRepository.saveAll(screeningSeatsCreated);
+                    screeningSeatsCreated.forEach(screening::addScreeningSeat);
+                } catch (Exception e) {
+                    throw new BadRequestException("Something went wrong!!");
                 }
-            });
-        }
-        screeningRepository.saveAll(screenings);
 
-        return minimalMapper.toScreeningMinimalDTO(screening);
+            }
+        }
+        return screeningMapper.toDTO(screening);
     }
 
     @Transactional
@@ -113,26 +129,6 @@ public class ScreeningServiceImpl implements ScreeningService {
                         .orElseThrow(() -> new NotFoundException("Not found movie with id: " + request.movieId())));
                 if (screening.getStartTime() != null)
                     screening.setEndTime(screening.getStartTime().plusMinutes(screening.getMovie().getTime()));
-            }
-            if (request.hallId() != null) {
-                HallEntity hall = hallRepository.findById(request.hallId())
-                        .orElseThrow(() -> new NotFoundException("Not found hall with id: " + request.hallId()));
-                LocalDateTime startTime = screening.getStartTime();
-                LocalDateTime endTime = screening.getEndTime();
-                List<ScreeningEntity> overlapTimeScreenings = screeningRepository.findScreeningOverlapTimerInHall(startTime, endTime, hall.getId());
-                if (!overlapTimeScreenings.isEmpty()) {
-                    StringBuilder messageResponse = new StringBuilder("Hall " + hall.getName() + " has overlapping screenings with id(s): ");
-
-                    overlapTimeScreenings.forEach(overlapTimeScreening -> {
-                        messageResponse.append(overlapTimeScreening.getId())
-                                .append(" from ")
-                                .append(overlapTimeScreening.getStartTime())
-                                .append(" to ")
-                                .append(overlapTimeScreening.getEndTime())
-                                .append("; ");
-                    });
-                    throw new BadRequestException(messageResponse.toString());
-                } else screening.setHall(hall);
             }
 
             if (request.reservationIds() != null && !request.reservationIds().isEmpty() && screening.getReservations() != null && !request.reservationIds().contains(null)) {
@@ -174,11 +170,16 @@ public class ScreeningServiceImpl implements ScreeningService {
         ScreeningEntity screening = screeningRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Not found screening with id: " + id));
         if (screening != null) {
-            try {
-                screeningRepository.delete(screening);
-            } catch (Exception e) {
-                throw new BadRequestException("Something went wrong!");
-            }
+            List<ScreeningSeatEntity> reservedSeats = screening.getScreeningSeats()
+                    .stream()
+                    .filter(ScreeningSeatEntity::getIsBooked)
+                    .toList();
+            if (reservedSeats.isEmpty()) {
+                screening.setStatus("cancel");
+                screeningRepository.save(screening);
+            } else
+                throw new BadRequestException("This screening cannot delete because reserved seat(s)");
+
         }
     }
 

@@ -21,4 +21,8 @@ public class ScreeningMinimalDTO {
     private LocalDateTime endTime;
 
     private MovieDetailDTO movie;
+
+    private Integer totalSeat;
+
+
 }

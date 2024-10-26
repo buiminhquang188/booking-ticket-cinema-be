@@ -119,6 +119,7 @@ CREATE TABLE screening
     updated_at DATETIME           NULL,
     start_time DATETIME           NULL,
     end_time   DATETIME           NULL,
+    status     VARCHAR(255)       NULL,
     hall_id    INT                NULL,
     movie_id   INT                NULL,
     CONSTRAINT pk_screening PRIMARY KEY (id)
