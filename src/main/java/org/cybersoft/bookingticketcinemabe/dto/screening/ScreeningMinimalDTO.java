@@ -14,9 +14,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ScreeningMinimalDTO {
 
-    private MovieDetailDTO movie;
+    private Integer id;
 
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
+
+    private MovieDetailDTO movie;
 }

@@ -14,4 +14,6 @@ public class BranchMinimalDTO {
 
     private String name;
 
+    private String address;
+
 }
