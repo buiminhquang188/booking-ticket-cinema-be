@@ -1,7 +1,7 @@
 package org.cybersoft.bookingticketcinemabe.service.impl;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
 import org.cybersoft.bookingticketcinemabe.entity.UserEntity;
@@ -24,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
 

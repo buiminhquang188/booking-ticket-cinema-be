@@ -5,6 +5,7 @@ import org.cybersoft.bookingticketcinemabe.controller.BranchController;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.branch.BranchDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.BranchService;
@@ -18,8 +19,9 @@ public class BranchControllerImpl implements BranchController {
     private final BranchService branchService;
 
     @Override
-    public ResponseEntity<?> getBranches(int pageNo, int pageLimit, String sortBy) {
-        PageableDTO<?> branches = branchService.getBranches(pageNo, pageLimit, sortBy);
+    public ResponseEntity<?> getBranches(BranchCriteria branchCriteria) {
+        PageableDTO<?> branches = branchService.getBranches(branchCriteria);
+
         return ResponseEntity.ok(BaseResponse.builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
