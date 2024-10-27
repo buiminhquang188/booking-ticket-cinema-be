@@ -5,6 +5,7 @@ import org.cybersoft.bookingticketcinemabe.controller.UserController;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.UserService;
@@ -18,8 +19,9 @@ public class UserControllerImpl implements UserController {
     private final UserService userService;
 
     @Override
-    public ResponseEntity<?> getUsers(int pageNo, int pageLimit, String sortBy) {
-        PageableDTO<?> users = userService.getUsers(pageNo, pageLimit, sortBy);
+    public ResponseEntity<?> getUsers(UserCriteria userCriteria) {
+        PageableDTO<?> users = userService.getUsers(userCriteria);
+
         return ResponseEntity.ok(BaseResponse.builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

@@ -3,10 +3,11 @@ package org.cybersoft.bookingticketcinemabe.service;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserUpdateRequest;
 
 public interface UserService {
-    PageableDTO<?> getUsers(int pageNo, int pageLimit, String sortBy);
+    PageableDTO<?> getUsers(UserCriteria userCriteria);
 
     UserDTO getUser(int id);
 
