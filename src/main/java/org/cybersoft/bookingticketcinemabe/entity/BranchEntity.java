@@ -20,10 +20,10 @@ public class BranchEntity extends BaseEntity {
     @Column(name = "distance", precision = 9, scale = 2)
     private BigDecimal distance;
 
-    @Column(name = "lat", precision = 9, scale = 6)
+    @Column(name = "lat", precision = 10, scale = 7)
     private BigDecimal lat;
 
-    @Column(name = "lon", precision = 9, scale = 6)
+    @Column(name = "lon", precision = 10, scale = 7)
     private BigDecimal lon;
 
     @Column(name = "rating", precision = 4, scale = 2)
