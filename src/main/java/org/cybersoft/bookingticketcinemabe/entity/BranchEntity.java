@@ -17,16 +17,16 @@ public class BranchEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "distance")
+    @Column(name = "distance", precision = 10, scale = 8)
     private BigDecimal distance;
 
-    @Column(name = "lat")
+    @Column(name = "lat", precision = 10, scale = 8)
     private BigDecimal lat;
 
-    @Column(name = "lon")
+    @Column(name = "lon", precision = 10, scale = 8)
     private BigDecimal lon;
 
-    @Column(name = "rating")
+    @Column(name = "rating", precision = 10, scale = 8)
     private BigDecimal rating;
 
     @Column(name = "total_cineplex_hall")
@@ -63,18 +63,21 @@ public class BranchEntity extends BaseEntity {
 
     public void addMovie(MovieEntity movie) {
         movies.add(movie);
-        movie.getBranches().add(this);
+        movie.getBranches()
+                .add(this);
     }
 
     public void removeMovie(MovieEntity movie) {
         movies.remove(movie);
-        movie.getBranches().remove(this);
+        movie.getBranches()
+                .remove(this);
     }
 
     public void addHall(HallEntity hall) {
         halls.add(hall);
         hall.setBranch(this);
     }
+
     public void removeHall(HallEntity hall) {
         halls.remove(hall);
         hall.setBranch(null);
