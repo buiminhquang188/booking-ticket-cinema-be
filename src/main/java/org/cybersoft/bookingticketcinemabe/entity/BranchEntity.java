@@ -17,16 +17,16 @@ public class BranchEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "distance", precision = 10, scale = 8)
+    @Column(name = "distance", precision = 9, scale = 2)
     private BigDecimal distance;
 
-    @Column(name = "lat", precision = 10, scale = 8)
+    @Column(name = "lat", precision = 9, scale = 6)
     private BigDecimal lat;
 
-    @Column(name = "lon", precision = 10, scale = 8)
+    @Column(name = "lon", precision = 9, scale = 6)
     private BigDecimal lon;
 
-    @Column(name = "rating", precision = 10, scale = 8)
+    @Column(name = "rating", precision = 4, scale = 2)
     private BigDecimal rating;
 
     @Column(name = "total_cineplex_hall")
