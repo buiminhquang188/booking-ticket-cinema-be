@@ -1,6 +1,7 @@
 package org.cybersoft.bookingticketcinemabe.controller;
 
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,9 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping
 public interface ScreeningController {
     @GetMapping("/screenings")
-    public ResponseEntity<?> getScreenings(@RequestParam(defaultValue = "0") int pageNo,
-                                           @RequestParam(defaultValue = "10") int pageLimit,
-                                           @RequestParam(defaultValue = "id") String sortBy);
+    public ResponseEntity<?> getScreenings(ScreeningCriteria screeningCriteria);
 
     @GetMapping("/screening/{id}")
     public ResponseEntity<?> getScreening(@PathVariable Integer id);
