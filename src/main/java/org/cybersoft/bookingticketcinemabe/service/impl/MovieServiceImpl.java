@@ -6,20 +6,22 @@ import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.movie.MovieDTO;
 import org.cybersoft.bookingticketcinemabe.entity.BranchEntity;
 import org.cybersoft.bookingticketcinemabe.entity.MovieEntity;
+import org.cybersoft.bookingticketcinemabe.entity.MovieEntity_;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.movie.MovieDetailMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.movie.MovieMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.movie.MovieCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.movie.MovieCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.movie.MovieUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
+import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
+import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
 import org.cybersoft.bookingticketcinemabe.repository.BranchRepository;
 import org.cybersoft.bookingticketcinemabe.repository.MovieRepository;
 import org.cybersoft.bookingticketcinemabe.repository.ScreeningRepository;
 import org.cybersoft.bookingticketcinemabe.service.MovieService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,13 +37,44 @@ public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
     private final BranchRepository branchRepository;
     private final ScreeningRepository screeningRepository;
+    private final MovieDetailMapper movieDetailMapper;
     private final MovieMapper movieMapper;
+    private final CriteriaApiHelper criteriaApiHelper;
 
     @Override
-    public PageableDTO<?> getMovies(int pageNo, int pageLimit, String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
-        Page<?> page = this.movieRepository.findAll(pageable).map(movieMapper::toDTO);
-        return new PageableMapper<>().toDTO(page);
+    public PageableDTO<?> getMovies(MovieCriteria movieCriteria) {
+        Pageable pageable = Pageable.builder()
+                .pageNumber(movieCriteria.getPageNo())
+                .pageSize(movieCriteria.getPageLimit())
+                .sortDefinition(Pageable.sort(movieCriteria.getSort(), movieCriteria.getOrder()))
+                .build();
+        SelectQueryImpl<MovieEntity> movie = this.criteriaApiHelper.select(MovieEntity.class);
+        if (movieCriteria.getId() != null) {
+            movie.equal(MovieEntity_.id, movieCriteria.getId());
+        }
+        if (movieCriteria.getMovieName() != null) {
+            movie.like(MovieEntity_.movieName, movieCriteria.getMovieName());
+        }
+        if (movieCriteria.getTime() != null) {
+            movie.equal(MovieEntity_.time, movieCriteria.getTime());
+        }
+        if (movieCriteria.getRating() != null) {
+            movie.equal(MovieEntity_.rating, movieCriteria.getRating());
+        }
+        if (movieCriteria.getStartDate() != null) {
+            movie.equal(MovieEntity_.startDate, movieCriteria.getStartDate());
+        }
+        if (movieCriteria.getStartDateFrom() != null && movieCriteria.getStartDateTo() != null) {
+            movie.between(MovieEntity_.startDate.getName(), movieCriteria.getStartDateFrom(), movieCriteria.getStartDateTo());
+        }
+        if (movieCriteria.getCreatedAtFrom() != null && movieCriteria.getCreatedAtTo() != null) {
+            movie.between(MovieEntity_.createdAt.getName(), movieCriteria.getCreatedAtFrom(), movieCriteria.getCreatedAtTo());
+        }
+
+        if (movieCriteria.getUpdatedAtFrom() != null && movieCriteria.getUpdatedAtTo() != null) {
+            movie.between(MovieEntity_.updatedAt.getName(), movieCriteria.getUpdatedAtFrom(), movieCriteria.getUpdatedAtTo());
+        }
+        return new PageableMapper<>().toDTO(movie.findAll(pageable).map(movieDetailMapper::toDTO));
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.cybersoft.bookingticketcinemabe.controller.MovieController;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.movie.MovieDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.movie.MovieCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.movie.MovieCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.movie.MovieUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.MovieService;
@@ -18,8 +19,8 @@ public class MovieControllerImpl implements MovieController {
     private final MovieService movieService;
 
     @Override
-    public ResponseEntity<?> getMovies(int pageNo, int pageLimit, String sortBy) {
-        PageableDTO<?> movies = movieService.getMovies(pageNo, pageLimit, sortBy);
+    public ResponseEntity<?> getMovies(MovieCriteria movieCriteria) {
+        PageableDTO<?> movies = movieService.getMovies(movieCriteria);
         return ResponseEntity.ok(BaseResponse.builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

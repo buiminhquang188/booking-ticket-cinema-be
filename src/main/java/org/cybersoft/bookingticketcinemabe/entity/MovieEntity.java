@@ -20,7 +20,7 @@ public class MovieEntity extends BaseEntity {
     private Byte rating;
 
     @Column(name = "time")
-    private Integer time;  // Time in minutes or another appropriate unit
+    private Integer time;  // Time in minutes unit
 
     @Column(name = "start_date")
     private LocalDateTime startDate;
