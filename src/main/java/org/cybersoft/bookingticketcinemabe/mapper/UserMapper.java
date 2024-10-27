@@ -2,8 +2,8 @@ package org.cybersoft.bookingticketcinemabe.mapper;
 
 import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
 import org.cybersoft.bookingticketcinemabe.entity.UserEntity;
-import org.cybersoft.bookingticketcinemabe.payload.request.UserCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.UserUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.user.UserUpdateRequest;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")

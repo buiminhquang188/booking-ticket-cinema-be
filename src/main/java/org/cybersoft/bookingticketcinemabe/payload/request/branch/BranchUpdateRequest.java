@@ -1,4 +1,4 @@
-package org.cybersoft.bookingticketcinemabe.payload.request;
+package org.cybersoft.bookingticketcinemabe.payload.request.branch;
 
 import java.math.BigDecimal;
 import java.util.List;

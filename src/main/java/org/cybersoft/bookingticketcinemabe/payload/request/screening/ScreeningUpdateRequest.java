@@ -1,4 +1,4 @@
-package org.cybersoft.bookingticketcinemabe.payload.request;
+package org.cybersoft.bookingticketcinemabe.payload.request.screening;
 
 import java.time.LocalDateTime;
 import java.util.List;

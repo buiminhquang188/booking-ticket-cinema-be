@@ -1,7 +1,7 @@
 package org.cybersoft.bookingticketcinemabe.controller;
 
-import org.cybersoft.bookingticketcinemabe.payload.request.MovieCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.MovieUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.movie.MovieCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.movie.MovieUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

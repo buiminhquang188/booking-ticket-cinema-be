@@ -1,8 +1,8 @@
 package org.cybersoft.bookingticketcinemabe.controller;
 
 import jakarta.validation.Valid;
-import org.cybersoft.bookingticketcinemabe.payload.request.UserCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.UserUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.user.UserUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

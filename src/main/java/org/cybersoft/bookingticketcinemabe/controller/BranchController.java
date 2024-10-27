@@ -1,7 +1,7 @@
 package org.cybersoft.bookingticketcinemabe.controller;
 
-import org.cybersoft.bookingticketcinemabe.payload.request.BranchCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.BranchUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

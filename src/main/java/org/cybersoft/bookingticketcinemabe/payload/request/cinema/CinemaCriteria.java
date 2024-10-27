@@ -1,4 +1,4 @@
-package org.cybersoft.bookingticketcinemabe.payload.request;
+package org.cybersoft.bookingticketcinemabe.payload.request.cinema;
 
 import org.cybersoft.bookingticketcinemabe.query.enums.Order;
 
