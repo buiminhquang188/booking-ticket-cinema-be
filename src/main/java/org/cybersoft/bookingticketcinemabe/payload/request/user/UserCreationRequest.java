@@ -1,4 +1,4 @@
-package org.cybersoft.bookingticketcinemabe.payload.request;
+package org.cybersoft.bookingticketcinemabe.payload.request.user;
 
 
 import jakarta.validation.constraints.Email;

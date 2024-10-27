@@ -10,9 +10,9 @@ import org.cybersoft.bookingticketcinemabe.exception.runtime.CinemaNotFoundExcep
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.cinema.CinemaMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.cinema.CinemaProvinceMapper;
-import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCriteria;
-import org.cybersoft.bookingticketcinemabe.payload.request.CinemaUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.cinema.CinemaCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.cinema.CinemaCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.cinema.CinemaUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
 import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
 import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;

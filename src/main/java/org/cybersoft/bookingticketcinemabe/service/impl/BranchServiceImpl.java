@@ -5,20 +5,21 @@ import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.branch.BranchDTO;
 import org.cybersoft.bookingticketcinemabe.entity.BranchEntity;
+import org.cybersoft.bookingticketcinemabe.entity.BranchEntity_;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
 import org.cybersoft.bookingticketcinemabe.entity.MovieEntity;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.branch.BranchDetailMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.branch.BranchMapper;
-import org.cybersoft.bookingticketcinemabe.payload.request.BranchCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.BranchUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
+import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
+import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
 import org.cybersoft.bookingticketcinemabe.repository.*;
 import org.cybersoft.bookingticketcinemabe.service.BranchService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,11 +38,41 @@ public class BranchServiceImpl implements BranchService {
     private final BranchMapper branchMapper;
     private final BranchDetailMapper branchDetailMapper;
 
+    private final CriteriaApiHelper criteriaApiHelper;
+
     @Override
-    public PageableDTO<?> getBranches(int pageNo, int pageLimit, String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
-        Page<?> page = this.branchRepository.findAll(pageable).map(branchDetailMapper::toDTO);
-        return new PageableMapper<>().toDTO(page);
+    public PageableDTO<?> getBranches(BranchCriteria branchCriteria) {
+        Pageable pageable = Pageable.builder()
+                .pageNumber(branchCriteria.getPageNo())
+                .pageSize(branchCriteria.getPageLimit())
+                .sortDefinition(Pageable.sort(branchCriteria.getSort(), branchCriteria.getOrder()))
+                .build();
+        SelectQueryImpl<BranchEntity> branch = this.criteriaApiHelper.select(BranchEntity.class);
+
+        if (branchCriteria.getId() != null) {
+            branch.equal(BranchEntity_.id, branchCriteria.getId());
+        }
+        if (branchCriteria.getName() != null) {
+            branch.like(BranchEntity_.name, branchCriteria.getName());
+        }
+        if (branchCriteria.getDistance() != null) {
+            branch.equal(BranchEntity_.distance, branchCriteria.getDistance());
+        }
+        if (branchCriteria.getRating() != null) {
+            branch.equal(BranchEntity_.rating, branchCriteria.getRating());
+        }
+        if (branchCriteria.getAddress() != null) {
+            branch.like(BranchEntity_.address, branchCriteria.getAddress());
+        }
+        if (branchCriteria.getCreatedAtFrom() != null && branchCriteria.getCreatedAtTo() != null) {
+            branch.between(BranchEntity_.createdAt.getName(), branchCriteria.getCreatedAtFrom(), branchCriteria.getCreatedAtTo());
+        }
+
+        if (branchCriteria.getUpdatedAtFrom() != null && branchCriteria.getUpdatedAtTo() != null) {
+            branch.between(BranchEntity_.updatedAt.getName(), branchCriteria.getUpdatedAtFrom(), branchCriteria.getUpdatedAtTo());
+        }
+
+        return new PageableMapper<>().toDTO(branch.findAll(pageable).map(branchDetailMapper::toDTO));
     }
 
     @Override

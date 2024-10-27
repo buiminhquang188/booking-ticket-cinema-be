@@ -1,10 +1,9 @@
-package org.cybersoft.bookingticketcinemabe.payload.request;
+package org.cybersoft.bookingticketcinemabe.payload.request.user;
 
 import lombok.Builder;
 
 @Builder
 public record UserUpdateRequest(
-        Integer id,
         String phone,
         String role,
         String firstName,

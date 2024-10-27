@@ -11,14 +11,14 @@ import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.SeatMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.screening.ScreeningMapper;
-import org.cybersoft.bookingticketcinemabe.payload.request.ScreeningCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.ScreeningUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
+import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
+import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
 import org.cybersoft.bookingticketcinemabe.repository.*;
 import org.cybersoft.bookingticketcinemabe.service.ScreeningService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -42,11 +42,38 @@ public class ScreeningServiceImpl implements ScreeningService {
     private final MinimalMapper minimalMapper;
     private final SeatMapper seatMapper;
 
+    private final CriteriaApiHelper criteriaApiHelper;
+
     @Override
-    public PageableDTO<?> getScreenings(int pageNo, int pageLimit, String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
-        Page<?> page = this.screeningRepository.findAll(pageable).map(minimalMapper::toScreeningMinimalDTO);
-        return new PageableMapper<>().toDTO(page);
+    public PageableDTO<?> getScreenings(ScreeningCriteria screeningCriteria) {
+        Pageable pageable = Pageable.builder()
+                .pageNumber(screeningCriteria.getPageNo())
+                .pageSize(screeningCriteria.getPageLimit())
+                .sortDefinition(Pageable.sort(screeningCriteria.getSort(), screeningCriteria.getOrder()))
+                .build();
+        SelectQueryImpl<ScreeningEntity> screening = this.criteriaApiHelper.select(ScreeningEntity.class);
+
+        if (screeningCriteria.getId() != null) {
+            screening.equal(ScreeningEntity_.id, screeningCriteria.getId());
+        }
+        if (screeningCriteria.getStatus() != null) {
+            screening.like(ScreeningEntity_.status, screeningCriteria.getStatus());
+        }
+        if (screeningCriteria.getStartTimeFrom() != null && screeningCriteria.getStartTimeTo() != null) {
+            screening.between(ScreeningEntity_.startTime.getName(), screeningCriteria.getStartTimeFrom(), screeningCriteria.getStartTimeFrom());
+        }
+        if (screeningCriteria.getEndTimeFrom() != null && screeningCriteria.getEndTimeTo() != null) {
+            screening.between(ScreeningEntity_.endTime.getName(), screeningCriteria.getEndTimeFrom(), screeningCriteria.getEndTimeTo());
+        }
+        if (screeningCriteria.getCreatedAtFrom() != null && screeningCriteria.getCreatedAtTo() != null) {
+            screening.between(ScreeningEntity_.createdAt.getName(), screeningCriteria.getCreatedAtFrom(), screeningCriteria.getCreatedAtTo());
+        }
+        if (screeningCriteria.getUpdatedAtFrom() != null && screeningCriteria.getUpdatedAtTo() != null) {
+            screening.between(ScreeningEntity_.updatedAt.getName(), screeningCriteria.getUpdatedAtFrom(), screeningCriteria.getUpdatedAtTo());
+        }
+
+        return new PageableMapper<>().toDTO(screening.findAll(pageable).map(minimalMapper::toScreeningMinimalDTO));
+
     }
 
     @Override

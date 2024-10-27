@@ -5,19 +5,20 @@ import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
 import org.cybersoft.bookingticketcinemabe.entity.UserEntity;
+import org.cybersoft.bookingticketcinemabe.entity.UserEntity_;
 import org.cybersoft.bookingticketcinemabe.exception.BadRequestException;
 import org.cybersoft.bookingticketcinemabe.exception.ExistedException;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.UserMapper;
-import org.cybersoft.bookingticketcinemabe.payload.request.UserCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.UserUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.user.UserUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
+import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
+import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
 import org.cybersoft.bookingticketcinemabe.repository.UserRepository;
 import org.cybersoft.bookingticketcinemabe.service.UserService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,51 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    private final CriteriaApiHelper criteriaApiHelper;
+
     @Override
-    public PageableDTO<?> getUsers(int pageNo, int pageLimit, String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
-        Page<?> page = this.userRepository.findAll(pageable)
-                .map(userMapper::toDTO);
-        return new PageableMapper<>().toDTO(page);
+    public PageableDTO<?> getUsers(UserCriteria userCriteria) {
+        Pageable pageable = Pageable.builder()
+                .pageNumber(userCriteria.getPageNo())
+                .pageSize(userCriteria.getPageLimit())
+                .sortDefinition(Pageable.sort(userCriteria.getSort(), userCriteria.getOrder()))
+                .build();
+        SelectQueryImpl<UserEntity> user = this.criteriaApiHelper.select(UserEntity.class);
+
+        if (userCriteria.getId() != null) {
+            user.equal(UserEntity_.id, userCriteria.getId());
+        }
+        if (userCriteria.getFirstName() != null) {
+            user.like(UserEntity_.firstName, userCriteria.getFirstName());
+        }
+        if (userCriteria.getLastName() != null) {
+            user.like(UserEntity_.lastName, userCriteria.getLastName());
+        }
+        if (userCriteria.getFullName() != null) {
+            user.like(UserEntity_.fullName, userCriteria.getFullName());
+        }
+        if (userCriteria.getEmail() != null) {
+            user.like(UserEntity_.email, userCriteria.getEmail());
+        }
+        if (userCriteria.getRole() != null) {
+            user.equal(UserEntity_.role, userCriteria.getRole());
+        }
+        if (userCriteria.getPhone() != null) {
+            user.like(UserEntity_.phone, userCriteria.getPhone());
+        }
+        if (userCriteria.getCreatedAtFrom() != null && userCriteria.getCreatedAtTo() != null) {
+            user.between(UserEntity_.createdAt.getName(), userCriteria.getCreatedAtFrom(), userCriteria.getCreatedAtTo());
+        }
+
+        if (userCriteria.getUpdatedAtFrom() != null && userCriteria.getUpdatedAtTo() != null) {
+            user.between(UserEntity_.updatedAt.getName(), userCriteria.getUpdatedAtFrom(), userCriteria.getUpdatedAtTo());
+        }
+
+        return new PageableMapper<>().toDTO(user.findAll(pageable).map(userMapper::toDTO));
     }
 
     @Override
@@ -66,8 +103,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO updateUser(UserUpdateRequest request) {
-        UserEntity userUpdate = this.userRepository.findById(request.id())
+    public UserDTO updateUser(UserUpdateRequest request, Integer id) {
+        UserEntity userUpdate = this.userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Not found user"));
         UserDTO dto = null;
         if (userUpdate != null) {
