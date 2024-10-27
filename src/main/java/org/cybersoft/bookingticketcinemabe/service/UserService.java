@@ -12,7 +12,7 @@ public interface UserService {
 
     UserDTO createUser(UserCreationRequest request);
 
-    UserDTO updateUser(UserUpdateRequest request);
+    UserDTO updateUser(UserUpdateRequest request, Integer id);
 
     UserDTO deleteUser(int id);
 

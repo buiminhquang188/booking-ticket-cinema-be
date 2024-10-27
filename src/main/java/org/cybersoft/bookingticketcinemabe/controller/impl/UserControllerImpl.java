@@ -46,8 +46,8 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<?> updateUser(UserUpdateRequest request) {
-        UserDTO user = userService.updateUser(request);
+    public ResponseEntity<?> updateUser(UserUpdateRequest request, Integer id) {
+        UserDTO user = userService.updateUser(request, id);
         return ResponseEntity.ok(BaseResponse.builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

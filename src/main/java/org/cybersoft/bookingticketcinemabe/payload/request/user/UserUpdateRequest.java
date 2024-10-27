@@ -4,7 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record UserUpdateRequest(
-        Integer id,
         String phone,
         String role,
         String firstName,

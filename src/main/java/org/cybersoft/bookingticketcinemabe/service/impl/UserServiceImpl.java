@@ -66,8 +66,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO updateUser(UserUpdateRequest request) {
-        UserEntity userUpdate = this.userRepository.findById(request.id())
+    public UserDTO updateUser(UserUpdateRequest request, Integer id) {
+        UserEntity userUpdate = this.userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Not found user"));
         UserDTO dto = null;
         if (userUpdate != null) {

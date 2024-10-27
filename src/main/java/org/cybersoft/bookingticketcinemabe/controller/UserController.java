@@ -20,8 +20,8 @@ public interface UserController {
     @PostMapping("/user")
     ResponseEntity<?> createUser(@RequestBody @Valid UserCreationRequest request);
 
-    @PutMapping("/user")
-    ResponseEntity<?> updateUser(@RequestBody UserUpdateRequest request);
+    @PutMapping("/user/{id}")
+    ResponseEntity<?> updateUser(@RequestBody UserUpdateRequest request, @PathVariable Integer id);
 
     @DeleteMapping("/user/{id}")
     ResponseEntity<?> deleteUser(@PathVariable int id);
