@@ -15,8 +15,6 @@ public class MovieCriteria extends Pagination {
 
     private Integer time;  // Time in minutes unit
 
-    private LocalDateTime startDate;
-
     private LocalDateTime startDateFrom;
 
     private LocalDateTime startDateTo;

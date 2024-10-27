@@ -61,9 +61,6 @@ public class MovieServiceImpl implements MovieService {
         if (movieCriteria.getRating() != null) {
             movie.equal(MovieEntity_.rating, movieCriteria.getRating());
         }
-        if (movieCriteria.getStartDate() != null) {
-            movie.equal(MovieEntity_.startDate, movieCriteria.getStartDate());
-        }
         if (movieCriteria.getStartDateFrom() != null && movieCriteria.getStartDateTo() != null) {
             movie.between(MovieEntity_.startDate.getName(), movieCriteria.getStartDateFrom(), movieCriteria.getStartDateTo());
         }
