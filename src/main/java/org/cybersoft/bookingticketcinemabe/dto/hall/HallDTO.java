@@ -17,4 +17,5 @@ public class HallDTO {
     private String name;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private HallBranchDTO branch;
 }

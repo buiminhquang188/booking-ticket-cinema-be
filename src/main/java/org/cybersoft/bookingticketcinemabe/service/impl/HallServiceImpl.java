@@ -49,6 +49,10 @@ public class HallServiceImpl implements HallService {
 
         SelectQueryImpl<HallEntity> halls = this.criteriaApiHelper.select(HallEntity.class);
 
+        if (hallCriteria.getId() != null) {
+            halls.equal(HallEntity_.id, hallCriteria.getId());
+        }
+
         if (hallCriteria.getName() != null) {
             halls.like(HallEntity_.name, hallCriteria.getName());
         }
