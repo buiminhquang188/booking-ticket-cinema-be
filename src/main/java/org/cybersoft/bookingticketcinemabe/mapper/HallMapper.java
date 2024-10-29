@@ -1,9 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.mapper;
 
-import org.cybersoft.bookingticketcinemabe.dto.hall.HallBranchDTO;
-import org.cybersoft.bookingticketcinemabe.dto.hall.HallDTO;
-import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailDTO;
-import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailSeatLayoutDTO;
+import org.cybersoft.bookingticketcinemabe.dto.hall.*;
 import org.cybersoft.bookingticketcinemabe.dto.seat.SeatTypeDTO;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
 import org.cybersoft.bookingticketcinemabe.entity.SeatEntity;
@@ -23,4 +20,7 @@ public interface HallMapper extends EntityMapper<HallDTO, HallEntity> {
     @Mapping(source = "branch.name", target = "name")
     @Mapping(source = "branch.address", target = "address")
     HallBranchDTO toHallBranchDTO(HallEntity hallEntity);
+
+    @Mapping(target = "seats", ignore = true)
+    HallDetailSeatDTO toHallDetailSeatDTO(HallEntity hallEntity);
 }

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailSeatDTO;
 import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailSeatLayoutDTO;
 import org.cybersoft.bookingticketcinemabe.entity.BranchEntity;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
@@ -76,10 +77,15 @@ public class HallServiceImpl implements HallService {
     }
 
     @Override
-    public HallDetailDTO getHall(Integer id) {
+    public HallDetailSeatDTO getHall(Integer id) {
         HallEntity hall = this.hallRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Hall " + id + " not found"));
-        return this.hallMapper.toHallDetailDto(hall);
+        HallDetailSeatDTO hallDetailSeatDTO = this.hallMapper.toHallDetailSeatDTO(hall);
+
+        // TODO: Enhance using mapper
+        hallDetailSeatDTO.setSeats(this.getSeatsLayout(id));
+
+        return hallDetailSeatDTO;
     }
 
     @Transactional
