@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.HallController;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailSeatDTO;
 import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailSeatLayoutDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.hall.HallCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.hall.HallCriteria;
@@ -37,7 +38,7 @@ public class HallControllerImpl implements HallController {
 
     @Override
     public ResponseEntity<?> getHallById(Integer id) {
-        HallDetailDTO hall = this.hallService.getHall(id);
+        HallDetailSeatDTO hall = this.hallService.getHall(id);
 
         return ResponseEntity.ok(
                 BaseResponse.builder()
