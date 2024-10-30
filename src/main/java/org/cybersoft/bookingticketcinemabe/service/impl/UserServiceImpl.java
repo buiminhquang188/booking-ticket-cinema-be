@@ -3,7 +3,7 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
-import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
+import org.cybersoft.bookingticketcinemabe.dto.user.UserDTO;
 import org.cybersoft.bookingticketcinemabe.entity.UserEntity;
 import org.cybersoft.bookingticketcinemabe.entity.UserEntity_;
 import org.cybersoft.bookingticketcinemabe.exception.BadRequestException;
