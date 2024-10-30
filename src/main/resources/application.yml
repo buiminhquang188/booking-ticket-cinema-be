@@ -27,7 +27,7 @@ management:
       exposure:
         include: '*'
 jwt:
-  key:
+  key: bCXUiu8ML78+HkgDMp97NB1hNnrE0BQBJszpGzttbqd0r+kmCR1XbQwg6fGKh09vTE5wO9teRM4KZBb1QByDGw==
   expirationMs: 5 * 60 * 1000
 cloudflare:
   r2:
