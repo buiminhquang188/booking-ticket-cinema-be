@@ -30,5 +30,4 @@ public class CinemaEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "cinema")
     private List<BranchEntity> branches;
-
 }

@@ -47,11 +47,11 @@ public class BranchEntity extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cinema_id")
     private CinemaEntity cinema;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "district_id")
     private DistrictEntity district;
 
