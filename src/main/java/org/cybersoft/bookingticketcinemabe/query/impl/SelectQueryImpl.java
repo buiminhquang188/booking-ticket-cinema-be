@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
+import jakarta.persistence.metamodel.ListAttribute;
 import jakarta.persistence.metamodel.SingularAttribute;
 import org.cybersoft.bookingticketcinemabe.exception.runtime.NotFoundColumnException;
 import org.cybersoft.bookingticketcinemabe.query.SelectQuery;
@@ -246,5 +247,10 @@ public class SelectQueryImpl<R> extends BaseQueryImpl<R, SelectQueryImpl<R>> imp
                 .fetch(attribute2)
                 .fetch(attribute3);
         return this;
+    }
+
+    @Override
+    public <P> ListJoin<R, P> join(ListAttribute<R, P> attribute) {
+        return root.join(attribute);
     }
 }

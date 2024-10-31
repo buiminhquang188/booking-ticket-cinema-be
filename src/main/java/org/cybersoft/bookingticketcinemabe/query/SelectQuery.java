@@ -1,5 +1,7 @@
 package org.cybersoft.bookingticketcinemabe.query;
 
+import jakarta.persistence.criteria.ListJoin;
+import jakarta.persistence.metamodel.ListAttribute;
 import jakarta.persistence.metamodel.SingularAttribute;
 import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
 import org.cybersoft.bookingticketcinemabe.query.enums.Order;
@@ -63,4 +65,5 @@ public interface SelectQuery<R, Q extends SelectQuery<R, Q>> extends BaseQuery<R
 
     <P1, P2, P3> SelectQuery<R, Q> fetch(SingularAttribute<R, P1> attribute1, SingularAttribute<P1, P2> attribute2, SingularAttribute<P2, P3> attribute3);
 
+    <P> ListJoin<R, P> join(ListAttribute<R, P> attribute);
 }
