@@ -19,7 +19,6 @@ import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
 import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
 import org.cybersoft.bookingticketcinemabe.repository.UserRepository;
 import org.cybersoft.bookingticketcinemabe.service.UserService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +26,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -89,7 +89,6 @@ public class UserServiceImpl implements UserService {
         if (user != null) throw new ExistedException("User existed");
         UserDTO dto;
         try {
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             user = userMapper.toEntity(request);
             user.setPassword(passwordEncoder.encode(request.password()));
             UserEntity userCreated = this.userRepository.save(user);
@@ -111,7 +110,6 @@ public class UserServiceImpl implements UserService {
             try {
                 userMapper.update(userUpdate, request);
                 if (request.password() != null) {
-                    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
                     userUpdate.setPassword(passwordEncoder.encode(request.password()));
                 }
                 UserEntity userUpdated = userRepository.save(userUpdate);

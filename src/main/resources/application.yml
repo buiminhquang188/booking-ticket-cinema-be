@@ -27,8 +27,8 @@ management:
       exposure:
         include: '*'
 jwt:
-  key: bCXUiu8ML78+HkgDMp97NB1hNnrE0BQBJszpGzttbqd0r+kmCR1XbQwg6fGKh09vTE5wO9teRM4KZBb1QByDGw==
-  expirationMs: 5 * 60 * 1000
+  key: RWy4_RjrkCv8j4qGN4sThqZDJlNgjtivkD8dCZ5yodCSohS9LCzYAsIdd62EWD7qupjeQ0AxAKKQJuPHLWivSA
+  expirationMs: 300000
 cloudflare:
   r2:
     access-key: ${R2_ACCESS_KEY}
@@ -37,3 +37,5 @@ cloudflare:
     endpoint: ${R2_ENDPOINT}
     bucket: ${R2_BUCKET}
     public-path: ${R2_PUBLIC_PATH}
+default:
+  password: 12345678

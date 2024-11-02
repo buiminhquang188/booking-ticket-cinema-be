@@ -5,39 +5,36 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.cybersoft.bookingticketcinemabe.exception.runtime.AuthenticateException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Date;
 
-@Configuration
+@Component
 public class JwtHelper {
     @Value("${jwt.key}")
     private String SIGNER_KEY;
-    //        Generate jwt key
-//        SecretKey secretKey = Jwts.SIG.HS512.key().build();
-//        String key = Encoders.BASE64.encode(secretKey.getEncoded());
-//        System.out.println(key);
-    private final SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(SIGNER_KEY));
+
     @Value("${jwt.expirationMs}")
-    private int expirationMsTime;
+    private String expirationMsTime;
+
 
     public String generateToken(String data) {
+        SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(SIGNER_KEY));
 
-
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .issuer("Booking-ticket-cinema")
                 .subject(data)
                 .issuedAt(new Date())
-                .expiration(new Date(Instant.now().plusMillis(expirationMsTime).toEpochMilli()))
+                .expiration(new Date(Instant.now().plusMillis(Long.parseLong(expirationMsTime)).toEpochMilli()))
                 .signWith(secretKey)
                 .compact();
-        return token;
     }
 
     public String introspectToken(String token) {
         try {
+            SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(SIGNER_KEY));
             Claims claims = Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
@@ -51,6 +48,8 @@ public class JwtHelper {
 
     public boolean validateToken(String token) {
         try {
+
+            SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(SIGNER_KEY));
             Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
@@ -66,4 +65,11 @@ public class JwtHelper {
             throw new AuthenticateException("JWT claims string is empty.");
         }
     }
+//    public static void main(String[] args) {
+//        //        Generate jwt key
+//        SecretKey secretKey = Jwts.SIG.HS512.key().build();
+//        String key = Encoders.BASE64URL.encode(secretKey.getEncoded());
+//        System.out.println(key);
+//
+//    }
 }
