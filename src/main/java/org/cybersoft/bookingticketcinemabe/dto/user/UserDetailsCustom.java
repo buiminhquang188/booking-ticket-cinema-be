@@ -21,6 +21,7 @@ public class UserDetailsCustom implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (userEntity.getRole() != null) {
+            authorities.add(new SimpleGrantedAuthority("ID_" + String.valueOf(userEntity.getId())));
             if (!userEntity.getRole().contains(",")) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getRole().toUpperCase()));
             } else {
