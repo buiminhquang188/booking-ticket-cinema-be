@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
-@PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+@PreAuthorize("hasAuthority('ID_' + #id) or hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
 @RequestMapping()
 public interface UserController {
     @GetMapping("/users")
