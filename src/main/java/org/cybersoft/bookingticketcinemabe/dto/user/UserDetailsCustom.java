@@ -7,8 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,8 +19,19 @@ public class UserDetailsCustom implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String role = "ROLE_" + userEntity.getRole().toUpperCase();
-        return Collections.singleton(new SimpleGrantedAuthority(role));
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (userEntity.getRole() != null) {
+            if (!userEntity.getRole().contains(",")) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getRole().toUpperCase()));
+            } else {
+                String[] roleList = userEntity.getRole().split(",");
+                for (String roleString : roleList) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_" + roleString.trim().toUpperCase()));
+                }
+            }
+        }
+
+        return authorities;
     }
 
     @Override

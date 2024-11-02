@@ -2,6 +2,7 @@ package org.cybersoft.bookingticketcinemabe.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.cybersoft.bookingticketcinemabe.enums.Status;
+import org.cybersoft.bookingticketcinemabe.exception.runtime.AuthenticateException;
 import org.cybersoft.bookingticketcinemabe.exception.runtime.CinemaNotFoundException;
 import org.cybersoft.bookingticketcinemabe.exception.runtime.NotFoundColumnException;
 import org.cybersoft.bookingticketcinemabe.exception.runtime.NotValidException;
@@ -107,15 +108,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {
+            AuthenticateException.class
+    })
+    public ResponseEntity<Object> handleAuthenticateException(AuthenticateException authenticateException, HttpServletRequest request) {
+        ErrorResponse<Object> errorResponse = this.createExceptionResponse(
+                authenticateException,
+                request,
+                HttpStatus.UNAUTHORIZED,
+                authenticateException.getMessage(),
+                authenticateException.getMessage()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
     /**
      * Help generate error exception response
      *
-     * @param runtimeException
-     *         Provide the runtime exception
-     * @param request
-     *         Provide the httpServletRequest
-     * @param httpStatus
-     *         Provide the HttpStatus enum code
+     * @param runtimeException Provide the runtime exception
+     * @param request          Provide the httpServletRequest
+     * @param httpStatus       Provide the HttpStatus enum code
      * @return ErrorResponse
      */
     private ErrorResponse<Object> createExceptionResponse(RuntimeException runtimeException, HttpServletRequest request, HttpStatus httpStatus, String message, Object details) {
