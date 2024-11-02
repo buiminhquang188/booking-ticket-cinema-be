@@ -5,9 +5,11 @@ import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCreationRequ
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserUpdateRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
+@PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
 @RequestMapping()
 public interface UserController {
     @GetMapping("/users")
