@@ -3,7 +3,7 @@ package org.cybersoft.bookingticketcinemabe.controller.impl;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.UserController;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
-import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
+import org.cybersoft.bookingticketcinemabe.dto.user.UserDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserUpdateRequest;

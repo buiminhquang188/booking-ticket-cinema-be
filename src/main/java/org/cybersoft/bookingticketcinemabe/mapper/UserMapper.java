@@ -1,6 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.mapper;
 
-import org.cybersoft.bookingticketcinemabe.dto.UserDTO;
+import org.cybersoft.bookingticketcinemabe.dto.user.UserDTO;
 import org.cybersoft.bookingticketcinemabe.entity.UserEntity;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserUpdateRequest;
