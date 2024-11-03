@@ -44,8 +44,8 @@ public class MinimalControllerImpl implements MinimalController {
     }
 
     @Override
-    public ResponseEntity<?> getScreenings(int pageNo, int pageLimit, String sortBy) {
-        PageableDTO<?> screenings = this.minimalService.getScreenings(pageNo, pageLimit, sortBy);
+    public ResponseEntity<?> getScreenings(MinimalCriteria minimalCriteria) {
+        PageableDTO<?> screenings = this.minimalService.getScreenings(minimalCriteria);
 
         return ResponseEntity.ok(
                 BaseResponse.builder()

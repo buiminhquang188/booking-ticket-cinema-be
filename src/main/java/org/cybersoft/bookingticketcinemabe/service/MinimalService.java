@@ -7,7 +7,7 @@ import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriter
 import java.util.List;
 
 public interface MinimalService {
-    PageableDTO<?> getScreenings(int pageNo, int pageLimit, String sortBy);
+    PageableDTO<?> getScreenings(MinimalCriteria minimalCriteria);
 
     PageableDTO<?> getMovies(MinimalCriteria minimalCriteria);
 

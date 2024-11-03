@@ -4,24 +4,18 @@ import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalBranchDTO;
 import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalScreeningDTO;
 import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.*;
-import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
-import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 import org.cybersoft.bookingticketcinemabe.query.dto.JooqPaginate;
 import org.cybersoft.bookingticketcinemabe.query.mapper.JooqPaginateMapper;
 import org.cybersoft.bookingticketcinemabe.query.utils.Helpers;
-import org.cybersoft.bookingticketcinemabe.repository.ScreeningRepository;
 import org.cybersoft.bookingticketcinemabe.service.MinimalService;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Result;
 import org.jooq.impl.DSL;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,20 +23,55 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MinimalServiceImpl implements MinimalService {
-    private final ScreeningRepository screeningRepository;
-
-    private final MinimalMapper minimalMapper;
-
     private final DSLContext dsl;
 
     private final JooqPaginateMapper jooqPaginateMapper;
 
     @Override
-    public PageableDTO<?> getScreenings(int pageNo, int pageLimit, String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
-        Page<?> page = this.screeningRepository.findAll(pageable)
-                .map(minimalMapper::toScreeningMinimalDTO);
-        return new PageableMapper<>().toDTO(page);
+    public PageableDTO<?> getScreenings(MinimalCriteria minimalCriteria) {
+        Condition condition = DSL.noCondition();
+
+        if (minimalCriteria.getSearch() != null) {
+            condition = condition
+                    .or(Movie.MOVIE.NAME.like('%' + minimalCriteria.getSearch() + '%'))
+                    .or(Hall.HALL.NAME.like('%' + minimalCriteria.getSearch() + '%'))
+                    .or(Branch.BRANCH.NAME.like('%' + minimalCriteria.getSearch() + '%'))
+                    .or(Branch.BRANCH.ADDRESS.like('%' + minimalCriteria.getSearch() + '%'));
+        }
+
+        Result<?> result = Helpers.paginate(
+                this.dsl,
+                this.dsl.select(Screening.SCREENING.ID,
+                                Screening.SCREENING.START_TIME,
+                                Screening.SCREENING.END_TIME,
+                                Movie.MOVIE.NAME.as("movieName"),
+                                Hall.HALL.NAME.as("hallName"),
+                                Branch.BRANCH.NAME.as("branchName"),
+                                Branch.BRANCH.ADDRESS.as("branchAddress"))
+                        .from(Screening.SCREENING)
+                        .join(Movie.MOVIE)
+                        .on(Screening.SCREENING.MOVIE_ID.eq(Movie.MOVIE.ID))
+                        .join(Hall.HALL)
+                        .on(Screening.SCREENING.HALL_ID.eq(Hall.HALL.ID))
+                        .join(Branch.BRANCH)
+                        .on(Hall.HALL.BRANCH_ID.eq(Branch.BRANCH.ID))
+                        .where(Screening.SCREENING.STATUS.eq("not_reserved"), condition),
+                new Field[]{Screening.SCREENING.ID},
+                minimalCriteria.getPageLimit(),
+                (minimalCriteria.getPageNo() - 1) * minimalCriteria.getPageLimit()
+        );
+
+        System.out.println(result);
+
+        JooqPaginate pagination = this.jooqPaginateMapper.toPaginate(result, minimalCriteria);
+
+        return PageableDTO.<List<MinimalScreeningDTO>>builder()
+                .content(result.into(MinimalScreeningDTO.class))
+                .pageSize(pagination.getPageSize())
+                .pageNo(pagination.getPageNumber())
+                .totalPages(pagination.getTotalPage())
+                .totalItems(pagination.getTotalElement())
+                .build();
     }
 
     @Override

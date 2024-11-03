@@ -7,7 +7,6 @@ import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -20,9 +19,7 @@ public interface MinimalController {
     ResponseEntity<?> getBranches(MinimalCriteria minimalCriteria);
 
     @GetMapping("/screenings")
-    ResponseEntity<?> getScreenings(@RequestParam(defaultValue = "0") int pageNo,
-                                    @RequestParam(defaultValue = "10") int pageLimit,
-                                    @RequestParam(defaultValue = "startTime") String sortBy);
+    ResponseEntity<?> getScreenings(MinimalCriteria minimalCriteria);
 
 
     @GetMapping("/cinemas")
