@@ -272,7 +272,7 @@
 
                             <!-- The destination directory of your generated classes. Using Maven directory layout here -->
                             <directory>
-                                /Users/quangbui/Desktop/Cybersoft/BCJV06/final-capstone/booking-ticket-cinema-be/target/generated-sources/jooq/
+                                ${project.basedir}/target/generated-sources/jooq
                             </directory>
                         </target>
                     </generator>
