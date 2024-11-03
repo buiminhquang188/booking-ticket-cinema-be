@@ -231,7 +231,7 @@
                     <!-- Configure the database connection here -->
                     <jdbc>
                         <driver>com.mysql.cj.jdbc.Driver</driver>
-                        <url>jdbc:mysql://192.168.1.10:3306/capstone</url>
+                        <url>jdbc:mysql://localhost:3306/capstone</url>
                         <user>root</user>
                         <password>meowmeow</password>
                     </jdbc>
