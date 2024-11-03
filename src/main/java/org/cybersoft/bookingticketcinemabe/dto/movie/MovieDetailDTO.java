@@ -20,7 +20,7 @@ public class MovieDetailDTO {
 
     private LocalDateTime startDate;
 
-    private String movieName;
+    private String name;
 
 
 }
