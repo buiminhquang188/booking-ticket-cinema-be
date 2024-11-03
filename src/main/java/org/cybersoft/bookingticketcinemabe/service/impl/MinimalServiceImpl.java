@@ -4,18 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalBranchDTO;
 import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
-import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Branch;
-import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Cinema;
-import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Districts;
-import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Provinces;
+import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.*;
 import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 import org.cybersoft.bookingticketcinemabe.query.dto.JooqPaginate;
 import org.cybersoft.bookingticketcinemabe.query.mapper.JooqPaginateMapper;
 import org.cybersoft.bookingticketcinemabe.query.utils.Helpers;
-import org.cybersoft.bookingticketcinemabe.repository.BranchRepository;
-import org.cybersoft.bookingticketcinemabe.repository.MovieRepository;
 import org.cybersoft.bookingticketcinemabe.repository.ScreeningRepository;
 import org.cybersoft.bookingticketcinemabe.service.MinimalService;
 import org.jooq.Condition;
@@ -36,10 +31,6 @@ import java.util.List;
 public class MinimalServiceImpl implements MinimalService {
     private final ScreeningRepository screeningRepository;
 
-    private final BranchRepository branchRepository;
-
-    private final MovieRepository movieRepository;
-
     private final MinimalMapper minimalMapper;
 
     private final DSLContext dsl;
@@ -55,11 +46,33 @@ public class MinimalServiceImpl implements MinimalService {
     }
 
     @Override
-    public PageableDTO<?> getMovies(int pageNo, int pageLimit, String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
-        Page<?> page = this.movieRepository.findAll(pageable)
-                .map(minimalMapper::toMovieDetailDTO);
-        return new PageableMapper<>().toDTO(page);
+    public PageableDTO<?> getMovies(MinimalCriteria minimalCriteria) {
+        Condition condition = DSL.noCondition();
+
+        if (minimalCriteria.getSearch() != null) {
+            condition = condition.or(Movie.MOVIE.NAME.like('%' + minimalCriteria.getSearch() + '%'));
+        }
+
+        Result<?> result = Helpers.paginate(
+                this.dsl,
+                this.dsl.select(Movie.MOVIE.ID,
+                                Movie.MOVIE.NAME)
+                        .from(Movie.MOVIE)
+                        .where(condition),
+                new Field[]{Movie.MOVIE.ID},
+                minimalCriteria.getPageLimit(),
+                (minimalCriteria.getPageNo() - 1) * minimalCriteria.getPageLimit()
+        );
+
+        JooqPaginate pagination = this.jooqPaginateMapper.toPaginate(result, minimalCriteria);
+
+        return PageableDTO.<List<MinimalDTO>>builder()
+                .content(result.into(MinimalDTO.class))
+                .pageSize(pagination.getPageSize())
+                .pageNo(pagination.getPageNumber())
+                .totalPages(pagination.getTotalPage())
+                .totalItems(pagination.getTotalElement())
+                .build();
     }
 
     @Override
@@ -84,7 +97,7 @@ public class MinimalServiceImpl implements MinimalService {
                 (minimalCriteria.getPageNo() - 1) * minimalCriteria.getPageLimit()
         );
 
-        JooqPaginate pagination = jooqPaginateMapper.toPaginate(result, minimalCriteria);
+        JooqPaginate pagination = this.jooqPaginateMapper.toPaginate(result, minimalCriteria);
 
         return PageableDTO.<List<MinimalBranchDTO>>builder()
                 .content(result.into(MinimalBranchDTO.class))
@@ -114,7 +127,7 @@ public class MinimalServiceImpl implements MinimalService {
                 (minimalCriteria.getPageNo() - 1) * minimalCriteria.getPageLimit()
         );
 
-        JooqPaginate pagination = jooqPaginateMapper.toPaginate(select, minimalCriteria);
+        JooqPaginate pagination = this.jooqPaginateMapper.toPaginate(select, minimalCriteria);
 
         return PageableDTO.<List<MinimalDTO>>builder()
                 .content(select.into(MinimalDTO.class))
@@ -154,7 +167,7 @@ public class MinimalServiceImpl implements MinimalService {
                 (minimalCriteria.getPageNo() - 1) * minimalCriteria.getPageLimit()
         );
 
-        JooqPaginate pagination = jooqPaginateMapper.toPaginate(select, minimalCriteria);
+        JooqPaginate pagination = this.jooqPaginateMapper.toPaginate(select, minimalCriteria);
 
         return PageableDTO.<List<MinimalDTO>>builder()
                 .content(select.into(MinimalDTO.class))

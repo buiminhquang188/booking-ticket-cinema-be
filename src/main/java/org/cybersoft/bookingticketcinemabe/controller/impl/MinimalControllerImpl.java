@@ -2,8 +2,8 @@ package org.cybersoft.bookingticketcinemabe.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.MinimalController;
-import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.MinimalService;
@@ -19,8 +19,9 @@ public class MinimalControllerImpl implements MinimalController {
     private final MinimalService minimalService;
 
     @Override
-    public ResponseEntity<?> getMovies(int pageNo, int pageLimit, String sortBy) {
-        PageableDTO<?> movies = minimalService.getMovies(pageNo, pageLimit, sortBy);
+    public ResponseEntity<?> getMovies(MinimalCriteria minimalCriteria) {
+        PageableDTO<?> movies = this.minimalService.getMovies(minimalCriteria);
+
         return ResponseEntity.ok(BaseResponse.builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -32,22 +33,26 @@ public class MinimalControllerImpl implements MinimalController {
     @Override
     public ResponseEntity<?> getBranches(MinimalCriteria minimalCriteria) {
         PageableDTO<?> branches = this.minimalService.getBranches(minimalCriteria);
-        return ResponseEntity.ok(BaseResponse.builder()
-                .statusCode(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(branches)
-                .build()
+
+        return ResponseEntity.ok(
+                BaseResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(branches)
+                        .build()
         );
     }
 
     @Override
     public ResponseEntity<?> getScreenings(int pageNo, int pageLimit, String sortBy) {
-        PageableDTO<?> screenings = minimalService.getScreenings(pageNo, pageLimit, sortBy);
-        return ResponseEntity.ok(BaseResponse.builder()
-                .statusCode(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(screenings)
-                .build()
+        PageableDTO<?> screenings = this.minimalService.getScreenings(pageNo, pageLimit, sortBy);
+
+        return ResponseEntity.ok(
+                BaseResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(screenings)
+                        .build()
         );
     }
 
