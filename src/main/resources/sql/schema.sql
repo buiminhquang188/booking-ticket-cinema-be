@@ -80,7 +80,7 @@ CREATE TABLE movie
     rating     TINYINT            NULL,
     time       INT                NULL,
     start_date DATETIME           NULL,
-    movie_name VARCHAR(255)       NULL,
+    name       VARCHAR(255)       NULL,
     poster     VARCHAR(255)       NULL,
     trailer    VARCHAR(255)       NULL,
     CONSTRAINT pk_movie PRIMARY KEY (id)

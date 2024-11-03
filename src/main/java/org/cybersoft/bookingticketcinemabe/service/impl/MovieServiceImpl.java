@@ -53,7 +53,7 @@ public class MovieServiceImpl implements MovieService {
             movie.equal(MovieEntity_.id, movieCriteria.getId());
         }
         if (movieCriteria.getMovieName() != null) {
-            movie.like(MovieEntity_.movieName, movieCriteria.getMovieName());
+            movie.like(MovieEntity_.name, movieCriteria.getMovieName());
         }
         if (movieCriteria.getTime() != null) {
             movie.equal(MovieEntity_.time, movieCriteria.getTime());
