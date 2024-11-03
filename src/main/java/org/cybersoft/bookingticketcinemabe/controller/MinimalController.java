@@ -21,11 +21,13 @@ public interface MinimalController {
     @GetMapping("/screenings")
     ResponseEntity<?> getScreenings(MinimalCriteria minimalCriteria);
 
-
     @GetMapping("/cinemas")
     ResponseEntity<BaseResponse<PageableDTO<List<MinimalDTO>>>> getCinemas(MinimalCriteria minimalCriteria);
 
     @GetMapping("/districts")
     ResponseEntity<BaseResponse<PageableDTO<List<MinimalDTO>>>> getDistricts(MinimalCriteria minimalCriteria);
+
+    @GetMapping("/provinces")
+    ResponseEntity<BaseResponse<PageableDTO<List<MinimalDTO>>>> getProvinces(MinimalCriteria minimalCriteria);
 }
 

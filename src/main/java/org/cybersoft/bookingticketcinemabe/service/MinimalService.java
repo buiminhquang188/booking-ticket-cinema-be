@@ -16,4 +16,6 @@ public interface MinimalService {
     PageableDTO<List<MinimalDTO>> getCinemas(MinimalCriteria minimalCriteria);
 
     PageableDTO<List<MinimalDTO>> getDistricts(MinimalCriteria minimalCriteria);
+
+    PageableDTO<List<MinimalDTO>> getProvinces(MinimalCriteria minimalCriteria);
 }

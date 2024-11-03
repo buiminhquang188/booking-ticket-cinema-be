@@ -206,4 +206,35 @@ public class MinimalServiceImpl implements MinimalService {
                 .totalItems(pagination.getTotalElement())
                 .build();
     }
+
+    @Override
+    public PageableDTO<List<MinimalDTO>> getProvinces(MinimalCriteria minimalCriteria) {
+        Condition condition = DSL.noCondition();
+
+        if (minimalCriteria.getSearch() != null) {
+            condition = condition
+                    .or(Provinces.PROVINCES.NAME.like('%' + minimalCriteria.getSearch() + '%'));
+        }
+
+        Result<?> select = Helpers.paginate(
+                this.dsl,
+                this.dsl.select(Provinces.PROVINCES.ID,
+                                Provinces.PROVINCES.NAME)
+                        .from(Provinces.PROVINCES)
+                        .where(condition),
+                new Field[]{Provinces.PROVINCES.ID},
+                minimalCriteria.getPageLimit(),
+                (minimalCriteria.getPageNo() - 1) * minimalCriteria.getPageLimit()
+        );
+
+        JooqPaginate pagination = this.jooqPaginateMapper.toPaginate(select, minimalCriteria);
+
+        return PageableDTO.<List<MinimalDTO>>builder()
+                .content(select.into(MinimalDTO.class))
+                .pageSize(pagination.getPageSize())
+                .pageNo(pagination.getPageNumber())
+                .totalPages(pagination.getTotalPage())
+                .totalItems(pagination.getTotalElement())
+                .build();
+    }
 }

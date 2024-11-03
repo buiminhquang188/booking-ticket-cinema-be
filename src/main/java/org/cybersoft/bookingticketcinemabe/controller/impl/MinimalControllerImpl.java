@@ -81,5 +81,18 @@ public class MinimalControllerImpl implements MinimalController {
                         .build()
         );
     }
+
+    @Override
+    public ResponseEntity<BaseResponse<PageableDTO<List<MinimalDTO>>>> getProvinces(MinimalCriteria minimalCriteria) {
+        PageableDTO<List<MinimalDTO>> provinces = this.minimalService.getProvinces(minimalCriteria);
+
+        return ResponseEntity.ok(
+                BaseResponse.<PageableDTO<List<MinimalDTO>>>builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(provinces)
+                        .build()
+        );
+    }
 }
 
