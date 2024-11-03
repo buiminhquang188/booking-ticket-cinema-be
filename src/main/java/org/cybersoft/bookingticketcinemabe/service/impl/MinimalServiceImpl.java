@@ -97,11 +97,6 @@ public class MinimalServiceImpl implements MinimalService {
 
     @Override
     public PageableDTO<List<MinimalDTO>> getDistricts(MinimalDistrictCriteria minimalDistrictCriteria) {
-        org.cybersoft.bookingticketcinemabe.query.dto.Pageable pageable = org.cybersoft.bookingticketcinemabe.query.dto.Pageable.builder()
-                .pageNumber(minimalDistrictCriteria.getPageNo())
-                .pageSize(minimalDistrictCriteria.getPageLimit())
-                .build();
-
         Condition districtCondition = DSL.noCondition();
         Condition provinceCondition = DSL.noCondition();
 
