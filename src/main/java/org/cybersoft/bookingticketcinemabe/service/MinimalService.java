@@ -1,6 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.service;
 
-import org.cybersoft.bookingticketcinemabe.dto.MinimalDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 
@@ -11,7 +11,7 @@ public interface MinimalService {
 
     PageableDTO<?> getMovies(int pageNo, int pageLimit, String sortBy);
 
-    PageableDTO<?> getBranches(int pageNo, int pageLimit, String sortBy);
+    PageableDTO<?> getBranches(MinimalCriteria minimalCriteria);
 
     PageableDTO<List<MinimalDTO>> getCinemas(MinimalCriteria minimalCriteria);
 

@@ -1,6 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.controller;
 
-import org.cybersoft.bookingticketcinemabe.dto.MinimalDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
@@ -20,9 +20,7 @@ public interface MinimalController {
                                 @RequestParam(defaultValue = "movieName") String sortBy);
 
     @GetMapping("/branches")
-    ResponseEntity<?> getBranches(@RequestParam(defaultValue = "0") int pageNo,
-                                  @RequestParam(defaultValue = "10") int pageLimit,
-                                  @RequestParam(defaultValue = "name") String sortBy);
+    ResponseEntity<?> getBranches(MinimalCriteria minimalCriteria);
 
     @GetMapping("/screenings")
     ResponseEntity<?> getScreenings(@RequestParam(defaultValue = "0") int pageNo,

@@ -1,6 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.mapper;
 
-import org.cybersoft.bookingticketcinemabe.dto.MinimalDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.branch.BranchMinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.movie.MovieDetailDTO;
 import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningMinimalDTO;

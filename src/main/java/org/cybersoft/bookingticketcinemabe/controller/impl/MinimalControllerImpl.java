@@ -2,7 +2,7 @@ package org.cybersoft.bookingticketcinemabe.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.MinimalController;
-import org.cybersoft.bookingticketcinemabe.dto.MinimalDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
@@ -30,8 +30,8 @@ public class MinimalControllerImpl implements MinimalController {
     }
 
     @Override
-    public ResponseEntity<?> getBranches(int pageNo, int pageLimit, String sortBy) {
-        PageableDTO<?> branches = minimalService.getBranches(pageNo, pageLimit, sortBy);
+    public ResponseEntity<?> getBranches(MinimalCriteria minimalCriteria) {
+        PageableDTO<?> branches = this.minimalService.getBranches(minimalCriteria);
         return ResponseEntity.ok(BaseResponse.builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

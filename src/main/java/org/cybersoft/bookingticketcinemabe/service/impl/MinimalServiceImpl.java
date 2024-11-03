@@ -1,15 +1,16 @@
 package org.cybersoft.bookingticketcinemabe.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.cybersoft.bookingticketcinemabe.dto.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalBranchDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
+import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Branch;
 import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Cinema;
 import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Districts;
 import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Provinces;
 import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
-import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
 import org.cybersoft.bookingticketcinemabe.query.dto.JooqPaginate;
 import org.cybersoft.bookingticketcinemabe.query.mapper.JooqPaginateMapper;
 import org.cybersoft.bookingticketcinemabe.query.utils.Helpers;
@@ -41,8 +42,6 @@ public class MinimalServiceImpl implements MinimalService {
 
     private final MinimalMapper minimalMapper;
 
-    private final CriteriaApiHelper criteriaApiHelper;
-
     private final DSLContext dsl;
 
     private final JooqPaginateMapper jooqPaginateMapper;
@@ -64,11 +63,36 @@ public class MinimalServiceImpl implements MinimalService {
     }
 
     @Override
-    public PageableDTO<?> getBranches(int pageNo, int pageLimit, String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageLimit, Sort.by(sortBy));
-        Page<?> page = this.branchRepository.findAll(pageable)
-                .map(minimalMapper::toBranchMinimalDTO);
-        return new PageableMapper<>().toDTO(page);
+    public PageableDTO<?> getBranches(MinimalCriteria minimalCriteria) {
+        Condition condition = DSL.noCondition();
+
+        if (minimalCriteria.getName() != null) {
+            condition = condition
+                    .or(Branch.BRANCH.NAME.like('%' + minimalCriteria.getName() + '%'))
+                    .or(Branch.BRANCH.ADDRESS.like('%' + minimalCriteria.getName() + '%'));
+        }
+
+        Result<?> result = Helpers.paginate(
+                this.dsl,
+                this.dsl.select(Branch.BRANCH.ID,
+                                Branch.BRANCH.NAME,
+                                Branch.BRANCH.ADDRESS)
+                        .from(Branch.BRANCH)
+                        .where(condition),
+                new Field[]{Branch.BRANCH.ID},
+                minimalCriteria.getPageLimit(),
+                (minimalCriteria.getPageNo() - 1) * minimalCriteria.getPageLimit()
+        );
+
+        JooqPaginate pagination = jooqPaginateMapper.toPaginate(result, minimalCriteria);
+
+        return PageableDTO.<List<MinimalBranchDTO>>builder()
+                .content(result.into(MinimalBranchDTO.class))
+                .pageSize(pagination.getPageSize())
+                .pageNo(pagination.getPageNumber())
+                .totalPages(pagination.getTotalPage())
+                .totalItems(pagination.getTotalElement())
+                .build();
     }
 
     @Override
