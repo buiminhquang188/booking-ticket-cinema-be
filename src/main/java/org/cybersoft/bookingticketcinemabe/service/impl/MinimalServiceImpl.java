@@ -66,10 +66,10 @@ public class MinimalServiceImpl implements MinimalService {
     public PageableDTO<?> getBranches(MinimalCriteria minimalCriteria) {
         Condition condition = DSL.noCondition();
 
-        if (minimalCriteria.getName() != null) {
+        if (minimalCriteria.getSearch() != null) {
             condition = condition
-                    .or(Branch.BRANCH.NAME.like('%' + minimalCriteria.getName() + '%'))
-                    .or(Branch.BRANCH.ADDRESS.like('%' + minimalCriteria.getName() + '%'));
+                    .or(Branch.BRANCH.NAME.like('%' + minimalCriteria.getSearch() + '%'))
+                    .or(Branch.BRANCH.ADDRESS.like('%' + minimalCriteria.getSearch() + '%'));
         }
 
         Result<?> result = Helpers.paginate(
@@ -99,8 +99,8 @@ public class MinimalServiceImpl implements MinimalService {
     public PageableDTO<List<MinimalDTO>> getCinemas(MinimalCriteria minimalCriteria) {
         Condition condition = DSL.noCondition();
 
-        if (minimalCriteria.getName() != null) {
-            condition = condition.or(Cinema.CINEMA.NAME.like('%' + minimalCriteria.getName() + '%'));
+        if (minimalCriteria.getSearch() != null) {
+            condition = condition.or(Cinema.CINEMA.NAME.like('%' + minimalCriteria.getSearch() + '%'));
         }
 
         Result<?> select = Helpers.paginate(
@@ -130,12 +130,12 @@ public class MinimalServiceImpl implements MinimalService {
         Condition districtCondition = DSL.noCondition();
         Condition provinceCondition = DSL.noCondition();
 
-        if (minimalCriteria.getName() != null) {
+        if (minimalCriteria.getSearch() != null) {
             districtCondition = districtCondition
-                    .or(Districts.DISTRICTS.NAME.like('%' + minimalCriteria.getName() + '%'));
+                    .or(Districts.DISTRICTS.NAME.like('%' + minimalCriteria.getSearch() + '%'));
 
             provinceCondition = provinceCondition
-                    .or(Provinces.PROVINCES.NAME.like('%' + minimalCriteria.getName() + '%'));
+                    .or(Provinces.PROVINCES.NAME.like('%' + minimalCriteria.getSearch() + '%'));
         }
 
         Result<?> select = Helpers.paginate(

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class MinimalCriteria {
-    private String name;
+    private String search;
     private Integer pageNo = 1;
     private Integer pageLimit = 10;
 }
