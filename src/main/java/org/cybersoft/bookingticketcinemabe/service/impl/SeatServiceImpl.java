@@ -7,7 +7,7 @@ import org.cybersoft.bookingticketcinemabe.entity.SeatEntity;
 import org.cybersoft.bookingticketcinemabe.entity.SeatEntity_;
 import org.cybersoft.bookingticketcinemabe.entity.SeatTypeEntity;
 import org.cybersoft.bookingticketcinemabe.exception.runtime.NotFoundException;
-import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.SeatMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.seat.SeatCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.seat.SeatUpdateRequest;

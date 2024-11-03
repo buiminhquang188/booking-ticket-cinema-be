@@ -25,8 +25,8 @@ public class MovieEntity extends BaseEntity {
     @Column(name = "start_date")
     private LocalDateTime startDate;
 
-    @Column(name = "movie_name")
-    private String movieName;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "poster")
     private String poster;
@@ -47,12 +47,14 @@ public class MovieEntity extends BaseEntity {
 
     public void addBranch(BranchEntity branch) {
         branches.add(branch);
-        branch.getMovies().add(this);
+        branch.getMovies()
+                .add(this);
     }
 
     public void removeBranch(BranchEntity branch) {
         branches.remove(branch);
-        branch.getMovies().remove(this);
+        branch.getMovies()
+                .remove(this);
     }
 
     public void addScreening(ScreeningEntity screening) {

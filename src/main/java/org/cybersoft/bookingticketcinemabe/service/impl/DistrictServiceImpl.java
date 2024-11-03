@@ -7,7 +7,7 @@ import org.cybersoft.bookingticketcinemabe.entity.ProvinceEntity;
 import org.cybersoft.bookingticketcinemabe.exception.BadRequestException;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.DistrictMapper;
-import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.repository.DistrictRepository;
 import org.cybersoft.bookingticketcinemabe.repository.ProvinceRepository;
 import org.cybersoft.bookingticketcinemabe.service.DistrictService;
