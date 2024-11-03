@@ -5,17 +5,26 @@ import org.cybersoft.bookingticketcinemabe.dto.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.entity.CinemaEntity;
 import org.cybersoft.bookingticketcinemabe.entity.CinemaEntity_;
-import org.cybersoft.bookingticketcinemabe.entity.DistrictEntity;
-import org.cybersoft.bookingticketcinemabe.entity.DistrictEntity_;
+import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Districts;
+import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Provinces;
 import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalDistrictCriteria;
 import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
+import org.cybersoft.bookingticketcinemabe.query.dto.JooqPaginate;
 import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
+import org.cybersoft.bookingticketcinemabe.query.mapper.JooqPaginateMapper;
+import org.cybersoft.bookingticketcinemabe.query.utils.Helpers;
 import org.cybersoft.bookingticketcinemabe.repository.BranchRepository;
 import org.cybersoft.bookingticketcinemabe.repository.MovieRepository;
 import org.cybersoft.bookingticketcinemabe.repository.ScreeningRepository;
 import org.cybersoft.bookingticketcinemabe.service.MinimalService;
+import org.jooq.Condition;
+import org.jooq.DSLContext;
+import org.jooq.Field;
+import org.jooq.Result;
+import org.jooq.impl.DSL;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +32,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static org.jooq.impl.DSL.selectOne;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +47,10 @@ public class MinimalServiceImpl implements MinimalService {
     private final MinimalMapper minimalMapper;
 
     private final CriteriaApiHelper criteriaApiHelper;
+
+    private final DSLContext dsl;
+
+    private final JooqPaginateMapper jooqPaginateMapper;
 
     @Override
     public PageableDTO<?> getScreenings(int pageNo, int pageLimit, String sortBy) {
@@ -81,21 +96,51 @@ public class MinimalServiceImpl implements MinimalService {
     }
 
     @Override
-    public PageableDTO<List<MinimalDTO>> getDistricts(MinimalCriteria minimalCriteria) {
+    public PageableDTO<List<MinimalDTO>> getDistricts(MinimalDistrictCriteria minimalDistrictCriteria) {
         org.cybersoft.bookingticketcinemabe.query.dto.Pageable pageable = org.cybersoft.bookingticketcinemabe.query.dto.Pageable.builder()
-                .pageNumber(minimalCriteria.getPageNo())
-                .pageSize(minimalCriteria.getPageLimit())
+                .pageNumber(minimalDistrictCriteria.getPageNo())
+                .pageSize(minimalDistrictCriteria.getPageLimit())
                 .build();
 
-        SelectQueryImpl<DistrictEntity> districts = this.criteriaApiHelper.select(DistrictEntity.class);
+        Condition districtCondition = DSL.noCondition();
+        Condition provinceCondition = DSL.noCondition();
 
-        if (minimalCriteria.getName() != null) {
-            districts.like(DistrictEntity_.name, minimalCriteria.getName());
+        if (minimalDistrictCriteria.getName() != null) {
+            districtCondition = districtCondition.and(Districts.DISTRICTS.NAME.like('%' + minimalDistrictCriteria.getName() + '%'));
         }
 
-        return new PageableMapper<>().toDTO(
-                districts.findAll(pageable)
-                        .map(minimalMapper::toDistrictMinimalDTO)
+        if (minimalDistrictCriteria.getProvinceName() != null) {
+            provinceCondition = provinceCondition.and(Provinces.PROVINCES.NAME.like('%' + minimalDistrictCriteria.getProvinceName() + '%'));
+        }
+        Result<?> select = Helpers.paginate(
+                this.dsl,
+                this.dsl.select(
+                                Districts.DISTRICTS.ID,
+                                Districts.DISTRICTS.NAME,
+                                Provinces.PROVINCES.NAME.as("provinceName")
+                        )
+                        .from(Districts.DISTRICTS)
+                        .join(Provinces.PROVINCES)
+                        .on(Districts.DISTRICTS.PROVINCE_ID.eq(Provinces.PROVINCES.ID))
+                        .where(districtCondition)
+                        .andExists(
+                                selectOne()
+                                        .from(Provinces.PROVINCES)
+                                        .where(provinceCondition.and(Provinces.PROVINCES.ID.eq(Districts.DISTRICTS.PROVINCE_ID)))
+                        ),
+                new Field[]{Districts.DISTRICTS.ID},
+                minimalDistrictCriteria.getPageLimit(),
+                (minimalDistrictCriteria.getPageNo() - 1) * minimalDistrictCriteria.getPageLimit()
         );
+
+        JooqPaginate pagination = jooqPaginateMapper.toPaginate(select, minimalDistrictCriteria);
+
+        return PageableDTO.<List<MinimalDTO>>builder()
+                .content(select.into(MinimalDTO.class))
+                .pageSize(pagination.getPageSize())
+                .pageNo(pagination.getPageNumber())
+                .totalPages(pagination.getTotalPage())
+                .totalItems(pagination.getTotalElement())
+                .build();
     }
 }

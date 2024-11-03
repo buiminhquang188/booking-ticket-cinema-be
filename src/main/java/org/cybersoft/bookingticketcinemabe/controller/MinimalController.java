@@ -3,6 +3,7 @@ package org.cybersoft.bookingticketcinemabe.controller;
 import org.cybersoft.bookingticketcinemabe.dto.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalDistrictCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,6 @@ public interface MinimalController {
     ResponseEntity<BaseResponse<PageableDTO<List<MinimalDTO>>>> getCinemas(MinimalCriteria minimalCriteria);
 
     @GetMapping("/districts")
-    ResponseEntity<BaseResponse<PageableDTO<List<MinimalDTO>>>> getDistricts(MinimalCriteria minimalCriteria);
+    ResponseEntity<BaseResponse<PageableDTO<List<MinimalDTO>>>> getDistricts(MinimalDistrictCriteria minimalCriteria);
 }
 
