@@ -10,7 +10,6 @@ import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Provinces;
 import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
-import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalDistrictCriteria;
 import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
 import org.cybersoft.bookingticketcinemabe.query.dto.JooqPaginate;
 import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
@@ -32,8 +31,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static org.jooq.impl.DSL.selectOne;
 
 @Service
 @RequiredArgsConstructor
@@ -96,17 +93,18 @@ public class MinimalServiceImpl implements MinimalService {
     }
 
     @Override
-    public PageableDTO<List<MinimalDTO>> getDistricts(MinimalDistrictCriteria minimalDistrictCriteria) {
+    public PageableDTO<List<MinimalDTO>> getDistricts(MinimalCriteria minimalCriteria) {
         Condition districtCondition = DSL.noCondition();
         Condition provinceCondition = DSL.noCondition();
 
-        if (minimalDistrictCriteria.getName() != null) {
-            districtCondition = districtCondition.and(Districts.DISTRICTS.NAME.like('%' + minimalDistrictCriteria.getName() + '%'));
+        if (minimalCriteria.getName() != null) {
+            districtCondition = districtCondition
+                    .or(Districts.DISTRICTS.NAME.like('%' + minimalCriteria.getName() + '%'));
+
+            provinceCondition = provinceCondition
+                    .or(Provinces.PROVINCES.NAME.like('%' + minimalCriteria.getName() + '%'));
         }
 
-        if (minimalDistrictCriteria.getProvinceName() != null) {
-            provinceCondition = provinceCondition.and(Provinces.PROVINCES.NAME.like('%' + minimalDistrictCriteria.getProvinceName() + '%'));
-        }
         Result<?> select = Helpers.paginate(
                 this.dsl,
                 this.dsl.select(
@@ -117,18 +115,13 @@ public class MinimalServiceImpl implements MinimalService {
                         .from(Districts.DISTRICTS)
                         .join(Provinces.PROVINCES)
                         .on(Districts.DISTRICTS.PROVINCE_ID.eq(Provinces.PROVINCES.ID))
-                        .where(districtCondition)
-                        .andExists(
-                                selectOne()
-                                        .from(Provinces.PROVINCES)
-                                        .where(provinceCondition.and(Provinces.PROVINCES.ID.eq(Districts.DISTRICTS.PROVINCE_ID)))
-                        ),
+                        .where(districtCondition.or(provinceCondition)),
                 new Field[]{Districts.DISTRICTS.ID},
-                minimalDistrictCriteria.getPageLimit(),
-                (minimalDistrictCriteria.getPageNo() - 1) * minimalDistrictCriteria.getPageLimit()
+                minimalCriteria.getPageLimit(),
+                (minimalCriteria.getPageNo() - 1) * minimalCriteria.getPageLimit()
         );
 
-        JooqPaginate pagination = jooqPaginateMapper.toPaginate(select, minimalDistrictCriteria);
+        JooqPaginate pagination = jooqPaginateMapper.toPaginate(select, minimalCriteria);
 
         return PageableDTO.<List<MinimalDTO>>builder()
                 .content(select.into(MinimalDTO.class))

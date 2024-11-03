@@ -5,7 +5,6 @@ import org.cybersoft.bookingticketcinemabe.controller.MinimalController;
 import org.cybersoft.bookingticketcinemabe.dto.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
-import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalDistrictCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.MinimalService;
 import org.springframework.http.HttpStatus;
@@ -66,8 +65,8 @@ public class MinimalControllerImpl implements MinimalController {
     }
 
     @Override
-    public ResponseEntity<BaseResponse<PageableDTO<List<MinimalDTO>>>> getDistricts(MinimalDistrictCriteria minimalDistrictCriteria) {
-        PageableDTO<List<MinimalDTO>> districts = this.minimalService.getDistricts(minimalDistrictCriteria);
+    public ResponseEntity<BaseResponse<PageableDTO<List<MinimalDTO>>>> getDistricts(MinimalCriteria minimalCriteria) {
+        PageableDTO<List<MinimalDTO>> districts = this.minimalService.getDistricts(minimalCriteria);
 
         return ResponseEntity.ok(
                 BaseResponse.<PageableDTO<List<MinimalDTO>>>builder()
