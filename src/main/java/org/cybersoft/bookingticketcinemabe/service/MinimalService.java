@@ -2,7 +2,7 @@ package org.cybersoft.bookingticketcinemabe.service;
 
 import org.cybersoft.bookingticketcinemabe.dto.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
-import org.cybersoft.bookingticketcinemabe.payload.request.MinimalCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 
 import java.util.List;
 

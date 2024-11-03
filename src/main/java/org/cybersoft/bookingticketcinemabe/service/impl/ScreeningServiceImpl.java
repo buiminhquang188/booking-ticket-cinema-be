@@ -8,7 +8,7 @@ import org.cybersoft.bookingticketcinemabe.entity.*;
 import org.cybersoft.bookingticketcinemabe.exception.BadRequestException;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
-import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.SeatMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.screening.ScreeningMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCreationRequest;

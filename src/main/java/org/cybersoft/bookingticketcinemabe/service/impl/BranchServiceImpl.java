@@ -9,7 +9,7 @@ import org.cybersoft.bookingticketcinemabe.entity.BranchEntity_;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
 import org.cybersoft.bookingticketcinemabe.entity.MovieEntity;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
-import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.branch.BranchDetailMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.branch.BranchMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchCreationRequest;

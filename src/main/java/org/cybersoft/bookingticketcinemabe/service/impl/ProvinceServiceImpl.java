@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.ProvinceDTO;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
-import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.ProvinceMapper;
 import org.cybersoft.bookingticketcinemabe.repository.ProvinceRepository;
 import org.cybersoft.bookingticketcinemabe.service.ProvinceService;

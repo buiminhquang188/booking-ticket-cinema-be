@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.MinimalController;
 import org.cybersoft.bookingticketcinemabe.dto.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
-import org.cybersoft.bookingticketcinemabe.payload.request.MinimalCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.MinimalService;
 import org.springframework.http.HttpStatus;

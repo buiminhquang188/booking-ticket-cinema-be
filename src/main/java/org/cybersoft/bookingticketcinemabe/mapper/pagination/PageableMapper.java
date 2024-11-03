@@ -1,4 +1,4 @@
-package org.cybersoft.bookingticketcinemabe.mapper;
+package org.cybersoft.bookingticketcinemabe.mapper.pagination;
 
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.springframework.data.domain.Page;

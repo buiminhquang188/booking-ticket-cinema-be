@@ -9,7 +9,7 @@ import org.cybersoft.bookingticketcinemabe.entity.MovieEntity;
 import org.cybersoft.bookingticketcinemabe.entity.MovieEntity_;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
-import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.movie.MovieDetailMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.movie.MovieMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.movie.MovieCreationRequest;
