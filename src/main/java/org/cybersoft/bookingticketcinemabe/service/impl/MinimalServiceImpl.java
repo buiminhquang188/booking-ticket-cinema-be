@@ -3,8 +3,7 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
-import org.cybersoft.bookingticketcinemabe.entity.CinemaEntity;
-import org.cybersoft.bookingticketcinemabe.entity.CinemaEntity_;
+import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Cinema;
 import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Districts;
 import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.Provinces;
 import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
@@ -12,7 +11,6 @@ import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
 import org.cybersoft.bookingticketcinemabe.query.dto.JooqPaginate;
-import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
 import org.cybersoft.bookingticketcinemabe.query.mapper.JooqPaginateMapper;
 import org.cybersoft.bookingticketcinemabe.query.utils.Helpers;
 import org.cybersoft.bookingticketcinemabe.repository.BranchRepository;
@@ -75,21 +73,32 @@ public class MinimalServiceImpl implements MinimalService {
 
     @Override
     public PageableDTO<List<MinimalDTO>> getCinemas(MinimalCriteria minimalCriteria) {
-        org.cybersoft.bookingticketcinemabe.query.dto.Pageable pageable = org.cybersoft.bookingticketcinemabe.query.dto.Pageable.builder()
-                .pageNumber(minimalCriteria.getPageNo())
-                .pageSize(minimalCriteria.getPageLimit())
-                .build();
-
-        SelectQueryImpl<CinemaEntity> cinemas = this.criteriaApiHelper.select(CinemaEntity.class);
+        Condition condition = DSL.noCondition();
 
         if (minimalCriteria.getName() != null) {
-            cinemas.like(CinemaEntity_.name, minimalCriteria.getName());
+            condition = condition.or(Cinema.CINEMA.NAME.like('%' + minimalCriteria.getName() + '%'));
         }
 
-        return new PageableMapper<>().toDTO(
-                cinemas.findAll(pageable)
-                        .map(minimalMapper::toCinemaMinimalDTO)
+        Result<?> select = Helpers.paginate(
+                this.dsl,
+                this.dsl.select(Cinema.CINEMA.ID,
+                                Cinema.CINEMA.NAME)
+                        .from(Cinema.CINEMA)
+                        .where(condition),
+                new Field[]{Cinema.CINEMA.ID},
+                minimalCriteria.getPageLimit(),
+                (minimalCriteria.getPageNo() - 1) * minimalCriteria.getPageLimit()
         );
+
+        JooqPaginate pagination = jooqPaginateMapper.toPaginate(select, minimalCriteria);
+
+        return PageableDTO.<List<MinimalDTO>>builder()
+                .content(select.into(MinimalDTO.class))
+                .pageSize(pagination.getPageSize())
+                .pageNo(pagination.getPageNumber())
+                .totalPages(pagination.getTotalPage())
+                .totalItems(pagination.getTotalElement())
+                .build();
     }
 
     @Override
