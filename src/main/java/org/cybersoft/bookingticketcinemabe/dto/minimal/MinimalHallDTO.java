@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MinimalBranchDTO {
+public class MinimalHallDTO {
     private Integer id;
     private String name;
-    private String address;
+    private MinimalBranchDTO branch;
 }

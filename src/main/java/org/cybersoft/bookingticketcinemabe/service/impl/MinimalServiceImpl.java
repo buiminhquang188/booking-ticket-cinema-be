@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalBranchDTO;
 import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalHallDTO;
 import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalScreeningDTO;
 import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.*;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
@@ -231,6 +232,44 @@ public class MinimalServiceImpl implements MinimalService {
 
         return PageableDTO.<List<MinimalDTO>>builder()
                 .content(select.into(MinimalDTO.class))
+                .pageSize(pagination.getPageSize())
+                .pageNo(pagination.getPageNumber())
+                .totalPages(pagination.getTotalPage())
+                .totalItems(pagination.getTotalElement())
+                .build();
+    }
+
+    @Override
+    public PageableDTO<List<MinimalHallDTO>> getHalls(MinimalCriteria minimalCriteria) {
+        Condition condition = DSL.noCondition();
+
+        if (minimalCriteria.getSearch() != null) {
+            condition = condition
+                    .or(Hall.HALL.NAME.like('%' + minimalCriteria.getSearch() + '%'))
+                    .or(Branch.BRANCH.NAME.like('%' + minimalCriteria.getSearch() + '%'))
+                    .or(Branch.BRANCH.ADDRESS.like('%' + minimalCriteria.getSearch() + '%'));
+        }
+
+        Result<?> select = Helpers.paginate(
+                this.dsl,
+                this.dsl.select(Hall.HALL.ID,
+                                Hall.HALL.NAME,
+                                Branch.BRANCH.ID.as("branch.id"),
+                                Branch.BRANCH.NAME.as("branch.name"),
+                                Branch.BRANCH.ADDRESS.as("branch.address"))
+                        .from(Hall.HALL)
+                        .join(Branch.BRANCH)
+                        .on(Hall.HALL.ID.eq(Branch.BRANCH.ID))
+                        .where(condition),
+                new Field[]{Hall.HALL.ID},
+                minimalCriteria.getPageLimit(),
+                (minimalCriteria.getPageNo() - 1) * minimalCriteria.getPageLimit()
+        );
+
+        JooqPaginate pagination = this.jooqPaginateMapper.toPaginate(select, minimalCriteria);
+
+        return PageableDTO.<List<MinimalHallDTO>>builder()
+                .content(select.into(MinimalHallDTO.class))
                 .pageSize(pagination.getPageSize())
                 .pageNo(pagination.getPageNumber())
                 .totalPages(pagination.getTotalPage())

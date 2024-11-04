@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.controller.MinimalController;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalHallDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.MinimalService;
@@ -91,6 +92,19 @@ public class MinimalControllerImpl implements MinimalController {
                         .statusCode(HttpStatus.OK.value())
                         .message(HttpStatus.OK.getReasonPhrase())
                         .data(provinces)
+                        .build()
+        );
+    }
+
+    @Override
+    public ResponseEntity<BaseResponse<PageableDTO<List<MinimalHallDTO>>>> getHalls(MinimalCriteria minimalCriteria) {
+        PageableDTO<List<MinimalHallDTO>> halls = this.minimalService.getHalls(minimalCriteria);
+
+        return ResponseEntity.ok(
+                BaseResponse.<PageableDTO<List<MinimalHallDTO>>>builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(halls)
                         .build()
         );
     }

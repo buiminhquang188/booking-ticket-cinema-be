@@ -2,6 +2,7 @@ package org.cybersoft.bookingticketcinemabe.controller;
 
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalHallDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +30,8 @@ public interface MinimalController {
 
     @GetMapping("/provinces")
     ResponseEntity<BaseResponse<PageableDTO<List<MinimalDTO>>>> getProvinces(MinimalCriteria minimalCriteria);
+
+    @GetMapping("/halls")
+    ResponseEntity<BaseResponse<PageableDTO<List<MinimalHallDTO>>>> getHalls(MinimalCriteria minimalCriteria);
 }
 
