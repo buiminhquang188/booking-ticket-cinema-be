@@ -170,14 +170,11 @@ public class MinimalServiceImpl implements MinimalService {
 
     @Override
     public PageableDTO<List<MinimalDTO>> getDistricts(MinimalCriteria minimalCriteria) {
-        Condition districtCondition = DSL.noCondition();
-        Condition provinceCondition = DSL.noCondition();
+        Condition condition = DSL.noCondition();
 
         if (minimalCriteria.getSearch() != null) {
-            districtCondition = districtCondition
-                    .or(Districts.DISTRICTS.NAME.like('%' + minimalCriteria.getSearch() + '%'));
-
-            provinceCondition = provinceCondition
+            condition = condition
+                    .or(Districts.DISTRICTS.NAME.like('%' + minimalCriteria.getSearch() + '%'))
                     .or(Provinces.PROVINCES.NAME.like('%' + minimalCriteria.getSearch() + '%'));
         }
 
@@ -191,7 +188,7 @@ public class MinimalServiceImpl implements MinimalService {
                         .from(Districts.DISTRICTS)
                         .join(Provinces.PROVINCES)
                         .on(Districts.DISTRICTS.PROVINCE_ID.eq(Provinces.PROVINCES.ID))
-                        .where(districtCondition.or(provinceCondition)),
+                        .where(condition),
                 new Field[]{Districts.DISTRICTS.ID},
                 minimalCriteria.getPageLimit(),
                 (minimalCriteria.getPageNo() - 1) * minimalCriteria.getPageLimit()
