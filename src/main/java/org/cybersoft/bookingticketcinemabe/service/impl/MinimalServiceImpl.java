@@ -2,10 +2,7 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
-import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalBranchDTO;
-import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
-import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalHallDTO;
-import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalScreeningDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.*;
 import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.*;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 import org.cybersoft.bookingticketcinemabe.query.dto.JooqPaginate;
@@ -76,7 +73,7 @@ public class MinimalServiceImpl implements MinimalService {
     }
 
     @Override
-    public PageableDTO<?> getMovies(MinimalCriteria minimalCriteria) {
+    public PageableDTO<List<MinimalMovieDTO>> getMovies(MinimalCriteria minimalCriteria) {
         Condition condition = DSL.noCondition();
 
         if (minimalCriteria.getSearch() != null) {
@@ -86,7 +83,8 @@ public class MinimalServiceImpl implements MinimalService {
         Result<?> result = Helpers.paginate(
                 this.dsl,
                 this.dsl.select(Movie.MOVIE.ID,
-                                Movie.MOVIE.NAME)
+                                Movie.MOVIE.NAME,
+                                Movie.MOVIE.TIME)
                         .from(Movie.MOVIE)
                         .where(condition),
                 new Field[]{Movie.MOVIE.ID},
@@ -96,8 +94,8 @@ public class MinimalServiceImpl implements MinimalService {
 
         JooqPaginate pagination = this.jooqPaginateMapper.toPaginate(result, minimalCriteria);
 
-        return PageableDTO.<List<MinimalDTO>>builder()
-                .content(result.into(MinimalDTO.class))
+        return PageableDTO.<List<MinimalMovieDTO>>builder()
+                .content(result.into(MinimalMovieDTO.class))
                 .pageSize(pagination.getPageSize())
                 .pageNo(pagination.getPageNumber())
                 .totalPages(pagination.getTotalPage())

@@ -5,6 +5,7 @@ import org.cybersoft.bookingticketcinemabe.controller.MinimalController;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalDTO;
 import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalHallDTO;
+import org.cybersoft.bookingticketcinemabe.dto.minimal.MinimalMovieDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.service.MinimalService;
@@ -20,14 +21,15 @@ public class MinimalControllerImpl implements MinimalController {
     private final MinimalService minimalService;
 
     @Override
-    public ResponseEntity<?> getMovies(MinimalCriteria minimalCriteria) {
-        PageableDTO<?> movies = this.minimalService.getMovies(minimalCriteria);
+    public ResponseEntity<BaseResponse<PageableDTO<List<MinimalMovieDTO>>>> getMovies(MinimalCriteria minimalCriteria) {
+        PageableDTO<List<MinimalMovieDTO>> movies = this.minimalService.getMovies(minimalCriteria);
 
-        return ResponseEntity.ok(BaseResponse.builder()
-                .statusCode(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(movies)
-                .build()
+        return ResponseEntity.ok(
+                BaseResponse.<PageableDTO<List<MinimalMovieDTO>>>builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
+                        .data(movies)
+                        .build()
         );
     }
 
