@@ -125,13 +125,19 @@ public class ScreeningServiceImpl implements ScreeningService {
                     final ScreeningEntity savedScreening = screening;
                     List<ScreeningSeatEntity> screeningSeatsCreated = hall.getSeats()
                             .stream()
-                            .map(seat -> {
-                                ScreeningSeatEntity screeningSeat = seatMapper.toScreeningSeatEntity(seat);
-                                screeningSeat.setIsBooked(false);
-                                screeningSeat.setScreening(savedScreening);
-                                return screeningSeat;
-                            })
+                            .map(seat -> ScreeningSeatEntity.builder()
+                                    .isActive(seat.getIsActive())
+                                    .seatColumn(seat.getSeatColumn())
+                                    .seatRow(seat.getSeatRow())
+                                    .seatNumber(seat.getSeatNumber())
+                                    .seatCode(seat.getSeatCode())
+                                    .price(seat.getPrice())
+                                    .seatType(seat.getSeatType())
+                                    .isBooked(false)
+                                    .screening(savedScreening)
+                                    .build())
                             .collect(Collectors.toList());
+
                     screeningSeatsCreated = screeningSeatRepository.saveAll(screeningSeatsCreated);
                     screeningSeatsCreated.forEach(screening::addScreeningSeat);
                 } catch (Exception e) {
