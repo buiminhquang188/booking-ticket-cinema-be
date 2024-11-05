@@ -11,7 +11,6 @@ public interface ScreeningService {
 
     ScreeningDTO getScreening(Integer id);
 
-
     ScreeningDTO createScreening(ScreeningCreationRequest request);
 
     ScreeningDTO updateScreening(Integer id, ScreeningUpdateRequest request);

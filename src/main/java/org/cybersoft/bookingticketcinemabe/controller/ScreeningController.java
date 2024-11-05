@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping
 public interface ScreeningController {
     @GetMapping("/screenings")
-    public ResponseEntity<?> getScreenings(ScreeningCriteria screeningCriteria);
+    ResponseEntity<?> getScreenings(ScreeningCriteria screeningCriteria);
 
     @GetMapping("/screening/{id}")
-    public ResponseEntity<?> getScreening(@PathVariable Integer id);
+    ResponseEntity<?> getScreening(@PathVariable Integer id);
 
     @PostMapping("/screening")
     ResponseEntity<?> createScreening(@RequestBody ScreeningCreationRequest request);
