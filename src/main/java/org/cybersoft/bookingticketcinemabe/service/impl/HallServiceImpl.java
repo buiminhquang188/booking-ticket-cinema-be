@@ -11,6 +11,7 @@ import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity_;
 import org.cybersoft.bookingticketcinemabe.entity.SeatEntity;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
+import org.cybersoft.bookingticketcinemabe.exception.runtime.BadRequestException;
 import org.cybersoft.bookingticketcinemabe.mapper.HallMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.hall.*;
@@ -143,6 +144,11 @@ public class HallServiceImpl implements HallService {
     public void deleteHall(Integer id) {
         HallEntity hall = this.hallRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Hall " + id + " not found"));
+
+        if (!hall.getScreenings()
+                .isEmpty()) {
+            throw new BadRequestException("Cannot delete hall " + id + " due to screenings");
+        }
 
         List<SeatEntity> seats = this.seatRepository.findAllByHallId(id);
         this.seatRepository.deleteAllInBatch(seats);
