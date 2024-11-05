@@ -56,7 +56,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(BaseResponse.builder()
                 .message(errorMessage)
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .build(), HttpStatus.OK);
+                .build(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {
@@ -115,12 +115,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponse<Object> errorResponse = this.createExceptionResponse(
                 authenticateException,
                 request,
-                HttpStatus.UNAUTHORIZED,
-                authenticateException.getMessage(),
+                HttpStatus.FORBIDDEN,
+                "Authentication Error",
                 authenticateException.getMessage()
         );
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 
     /**
@@ -131,7 +131,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @param httpStatus       Provide the HttpStatus enum code
      * @return ErrorResponse
      */
-    private ErrorResponse<Object> createExceptionResponse(RuntimeException runtimeException, HttpServletRequest request, HttpStatus httpStatus, String message, Object details) {
+    public ErrorResponse<Object> createExceptionResponse(RuntimeException runtimeException, HttpServletRequest request, HttpStatus httpStatus, String message, Object details) {
         return ErrorResponse.builder()
                 .status(Status.ERROR.toString()
                         .toLowerCase())
