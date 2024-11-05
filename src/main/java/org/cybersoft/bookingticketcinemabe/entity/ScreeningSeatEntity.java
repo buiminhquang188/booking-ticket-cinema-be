@@ -37,9 +37,9 @@ public class ScreeningSeatEntity extends BaseEntity {
     @Column(name = "price")
     private Double price;
 
-    @ManyToOne
-    @JoinColumn(name = "seat_type_id")
-    private SeatTypeEntity seatType;
+//    @ManyToOne
+//    @JoinColumn(name = "seat_type_id")
+//    private SeatTypeEntity seatType;
 
     @ManyToOne
     @JoinColumn(name = "screening_id")
