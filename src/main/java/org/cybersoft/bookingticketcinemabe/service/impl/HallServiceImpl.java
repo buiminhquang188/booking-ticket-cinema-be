@@ -12,7 +12,7 @@ import org.cybersoft.bookingticketcinemabe.entity.HallEntity_;
 import org.cybersoft.bookingticketcinemabe.entity.SeatEntity;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.HallMapper;
-import org.cybersoft.bookingticketcinemabe.mapper.PageableMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.hall.*;
 import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
 import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;

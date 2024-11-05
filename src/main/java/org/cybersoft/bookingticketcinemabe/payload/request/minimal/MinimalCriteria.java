@@ -1,10 +1,10 @@
-package org.cybersoft.bookingticketcinemabe.payload.request;
+package org.cybersoft.bookingticketcinemabe.payload.request.minimal;
 
 import lombok.Data;
 
 @Data
 public class MinimalCriteria {
-    private String name;
+    private String search;
     private Integer pageNo = 1;
     private Integer pageLimit = 10;
 }

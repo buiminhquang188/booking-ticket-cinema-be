@@ -23,7 +23,7 @@ public class MovieDTO {
 
     private LocalDateTime startDate;
 
-    private String movieName;
+    private String name;
 
     private String poster;
 
