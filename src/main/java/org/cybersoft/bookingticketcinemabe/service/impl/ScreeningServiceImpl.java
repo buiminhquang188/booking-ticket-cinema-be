@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningDTO;
+import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningDetailDTO;
 import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity_;
@@ -11,7 +12,6 @@ import org.cybersoft.bookingticketcinemabe.entity.ScreeningSeatEntity;
 import org.cybersoft.bookingticketcinemabe.exception.BadRequestException;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
-import org.cybersoft.bookingticketcinemabe.mapper.SeatMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.screening.ScreeningMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCreationRequest;
@@ -21,8 +21,12 @@ import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningUp
 import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
 import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
 import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
-import org.cybersoft.bookingticketcinemabe.repository.*;
+import org.cybersoft.bookingticketcinemabe.repository.HallRepository;
+import org.cybersoft.bookingticketcinemabe.repository.MovieRepository;
+import org.cybersoft.bookingticketcinemabe.repository.ScreeningRepository;
+import org.cybersoft.bookingticketcinemabe.repository.ScreeningSeatRepository;
 import org.cybersoft.bookingticketcinemabe.service.ScreeningService;
+import org.cybersoft.bookingticketcinemabe.service.SeatLayoutService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,18 +37,13 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ScreeningServiceImpl implements ScreeningService {
+    private final SeatLayoutService seatLayoutService;
     private final ScreeningRepository screeningRepository;
     private final HallRepository hallRepository;
     private final MovieRepository movieRepository;
-    private final ReservationRepository reservationRepository;
-    private final SeatReservationRepository seatReservationRepository;
     private final ScreeningSeatRepository screeningSeatRepository;
-
-
     private final ScreeningMapper screeningMapper;
     private final MinimalMapper minimalMapper;
-    private final SeatMapper seatMapper;
-
     private final CriteriaApiHelper criteriaApiHelper;
 
     @Override
@@ -81,11 +80,15 @@ public class ScreeningServiceImpl implements ScreeningService {
     }
 
     @Override
-    public ScreeningDTO getScreening(Integer id) {
-        return this.screeningRepository.findById(id)
-                .map(screeningMapper::toDTO)
+    public ScreeningDetailDTO getScreening(Integer id) {
+        ScreeningEntity screening = this.screeningRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Not found screening"));
 
+        ScreeningDetailDTO screeningDetailDTO = this.screeningMapper.toScreeningDetailDto(screening);
+        // TODO: Bypass mapper form now, enhance later
+        screeningDetailDTO.setScreeningSeats(this.seatLayoutService.getSeatLayoutByScreeningId(id));
+
+        return screeningDetailDTO;
     }
 
     @Transactional
@@ -141,7 +144,8 @@ public class ScreeningServiceImpl implements ScreeningService {
                                     .seatNumber(seat.getSeatNumber())
                                     .seatCode(seat.getSeatCode())
                                     .price(seat.getPrice())
-                                    .seatType(seat.getSeatType())
+                                    // TODO: Enhance Later, Bypass now.
+                                    //.seatType(seat.getSeatType())
                                     .isBooked(false)
                                     .screening(savedScreening)
                                     .build())

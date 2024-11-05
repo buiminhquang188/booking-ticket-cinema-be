@@ -22,6 +22,6 @@ public class SeatTypeEntity extends BaseEntity {
     @OneToMany(mappedBy = "seatType")
     private List<SeatEntity> seats;
 
-    @OneToMany(mappedBy = "seatType")
-    private List<ScreeningSeatEntity> screeningSeats;
+//    @OneToMany(mappedBy = "seatType")
+//    private List<ScreeningSeatEntity> screeningSeats;
 }
