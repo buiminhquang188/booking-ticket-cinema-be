@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ScreeningSeatRepository extends JpaRepository<ScreeningSeatEntity, Integer> {
     List<ScreeningSeatEntity> findAllByIdInAndScreeningId(List<Integer> seatIds, Integer screeningId);
+
+    List<ScreeningSeatEntity> findAllByScreeningId(Integer screeningId);
 }

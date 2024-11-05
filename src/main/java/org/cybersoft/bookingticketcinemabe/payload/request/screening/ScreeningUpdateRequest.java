@@ -1,12 +1,15 @@
 package org.cybersoft.bookingticketcinemabe.payload.request.screening;
 
+import org.cybersoft.bookingticketcinemabe.annotation.validator.ValidSeats;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 public record ScreeningUpdateRequest(
         LocalDateTime startTime,
+        Integer hallId,
         Integer movieId,
-        List<Integer> reservationIds,
-        List<Integer> seatReservationIds
+        @ValidSeats
+        List<ScreeningUpdateSeat> screeningSeats
 ) {
 }

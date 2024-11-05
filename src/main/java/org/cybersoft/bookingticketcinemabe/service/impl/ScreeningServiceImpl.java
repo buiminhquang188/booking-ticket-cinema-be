@@ -4,16 +4,20 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningDTO;
-import org.cybersoft.bookingticketcinemabe.entity.*;
+import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
+import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity;
+import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity_;
+import org.cybersoft.bookingticketcinemabe.entity.ScreeningSeatEntity;
 import org.cybersoft.bookingticketcinemabe.exception.BadRequestException;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
-import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.SeatMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.screening.ScreeningMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningUpdateSeat;
 import org.cybersoft.bookingticketcinemabe.query.CriteriaApiHelper;
 import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
 import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
@@ -24,7 +28,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,13 +75,15 @@ public class ScreeningServiceImpl implements ScreeningService {
             screening.between(ScreeningEntity_.updatedAt.getName(), screeningCriteria.getUpdatedAtFrom(), screeningCriteria.getUpdatedAtTo());
         }
 
-        return new PageableMapper<>().toDTO(screening.findAll(pageable).map(minimalMapper::toScreeningMinimalDTO));
+        return new PageableMapper<>().toDTO(screening.findAll(pageable)
+                .map(minimalMapper::toScreeningMinimalDTO));
 
     }
 
     @Override
     public ScreeningDTO getScreening(Integer id) {
-        return this.screeningRepository.findById(id).map(screeningMapper::toDTO)
+        return this.screeningRepository.findById(id)
+                .map(screeningMapper::toDTO)
                 .orElseThrow(() -> new NotFoundException("Not found screening"));
 
     }
@@ -92,13 +97,17 @@ public class ScreeningServiceImpl implements ScreeningService {
             screening.setMovie(movieRepository.findById(request.movieId())
                     .orElseThrow(() -> new NotFoundException("Not found movie with id: " + request.movieId())));
             if (screening.getStartTime() != null)
-                screening.setEndTime(screening.getStartTime().plusMinutes(screening.getMovie().getTime()));
+                screening.setEndTime(screening.getStartTime()
+                        .plusMinutes(screening.getMovie()
+                                .getTime()));
         }
         if (request.hallId() != null) {
             HallEntity hall = hallRepository.findById(request.hallId())
                     .orElseThrow(() -> new NotFoundException("Not found hall with id: " + request.hallId()));
 
-            if (hall.getSeats() == null && hall.getSeats().isEmpty() && hall.getSeats().contains(null))
+            if (hall.getSeats() == null && hall.getSeats()
+                    .isEmpty() && hall.getSeats()
+                        .contains(null))
                 throw new NotFoundException("Not found seats at hall with id: " + hall.getId());
 
             LocalDateTime startTime = screening.getStartTime();
@@ -154,46 +163,51 @@ public class ScreeningServiceImpl implements ScreeningService {
     public ScreeningDTO updateScreening(Integer id, ScreeningUpdateRequest request) {
         ScreeningEntity screening = screeningRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Not found screening with id: " + id));
-        if (screening != null) {
-            screeningMapper.update(screening, request);
 
-            if (request.movieId() != null) {
-                screening.setMovie(movieRepository.findById(request.movieId())
-                        .orElseThrow(() -> new NotFoundException("Not found movie with id: " + request.movieId())));
-                if (screening.getStartTime() != null)
-                    screening.setEndTime(screening.getStartTime().plusMinutes(screening.getMovie().getTime()));
-            }
+        HallEntity hall = hallRepository.findById(request.hallId())
+                .orElseThrow(() -> new NotFoundException("Not found hall with id: " + request.hallId()));
 
-            if (request.reservationIds() != null && !request.reservationIds().isEmpty() && screening.getReservations() != null && !request.reservationIds().contains(null)) {
+        LocalDateTime startTime = request.startTime();
+        LocalDateTime endTime = request.startTime()
+                .plusMinutes(screening.getMovie()
+                        .getTime());
+        List<ScreeningEntity> overlapTimeScreenings = screeningRepository.findScreeningOverlapTimerInHall(startTime, endTime, hall.getId());
 
-                int reservationSize = Objects.requireNonNull(screening).getReservations().size();
-                for (int i = 0; i < reservationSize; i++)
-                    screening.removeReservation(screening.getReservations().get(0));
+        if (!overlapTimeScreenings.isEmpty()) {
+            StringBuilder messageResponse = new StringBuilder("Hall " + hall.getName() + " has overlapping screenings with id(s): ");
 
-                request.reservationIds().forEach(reservationId -> {
-                    ReservationEntity reservationEntity = reservationRepository.findById(reservationId)
-                            .orElseThrow(() -> new NotFoundException("Not found reservation with id: " + reservationId));
-                    if (reservationEntity != null) screening.addReservation(reservationEntity);
-                });
-            }
-            if (request.seatReservationIds() != null && !request.seatReservationIds().isEmpty() && screening.getSeatReservations() != null && !request.seatReservationIds().contains(null)) {
-
-                int seatReservationSize = Objects.requireNonNull(screening).getSeatReservations().size();
-                for (int i = 0; i < seatReservationSize; i++)
-                    screening.removeSeatReservation(screening.getSeatReservations().get(0));
-
-                request.seatReservationIds().forEach(seatReservationId -> {
-                    SeatReservationEntity seatReservationEntity = seatReservationRepository.findById(seatReservationId)
-                            .orElseThrow(() -> new NotFoundException("Not found seat-reservation with id: " + seatReservationId));
-                    if (seatReservationEntity != null) screening.addSeatReservation(seatReservationEntity);
-                });
-            }
+            overlapTimeScreenings.forEach(overlapTimeScreening -> {
+                messageResponse.append(overlapTimeScreening.getId())
+                        .append(" from ")
+                        .append(overlapTimeScreening.getStartTime())
+                        .append(" to ")
+                        .append(overlapTimeScreening.getEndTime())
+                        .append("; ");
+            });
+            throw new BadRequestException(messageResponse.toString());
         }
 
-        assert screening != null;
+        screeningMapper.update(screening, request);
+
+        if (request.movieId() != null) {
+            screening.setMovie(movieRepository.findById(request.movieId())
+                    .orElseThrow(() -> new NotFoundException("Not found movie with id: " + request.movieId())));
+            if (screening.getStartTime() != null)
+                screening.setEndTime(screening.getStartTime()
+                        .plusMinutes(screening.getMovie()
+                                .getTime()));
+        }
+
+        if (!request.screeningSeats()
+                .isEmpty()) {
+            List<ScreeningSeatEntity> screeningSeats = this.screeningSeatRepository.findAllByScreeningId(id);
+            List<ScreeningSeatEntity> screeningSeatEntities = this.updateScreeningSeats(request.screeningSeats(), screeningSeats, screening);
+
+            this.screeningSeatRepository.saveAll(screeningSeatEntities);
+        }
+
+        screening.setHall(hall);
         ScreeningEntity screeningUpdated = screeningRepository.save(screening);
-
-
         return screeningMapper.toDTO(screeningUpdated);
     }
 
@@ -217,4 +231,53 @@ public class ScreeningServiceImpl implements ScreeningService {
     }
 
 
+    private List<ScreeningSeatEntity> updateScreeningSeats(List<ScreeningUpdateSeat> requestUpdateSeats, List<ScreeningSeatEntity> screeningSeats, ScreeningEntity screening) {
+        return requestUpdateSeats.stream()
+                .map(requestScreeningSeat -> this.enrichScreeningSeats(requestScreeningSeat, screeningSeats, screening))
+                .collect(Collectors.toList());
+    }
+
+    private ScreeningSeatEntity enrichScreeningSeats(ScreeningUpdateSeat requestScreeningSeat, List<ScreeningSeatEntity> screeningSeatEntities, ScreeningEntity screening) {
+        ScreeningSeatEntity screeningSeat = screeningSeatEntities.stream()
+                .filter((screeningSeatEntity) -> this.isMatch(screeningSeatEntity, requestScreeningSeat))
+                .findFirst()
+                .orElseGet(() -> this.updateScreeningSeat(requestScreeningSeat, screening));
+
+        if (!screeningSeat.getIsBooked()) {
+            screeningSeat.setIsActive(requestScreeningSeat.isActive());
+        }
+
+        if (!screeningSeat.getIsBooked() && requestScreeningSeat.seatPrice() != null) {
+            screeningSeat.setPrice(requestScreeningSeat.seatPrice());
+        }
+
+        return screeningSeat;
+    }
+
+    private boolean isMatch(ScreeningSeatEntity screeningSeat, ScreeningUpdateSeat requestScreeningSeat) {
+        return screeningSeat.getSeatRow()
+                       .equals(requestScreeningSeat.seatRow()) && screeningSeat.getSeatColumn()
+                       .equals(requestScreeningSeat.seatColumn()) && screeningSeat.getSeatNumber()
+                       .equals(requestScreeningSeat.seatNumber());
+
+    }
+
+    private ScreeningSeatEntity updateScreeningSeat(ScreeningUpdateSeat requestScreeningSeat, ScreeningEntity screening) {
+        StringBuilder stringBuilder = new StringBuilder();
+        return ScreeningSeatEntity.builder()
+                .screening(screening)
+                .seatRow(requestScreeningSeat.seatRow())
+                .seatColumn(requestScreeningSeat.seatColumn())
+                .seatNumber(requestScreeningSeat.seatNumber())
+                .seatCode(
+                        stringBuilder
+                                .append(requestScreeningSeat.seatRow())
+                                .append(requestScreeningSeat.seatNumber())
+                                .toString()
+                )
+                .price(requestScreeningSeat.seatPrice())
+                .isBooked(false)
+                .isActive(requestScreeningSeat.isActive())
+                .build();
+    }
 }
