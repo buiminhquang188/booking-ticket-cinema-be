@@ -23,3 +23,17 @@ docker compose --profile database start
 ```
 
 This will start database.
+
+6. Enviroment:
+
+Copy new file `.env.properties.example` and rename it to `.env.properties` and replace value of variables inside it.
+
+7. Before development:
+
+Following these steps to make sure everything is working fine:
+
+`
+maven clean -> maven install -> maven compile
+`
+
+8. Happy coding!
