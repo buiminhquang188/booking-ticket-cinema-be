@@ -38,7 +38,15 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public ReservationDTO bookingTicket(Integer screeningId, ReservationBookingRequest reservationBookingRequest) {
         ScreeningEntity screening = this.getScreeningById(screeningId);
-        List<ScreeningSeatEntity> seats = this.getSeatsByIds(reservationBookingRequest.seatIds());
+        List<ScreeningSeatEntity> seats = this.getSeatsByIds(reservationBookingRequest.seatIds(), screeningId);
+
+        // Check if time reservation is valid
+        if (reservationBookingRequest.timeReservation()
+                    .isAfter(screening.getStartTime()) && LocalDateTime.now()
+                    .isAfter(screening.getStartTime())) {
+            throw new NotFoundException("Screening has already started");
+        }
+
 
         // Check if seat is not found
         List<Integer> notFoundSeatIds = this.getNotFoundSeatIds(reservationBookingRequest.seatIds(), seats);
@@ -74,6 +82,8 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toList());
         this.seatReservationRepository.saveAll(seatReservations);
 
+        screening.setStatus("booked");
+
         return this.reservationMapper.toDTO(savedReservation);
     }
 
@@ -104,8 +114,8 @@ public class ReservationServiceImpl implements ReservationService {
                 .orElseThrow(() -> new NotFoundException("Screening not found"));
     }
 
-    private List<ScreeningSeatEntity> getSeatsByIds(List<Integer> seatIds) {
-        return this.screeningSeatRepository.findAllById(seatIds);
+    private List<ScreeningSeatEntity> getSeatsByIds(List<Integer> seatIds, Integer screeningId) {
+        return this.screeningSeatRepository.findAllByIdInAndScreeningId(seatIds, screeningId);
     }
 
     private List<Integer> getNotFoundSeatIds(List<Integer> seatIds, List<ScreeningSeatEntity> seats) {

@@ -2,6 +2,7 @@ package org.cybersoft.bookingticketcinemabe.service;
 
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningDTO;
+import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningDetailDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningUpdateRequest;
@@ -9,8 +10,7 @@ import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningUp
 public interface ScreeningService {
     PageableDTO<?> getScreenings(ScreeningCriteria screeningCriteria);
 
-    ScreeningDTO getScreening(Integer id);
-
+    ScreeningDetailDTO getScreening(Integer id);
 
     ScreeningDTO createScreening(ScreeningCreationRequest request);
 
