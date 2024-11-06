@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -48,15 +49,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        String errorMessage = (exception.getFieldError() != null)
-                ? exception.getFieldError()
-                .getDefaultMessage()
-                : "Validation error";
-        return new ResponseEntity<>(BaseResponse.builder()
-                .message(errorMessage)
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .build(), HttpStatus.BAD_REQUEST);
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException validException, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        HttpServletRequest servletRequest = ((ServletWebRequest) request).getRequest();
+        ErrorResponse<Object> errorResponse = this.createValidExceptionResponse(
+                validException,
+                servletRequest,
+                HttpStatus.BAD_REQUEST,
+                "Validation error",
+                validException.getFieldError()
+                        .getDefaultMessage()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {
@@ -132,6 +137,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return ErrorResponse
      */
     public ErrorResponse<Object> createExceptionResponse(RuntimeException runtimeException, HttpServletRequest request, HttpStatus httpStatus, String message, Object details) {
+        return ErrorResponse.builder()
+                .status(Status.ERROR.toString()
+                        .toLowerCase())
+                .statusCode(httpStatus.getReasonPhrase())
+                .error(
+                        ErrorDetailResponse.builder()
+                                .code(httpStatus.getReasonPhrase())
+                                .message(message)
+                                .details(details)
+                                .timestamp(LocalDateTime.now())
+                                .path(request.getRequestURI())
+                                .build()
+                )
+                .build();
+    }
+
+    public ErrorResponse<Object> createValidExceptionResponse(MethodArgumentNotValidException validException, HttpServletRequest request, HttpStatus httpStatus, String message, Object details) {
         return ErrorResponse.builder()
                 .status(Status.ERROR.toString()
                         .toLowerCase())
