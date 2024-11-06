@@ -21,6 +21,9 @@ spring:
     multipart:
       max-request-size: 10MB
       max-file-size: 10MB
+  jackson:
+    serialization:
+      write-date-keys-as-timestamps: false
 management:
   endpoints:
     web:
