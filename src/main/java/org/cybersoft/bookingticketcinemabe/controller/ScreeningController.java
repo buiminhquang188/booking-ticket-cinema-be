@@ -1,5 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.controller;
 
+import jakarta.validation.Valid;
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningUpdateRequest;
@@ -15,10 +16,10 @@ public interface ScreeningController {
     ResponseEntity<?> getScreening(@PathVariable Integer id);
 
     @PostMapping("/screening")
-    ResponseEntity<?> createScreening(@RequestBody ScreeningCreationRequest request);
+    ResponseEntity<?> createScreening(@RequestBody @Valid ScreeningCreationRequest request);
 
     @PutMapping("/screening/{id}")
-    ResponseEntity<?> updateScreening(@PathVariable Integer id, @RequestBody ScreeningUpdateRequest request);
+    ResponseEntity<?> updateScreening(@PathVariable Integer id, @RequestBody @Valid ScreeningUpdateRequest request);
 
     @DeleteMapping("/screening/{id}")
     ResponseEntity<?> deleteScreening(@PathVariable Integer id);

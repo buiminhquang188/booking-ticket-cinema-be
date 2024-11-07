@@ -9,6 +9,7 @@ import org.cybersoft.bookingticketcinemabe.exception.runtime.NotValidException;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
 import org.cybersoft.bookingticketcinemabe.payload.response.ErrorDetailResponse;
 import org.cybersoft.bookingticketcinemabe.payload.response.ErrorResponse;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -21,6 +22,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -52,13 +55,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException validException, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
         HttpServletRequest servletRequest = ((ServletWebRequest) request).getRequest();
+        List<String> errorDetails = validException.getBindingResult().getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
         ErrorResponse<Object> errorResponse = this.createValidExceptionResponse(
                 validException,
                 servletRequest,
                 HttpStatus.BAD_REQUEST,
                 "Validation error",
-                validException.getFieldError()
-                        .getDefaultMessage()
+                errorDetails
         );
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -162,7 +166,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         ErrorDetailResponse.builder()
                                 .code(httpStatus.getReasonPhrase())
                                 .message(message)
-                                .details(details)
+                                .details(details != null ? details : "No details available")
                                 .timestamp(LocalDateTime.now())
                                 .path(request.getRequestURI())
                                 .build()
