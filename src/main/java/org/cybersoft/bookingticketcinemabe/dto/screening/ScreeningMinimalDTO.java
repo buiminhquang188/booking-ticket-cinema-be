@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.movie.MovieDetailDTO;
+import org.cybersoft.bookingticketcinemabe.enums.ScreeningStatus;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +23,5 @@ public class ScreeningMinimalDTO {
     private LocalDateTime endTime;
     private MovieDetailDTO movie;
     private Integer totalSeat;
-
-
+    private ScreeningStatus status;
 }
