@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailDTO;
 import org.cybersoft.bookingticketcinemabe.dto.movie.MovieDetailDTO;
+import org.cybersoft.bookingticketcinemabe.enums.ScreeningStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,4 +19,5 @@ public class ScreeningDetailDTO {
     private HallDetailDTO hall;
     private MovieDetailDTO movie;
     private List<List<ScreeningDetailSeatLayoutDTO>> screeningSeats;
+    private ScreeningStatus status;
 }
