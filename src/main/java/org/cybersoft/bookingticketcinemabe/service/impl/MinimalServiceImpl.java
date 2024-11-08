@@ -3,6 +3,7 @@ package org.cybersoft.bookingticketcinemabe.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.minimal.*;
+import org.cybersoft.bookingticketcinemabe.enums.ScreeningStatus;
 import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.*;
 import org.cybersoft.bookingticketcinemabe.payload.request.minimal.MinimalCriteria;
 import org.cybersoft.bookingticketcinemabe.query.dto.JooqPaginate;
@@ -53,13 +54,11 @@ public class MinimalServiceImpl implements MinimalService {
                         .on(Screening.SCREENING.HALL_ID.eq(Hall.HALL.ID))
                         .join(Branch.BRANCH)
                         .on(Hall.HALL.BRANCH_ID.eq(Branch.BRANCH.ID))
-                        .where(Screening.SCREENING.STATUS.eq("not_reserved"), condition),
+                        .where(Screening.SCREENING.STATUS.eq(ScreeningStatus.NEW.name()), condition),
                 new Field[]{Screening.SCREENING.ID},
                 minimalCriteria.getPageLimit(),
                 (minimalCriteria.getPageNo() - 1) * minimalCriteria.getPageLimit()
         );
-
-        System.out.println(result);
 
         JooqPaginate pagination = this.jooqPaginateMapper.toPaginate(result, minimalCriteria);
 

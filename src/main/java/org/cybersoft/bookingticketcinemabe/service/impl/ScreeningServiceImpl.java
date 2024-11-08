@@ -180,7 +180,7 @@ public class ScreeningServiceImpl implements ScreeningService {
         LocalDateTime endTime = request.startTime()
                 .plusMinutes(screening.getMovie()
                         .getTime());
-        List<ScreeningEntity> overlapTimeScreenings = screeningRepository.findScreeningOverlapTimerInHall(startTime, endTime, hall.getId());
+        List<ScreeningEntity> overlapTimeScreenings = screeningRepository.findScreeningOverlapTimerInHallExcludeItSelf(startTime, endTime, hall.getId(), screening.getId());
 
         if (!overlapTimeScreenings.isEmpty()) {
             StringBuilder messageResponse = new StringBuilder("Hall " + hall.getName() + " has overlapping screenings with id(s): ");
