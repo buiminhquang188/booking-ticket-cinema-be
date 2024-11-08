@@ -16,7 +16,7 @@ public interface HallController {
     ResponseEntity<?> getHallById(@PathVariable Integer id);
 
     @PostMapping("/hall")
-    ResponseEntity<?> createHall(@RequestBody HallCreationRequest request);
+    ResponseEntity<?> createHall(@RequestBody @Valid HallCreationRequest request);
 
     @PatchMapping("/hall/{id}")
     ResponseEntity<?> updateHall(@PathVariable Integer id, @RequestBody @Valid HallUpdateRequest request);

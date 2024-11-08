@@ -1,5 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.controller;
 
+import jakarta.validation.Valid;
 import org.cybersoft.bookingticketcinemabe.payload.request.movie.MovieCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.movie.MovieCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.movie.MovieUpdateRequest;
@@ -15,10 +16,10 @@ public interface MovieController {
     ResponseEntity<?> getMovie(@PathVariable Integer id);
 
     @PostMapping("/movie")
-    ResponseEntity<?> createMovie(@RequestBody MovieCreationRequest request);
+    ResponseEntity<?> createMovie(@RequestBody @Valid MovieCreationRequest request);
 
     @PutMapping("/movie/{id}")
-    ResponseEntity<?> updateMovie(@PathVariable Integer id, @RequestBody MovieUpdateRequest request);
+    ResponseEntity<?> updateMovie(@PathVariable Integer id, @RequestBody @Valid MovieUpdateRequest request);
 
     @DeleteMapping("/movie/{id}")
     ResponseEntity<?> deleteMovie(@PathVariable Integer id);

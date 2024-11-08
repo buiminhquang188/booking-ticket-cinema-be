@@ -6,15 +6,30 @@ import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCreationRequ
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserUpdateRequest;
 import org.mapstruct.*;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface UserMapper extends EntityMapper<UserDTO, UserEntity> {
 
-    @Mapping(target = "role", defaultValue = "user")
     @Mapping(target = "isEmailVerified", defaultValue = "false")
     @Mapping(target = "isPhoneVerified", defaultValue = "false")
+    @Mapping(target = "role", expression = "java(mapRoles(request.role(), request.roles()))")
     UserEntity toEntity(UserCreationRequest request);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void update(@MappingTarget UserEntity user, UserUpdateRequest request);
 
+    default String mapRoles(String role, List<String> roles) {
+
+        String joinedRoles;
+
+        if (role != null) {
+            joinedRoles = role;
+        } else if (roles != null && !roles.isEmpty()) {
+            joinedRoles = "";
+            joinedRoles += String.join(",", roles);
+        } else joinedRoles = "user";
+
+        return joinedRoles;
+    }
 }
