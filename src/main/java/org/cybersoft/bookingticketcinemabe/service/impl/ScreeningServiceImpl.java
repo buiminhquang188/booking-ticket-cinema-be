@@ -231,7 +231,7 @@ public class ScreeningServiceImpl implements ScreeningService {
                     .filter(ScreeningSeatEntity::getIsBooked)
                     .toList();
             if (reservedSeats.isEmpty()) {
-                screening.setStatus("cancel");
+                screening.setStatus(ScreeningStatus.CANCELED.name());
                 screeningRepository.save(screening);
             } else
                 throw new BadRequestException("This screening cannot delete because reserved seat(s)");
