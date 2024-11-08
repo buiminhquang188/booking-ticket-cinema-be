@@ -1,5 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.controller;
 
+import jakarta.validation.Valid;
 import org.cybersoft.bookingticketcinemabe.dto.ReservationDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.reservation.ReservationBookingRequest;
 import org.cybersoft.bookingticketcinemabe.payload.response.BaseResponse;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public interface ReservationController {
     @PostMapping("/booking/{screeningId}")
     ResponseEntity<BaseResponse<ReservationDTO>> bookingTicket(@PathVariable("screeningId") Integer screeningId,
-                                                               @RequestBody ReservationBookingRequest reservationBookingRequest);
+                                                               @RequestBody @Valid ReservationBookingRequest reservationBookingRequest);
 
     @DeleteMapping("/booking/{screeningId}/{reservationId}")
     ResponseEntity<BaseResponse<ReservationDTO>> cancelBooking(@PathVariable("screeningId") Integer screeningId,
