@@ -14,14 +14,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetailsCustom checkLogin(AuthenticateRequest request) {
-        UserEntity user = userRepository.findUserEntityByEmail(request.email());
+        UserEntity user = this.userRepository.findUserByEmail(request.email());
+
         if (user == null || !passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new AuthenticateException("Email or password is not valid");
         }
+
         return new UserDetailsCustom(user);
     }
 }

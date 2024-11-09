@@ -8,6 +8,6 @@ public record AuthenticateRequest(
         @NotEmpty(message = "Email is required")
         String email,
         @NotEmpty(message = "This field is not empty")
-        String password) {
-
+        String password
+) {
 }
