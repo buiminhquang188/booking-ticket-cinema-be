@@ -3,6 +3,7 @@ package org.cybersoft.bookingticketcinemabe.payload.request.screening;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Positive;
 import org.cybersoft.bookingticketcinemabe.annotation.validator.ValidSeats;
+import org.cybersoft.bookingticketcinemabe.enums.ScreeningStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +16,7 @@ public record ScreeningUpdateRequest(
 
         @Positive(message = "The movie Id must be positive")
         Integer movieId,
+        ScreeningStatus status,
         @ValidSeats
         List<ScreeningUpdateSeat> screeningSeats
 ) {

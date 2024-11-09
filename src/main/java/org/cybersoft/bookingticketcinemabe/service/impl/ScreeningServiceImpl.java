@@ -9,6 +9,7 @@ import org.cybersoft.bookingticketcinemabe.entity.HallEntity;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity_;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningSeatEntity;
+import org.cybersoft.bookingticketcinemabe.enums.ScreeningStatus;
 import org.cybersoft.bookingticketcinemabe.exception.BadRequestException;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.MinimalMapper;
@@ -132,7 +133,7 @@ public class ScreeningServiceImpl implements ScreeningService {
                 try {
                     screening.setHall(hall);
                     screening.setScreeningSeats(new ArrayList<>());
-                    screening.setStatus("not_reserved");
+                    screening.setStatus(ScreeningStatus.NEW.name());
                     screening = screeningRepository.save(screening);
                     final ScreeningEntity savedScreening = screening;
                     List<ScreeningSeatEntity> screeningSeatsCreated = hall.getSeats()
@@ -168,6 +169,10 @@ public class ScreeningServiceImpl implements ScreeningService {
         ScreeningEntity screening = screeningRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Not found screening with id: " + id));
 
+        if (!this.isValidStatus(screening.getStatus())) {
+            throw new BadRequestException("Cannot update screening with status: " + screening.getStatus());
+        }
+
         HallEntity hall = hallRepository.findById(request.hallId())
                 .orElseThrow(() -> new NotFoundException("Not found hall with id: " + request.hallId()));
 
@@ -175,7 +180,7 @@ public class ScreeningServiceImpl implements ScreeningService {
         LocalDateTime endTime = request.startTime()
                 .plusMinutes(screening.getMovie()
                         .getTime());
-        List<ScreeningEntity> overlapTimeScreenings = screeningRepository.findScreeningOverlapTimerInHall(startTime, endTime, hall.getId());
+        List<ScreeningEntity> overlapTimeScreenings = screeningRepository.findScreeningOverlapTimerInHallExcludeItSelf(startTime, endTime, hall.getId(), screening.getId());
 
         if (!overlapTimeScreenings.isEmpty()) {
             StringBuilder messageResponse = new StringBuilder("Hall " + hall.getName() + " has overlapping screenings with id(s): ");
@@ -226,7 +231,7 @@ public class ScreeningServiceImpl implements ScreeningService {
                     .filter(ScreeningSeatEntity::getIsBooked)
                     .toList();
             if (reservedSeats.isEmpty()) {
-                screening.setStatus("cancel");
+                screening.setStatus(ScreeningStatus.CANCELED.name());
                 screeningRepository.save(screening);
             } else
                 throw new BadRequestException("This screening cannot delete because reserved seat(s)");
@@ -283,5 +288,9 @@ public class ScreeningServiceImpl implements ScreeningService {
                 .isBooked(false)
                 .isActive(requestScreeningSeat.isActive())
                 .build();
+    }
+
+    private Boolean isValidStatus(String status) {
+        return status.equals(ScreeningStatus.NEW.name());
     }
 }

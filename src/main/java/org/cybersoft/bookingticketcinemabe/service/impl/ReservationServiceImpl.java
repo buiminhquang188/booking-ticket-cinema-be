@@ -6,6 +6,8 @@ import org.cybersoft.bookingticketcinemabe.entity.ReservationEntity;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningEntity;
 import org.cybersoft.bookingticketcinemabe.entity.ScreeningSeatEntity;
 import org.cybersoft.bookingticketcinemabe.entity.SeatReservationEntity;
+import org.cybersoft.bookingticketcinemabe.enums.ReservationStatus;
+import org.cybersoft.bookingticketcinemabe.enums.ScreeningStatus;
 import org.cybersoft.bookingticketcinemabe.exception.runtime.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.ReservationMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.reservation.ReservationBookingRequest;
@@ -82,7 +84,10 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toList());
         this.seatReservationRepository.saveAll(seatReservations);
 
-        screening.setStatus("booked");
+        if (screening.getStatus()
+                .equals(ScreeningStatus.NEW.name())) {
+            screening.setStatus(ScreeningStatus.BOOKED.name());
+        }
 
         return this.reservationMapper.toDTO(savedReservation);
     }
@@ -93,7 +98,7 @@ public class ReservationServiceImpl implements ReservationService {
         ReservationEntity reservation = this.getReservationById(reservationId);
 
         if (reservation.getStatus()
-                .equals("CANCELLED")) {
+                .equals(ReservationStatus.CANCELLED.name())) {
             throw new NotFoundException("Reservation is already cancelled");
         }
 
@@ -104,7 +109,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toList());
         this.screeningSeatRepository.saveAll(screeningSeats);
 
-        reservation.setStatus("CANCELLED");
+        reservation.setStatus(ReservationStatus.CANCELLED.name());
 
         return this.reservationMapper.toDTO(reservation);
     }
@@ -145,7 +150,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .screening(screening)
                 .timeReservation(timeReservation)
                 .totalPrice(totalPrice)
-                .status("SUCCESS")
+                .status(ReservationStatus.BOOKED.name())
                 .build();
     }
 
