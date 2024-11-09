@@ -1,5 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.filter;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,14 +18,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
     private final JwtHelper jwtHelper;
 
     private final HandlerExceptionResolver handlerExceptionResolver;
@@ -37,15 +36,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
-                if (jwtHelper.validateToken(token)) {
-                    String emailAndRoles = jwtHelper.introspectToken(token);
-                    String[] parts = emailAndRoles.split(":");
-                    String email = parts[0];
-                    String roles = parts.length > 1 ? parts[1] : "";
-                    List<GrantedAuthority> authorities = Arrays.stream(roles.split(","))
-                            .map(role -> new SimpleGrantedAuthority(role.trim()))
-                            .collect(Collectors.toList());
-                    if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                Claims claims = this.jwtHelper.parseToken(token);
+
+                if (claims != null) {
+                    String email = claims.getSubject();
+                    List<String> roles = claims.get("roles", List.class);
+                    List<GrantedAuthority> authorities = new ArrayList<>();
+
+                    roles.forEach(role -> {
+                        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role);
+                        authorities.add(simpleGrantedAuthority);
+                    });
+
+                    if (email != null && SecurityContextHolder.getContext()
+                                                 .getAuthentication() == null) {
                         Authentication authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorities);
                         SecurityContext context = SecurityContextHolder.getContext();
                         context.setAuthentication(authenticationToken);

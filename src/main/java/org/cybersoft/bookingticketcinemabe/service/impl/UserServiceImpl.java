@@ -9,8 +9,8 @@ import org.cybersoft.bookingticketcinemabe.entity.UserEntity_;
 import org.cybersoft.bookingticketcinemabe.exception.BadRequestException;
 import org.cybersoft.bookingticketcinemabe.exception.ExistedException;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
-import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.UserMapper;
+import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserUpdateRequest;
@@ -71,7 +71,8 @@ public class UserServiceImpl implements UserService {
             user.between(UserEntity_.updatedAt.getName(), userCriteria.getUpdatedAtFrom(), userCriteria.getUpdatedAtTo());
         }
 
-        return new PageableMapper<>().toDTO(user.findAll(pageable).map(userMapper::toDTO));
+        return new PageableMapper<>().toDTO(user.findAll(pageable)
+                .map(userMapper::toDTO));
     }
 
     @Override
@@ -85,8 +86,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDTO createUser(UserCreationRequest request) {
-        UserEntity user = userRepository.findUserEntityByEmail(request.email());
+        UserEntity user = userRepository.findUserByEmail(request.email());
         if (user != null) throw new ExistedException("User existed");
+
         UserDTO dto;
         try {
             user = userMapper.toEntity(request);

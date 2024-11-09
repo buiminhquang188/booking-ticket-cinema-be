@@ -19,19 +19,24 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String userName = authentication.getName();
-        String password = authentication.getCredentials().toString();
+        String password = authentication.getCredentials()
+                .toString();
 
         AuthenticateRequest request = new AuthenticateRequest(userName, password);
+        UserDetailsCustom userDetails = this.authenticationService.checkLogin(request);
 
-        UserDetailsCustom userDetails = authenticationService.checkLogin(request);
         if (userDetails != null) {
-            return new UsernamePasswordAuthenticationToken(
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                     userName,
-                    "",
+                    null,
                     userDetails.getAuthorities());
-        } else {
-            throw new BadCredentialsException("Incorrect user credentials !!");
+
+            usernamePasswordAuthenticationToken.setDetails(userDetails);
+
+            return usernamePasswordAuthenticationToken;
         }
+
+        throw new BadCredentialsException("Incorrect user credentials !!");
     }
 
     @Override

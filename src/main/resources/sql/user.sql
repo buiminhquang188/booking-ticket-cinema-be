@@ -22,7 +22,7 @@ VALUES (4, '2024-01-04 13:00:00', '2024-01-04 13:00:00', false, false, '22222222
         '$2a$10$bNzKcp68FveCVQJavjuXCu7pnEs6yG5SocTR1pV1OE4cZM30RwkQS');
 INSERT INTO capstone.user (id, created_at, updated_at, is_email_verified, is_phone_verified, phone, role, email,
                            first_name, last_name, full_name, avatar, password)
-VALUES (5, '2024-01-05 14:00:00', '2024-01-05 14:00:00', true, true, '3333333333', 'admin, super_admin',
+VALUES (5, '2024-01-05 14:00:00', '2024-01-05 14:00:00', true, true, '3333333333', 'super_admin',
         'carol.miller5@example.com', 'Carol', 'Miller', 'Carol Miller', 'https://avatar.iran.liara.run/public/5',
         '$2a$10$bNzKcp68FveCVQJavjuXCu7pnEs6yG5SocTR1pV1OE4cZM30RwkQS');
 INSERT INTO capstone.user (id, created_at, updated_at, is_email_verified, is_phone_verified, phone, role, email,

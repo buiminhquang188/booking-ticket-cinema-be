@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class JwtHelper {
@@ -21,46 +22,31 @@ public class JwtHelper {
     private String expirationMsTime;
 
 
-    public String generateToken(String data) {
+    public String generateToken(String subject, Map<String, Object> claims) {
         SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(SIGNER_KEY));
 
         return Jwts.builder()
                 .issuer("Booking-ticket-cinema")
-                .subject(data)
+                .subject(subject)
+                .claims(claims)
                 .issuedAt(new Date())
-                .expiration(new Date(Instant.now().plusMillis(Long.parseLong(expirationMsTime)).toEpochMilli()))
+                .expiration(new Date(Instant.now()
+                        .plusMillis(Long.parseLong(expirationMsTime))
+                        .toEpochMilli()))
                 .signWith(secretKey)
                 .compact();
     }
 
-    public String introspectToken(String token) {
+    public Claims parseToken(String token) {
         try {
             SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(SIGNER_KEY));
-            Claims claims = Jwts.parser()
+            return Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-            return claims.getSubject();
         } catch (Exception e) {
             throw new AuthenticateException("Invalid or expired JWT token");
         }
     }
-
-    public boolean validateToken(String token) {
-        SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(SIGNER_KEY));
-        Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token);
-        return true;
-
-    }
-//    public static void main(String[] args) {
-//        //        Generate jwt key
-//        SecretKey secretKey = Jwts.SIG.HS512.key().build();
-//        String key = Encoders.BASE64URL.encode(secretKey.getEncoded());
-//        System.out.println(key);
-//
-//    }
 }

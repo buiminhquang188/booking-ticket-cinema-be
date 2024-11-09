@@ -20,16 +20,9 @@ public class UserDetailsCustom implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        if (userEntity.getRole() != null) {
-            authorities.add(new SimpleGrantedAuthority("ID_" + String.valueOf(userEntity.getId())));
-            if (!userEntity.getRole().contains(",")) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getRole().toUpperCase()));
-            } else {
-                String[] roleList = userEntity.getRole().split(",");
-                for (String roleString : roleList) {
-                    authorities.add(new SimpleGrantedAuthority("ROLE_" + roleString.trim().toUpperCase()));
-                }
-            }
+
+        if (this.userEntity.getRole() != null) {
+            authorities.add(new SimpleGrantedAuthority(this.userEntity.getRole()));
         }
 
         return authorities;
