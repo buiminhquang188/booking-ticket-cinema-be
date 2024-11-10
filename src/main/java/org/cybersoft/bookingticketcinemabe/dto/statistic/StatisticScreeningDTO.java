@@ -8,4 +8,7 @@ public class StatisticScreeningDTO {
     private Integer totalSeatsEmpty;
     private Integer totalSeatsBooked;
     private String movieName;
+    private String hallName;
+    private String branchName;
+    private String branchAddress;
 }

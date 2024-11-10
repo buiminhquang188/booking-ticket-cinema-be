@@ -130,16 +130,25 @@ public class StatisticServiceImpl implements StatisticService {
                         count().as("total"),
                         sum(when(ScreeningSeat.SCREENING_SEAT.IS_BOOKED.eq(ScreeningSeatStatus.EMPTY.getStatus()), 1).otherwise(0)).as("total_seats_empty"),
                         sum(when(ScreeningSeat.SCREENING_SEAT.IS_BOOKED.eq(ScreeningSeatStatus.BOOK.getStatus()), 1).otherwise(0)).as("total_seats_booked"),
-                        Movie.MOVIE.NAME.as("movieName")
+                        Movie.MOVIE.NAME.as("movieName"),
+                        Hall.HALL.NAME.as("hallName"),
+                        Branch.BRANCH.NAME.as("branchName"),
+                        Branch.BRANCH.ADDRESS.as("branchAddress")
                 )
                 .from(Screening.SCREENING)
                 .join(Movie.MOVIE)
                 .on(Screening.SCREENING.MOVIE_ID.eq(Movie.MOVIE.ID))
                 .join(ScreeningSeat.SCREENING_SEAT)
                 .on(Screening.SCREENING.ID.eq(ScreeningSeat.SCREENING_SEAT.SCREENING_ID))
+                .join(Hall.HALL)
+                .on(Screening.SCREENING.HALL_ID.eq(Hall.HALL.ID))
+                .join(Branch.BRANCH)
+                .on(Hall.HALL.BRANCH_ID.eq(Branch.BRANCH.ID))
                 .where(condition)
-                .groupBy(Movie.MOVIE.ID)
+                .groupBy(Movie.MOVIE.ID, Hall.HALL.ID)
                 .fetch();
+
+        System.out.println(result);
 
         return result.into(StatisticScreeningDTO.class);
     }
