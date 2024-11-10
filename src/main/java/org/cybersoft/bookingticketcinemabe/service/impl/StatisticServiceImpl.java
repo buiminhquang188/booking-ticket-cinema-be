@@ -130,6 +130,7 @@ public class StatisticServiceImpl implements StatisticService {
                         count().as("total"),
                         sum(when(ScreeningSeat.SCREENING_SEAT.IS_BOOKED.eq(ScreeningSeatStatus.EMPTY.getStatus()), 1).otherwise(0)).as("total_seats_empty"),
                         sum(when(ScreeningSeat.SCREENING_SEAT.IS_BOOKED.eq(ScreeningSeatStatus.BOOK.getStatus()), 1).otherwise(0)).as("total_seats_booked"),
+                        Screening.SCREENING.ID,
                         Movie.MOVIE.NAME.as("movieName"),
                         Hall.HALL.NAME.as("hallName"),
                         Branch.BRANCH.NAME.as("branchName"),

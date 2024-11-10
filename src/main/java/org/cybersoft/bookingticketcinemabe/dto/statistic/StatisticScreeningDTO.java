@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class StatisticScreeningDTO {
+    private Integer id;
     private Integer total;
     private Integer totalSeatsEmpty;
     private Integer totalSeatsBooked;
