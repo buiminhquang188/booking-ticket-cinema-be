@@ -1,23 +1,24 @@
 package org.cybersoft.bookingticketcinemabe.payload.request.branch;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public record BranchUpdateRequest(
-        @NotEmpty(message = "The name must not empty")
+
         String name,
         String logo,
         String avatar,
         String link,
         String address,
-        @Positive(message = "The cinemaId must be positive")
+
         Integer districtId,
-        @Positive(message = "The cinemaId must be positive")
         Integer cinemaId,
-        List<@Positive(message = "ALL movieIds must be positive")
-                Integer> movieIds,
+        List<Integer> movieIds,
         @Positive(message = "The distance must be positive")
         BigDecimal distance,
         @Min(value = -90, message = "Latitude must be greater than or equal to -90")
