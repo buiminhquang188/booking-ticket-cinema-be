@@ -1,5 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.service.impl;
 
+import io.jsonwebtoken.Claims;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
@@ -11,6 +12,7 @@ import org.cybersoft.bookingticketcinemabe.exception.ExistedException;
 import org.cybersoft.bookingticketcinemabe.exception.NotFoundException;
 import org.cybersoft.bookingticketcinemabe.mapper.UserMapper;
 import org.cybersoft.bookingticketcinemabe.mapper.pagination.PageableMapper;
+import org.cybersoft.bookingticketcinemabe.payload.request.user.ProfileUpdateRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserCriteria;
 import org.cybersoft.bookingticketcinemabe.payload.request.user.UserUpdateRequest;
@@ -19,6 +21,8 @@ import org.cybersoft.bookingticketcinemabe.query.dto.Pageable;
 import org.cybersoft.bookingticketcinemabe.query.impl.SelectQueryImpl;
 import org.cybersoft.bookingticketcinemabe.repository.UserRepository;
 import org.cybersoft.bookingticketcinemabe.service.UserService;
+import org.cybersoft.bookingticketcinemabe.utils.JwtHelper;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +36,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     private final CriteriaApiHelper criteriaApiHelper;
+    private final JwtHelper jwtHelper;
 
     @Override
     public PageableDTO<?> getUsers(UserCriteria userCriteria) {
@@ -105,22 +110,22 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDTO updateUser(UserUpdateRequest request, Integer id) {
-        UserEntity userUpdate = this.userRepository.findById(id)
+        UserEntity user = this.userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Not found user"));
-        UserDTO dto = null;
-        if (userUpdate != null) {
+
+        UserDTO dto = new UserDTO();
+        if (user != null && request != null) {
             try {
-                userMapper.update(userUpdate, request);
+                userMapper.update(user, request);
                 if (request.password() != null) {
-                    userUpdate.setPassword(passwordEncoder.encode(request.password()));
+                    user.setPassword(passwordEncoder.encode(request.password()));
                 }
-                UserEntity userUpdated = userRepository.save(userUpdate);
+                UserEntity userUpdated = userRepository.save(user);
                 dto = userMapper.toDTO(userUpdated);
             } catch (Exception e) {
                 throw new BadRequestException("Fail to update user");
             }
         }
-
         return dto;
     }
 
@@ -136,4 +141,54 @@ public class UserServiceImpl implements UserService {
         }
         return userDeleteDTO;
     }
+
+    @Override
+    public UserDTO getUser(HttpHeaders headers) {
+        UserDTO userDTO = new UserDTO();
+        String authHeader = headers.getFirst("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            Claims claims = this.jwtHelper.parseToken(token);
+
+            if (claims != null) {
+                String email = claims.getSubject();
+                UserEntity user = this.userRepository.findUserByEmail(email);
+                if (user == null) throw new NotFoundException("Can't find user with email: " + email);
+                userDTO = this.userMapper.toDTO(user);
+            }
+        }
+        return userDTO;
+    }
+
+    @Override
+    @Transactional
+    public UserDTO updateUser(HttpHeaders header, ProfileUpdateRequest request) {
+        try {
+            String authHeader = header.getFirst("Authorization");
+
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                UserEntity user = new UserEntity();
+                String token = authHeader.substring(7);
+                Claims claims = this.jwtHelper.parseToken(token);
+
+                if (claims != null) {
+
+                    String email = claims.getSubject();
+                    user = this.userRepository.findUserByEmail(email);
+
+                    if (user == null) throw new NotFoundException("Can't find user with email: " + email);
+
+                    userMapper.update(user, request);
+
+                    if (request.password() != null) user.setPassword(passwordEncoder.encode(request.password()));
+
+                    return userMapper.toDTO(this.userRepository.save(user));
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            throw new BadRequestException("Fail to update profile");
+        }
+    }
+
 }

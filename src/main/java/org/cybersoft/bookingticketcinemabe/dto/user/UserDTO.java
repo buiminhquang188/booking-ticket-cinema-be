@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.cybersoft.bookingticketcinemabe.dto.ReservationUserDTO;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -18,4 +21,5 @@ public class UserDTO {
     private String lastName;
     private String fullName;
     private String role;
+    private List<ReservationUserDTO> reservations;
 }

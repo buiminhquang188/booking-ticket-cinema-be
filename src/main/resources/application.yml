@@ -32,7 +32,7 @@ management:
         include: '*'
 jwt:
   key: RWy4_RjrkCv8j4qGN4sThqZDJlNgjtivkD8dCZ5yodCSohS9LCzYAsIdd62EWD7qupjeQ0AxAKKQJuPHLWivSA
-  expirationMs: 300000
+  expirationMs: 28800000 # 8*60*60*1000
 cloudflare:
   r2:
     access-key: ${R2_ACCESS_KEY}
@@ -41,5 +41,3 @@ cloudflare:
     endpoint: ${R2_ENDPOINT}
     bucket: ${R2_BUCKET}
     public-path: ${R2_PUBLIC_PATH}
-default:
-  password: 12345678
