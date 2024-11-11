@@ -101,6 +101,7 @@ public class StatisticServiceImpl implements StatisticService {
 
         Result<?> result = this.dsl.select(
                         count().as("total"),
+                        Districts.DISTRICTS.ID.as("id"),
                         Districts.DISTRICTS.NAME.as("name")
                 )
                 .from(Branch.BRANCH)
@@ -130,7 +131,7 @@ public class StatisticServiceImpl implements StatisticService {
                         count().as("total"),
                         sum(when(ScreeningSeat.SCREENING_SEAT.IS_BOOKED.eq(ScreeningSeatStatus.EMPTY.getStatus()), 1).otherwise(0)).as("total_seats_empty"),
                         sum(when(ScreeningSeat.SCREENING_SEAT.IS_BOOKED.eq(ScreeningSeatStatus.BOOK.getStatus()), 1).otherwise(0)).as("total_seats_booked"),
-                        Screening.SCREENING.ID,
+                        Screening.SCREENING.ID.as("id"),
                         Movie.MOVIE.NAME.as("movieName"),
                         Hall.HALL.NAME.as("hallName"),
                         Branch.BRANCH.NAME.as("branchName"),
@@ -146,7 +147,7 @@ public class StatisticServiceImpl implements StatisticService {
                 .join(Branch.BRANCH)
                 .on(Hall.HALL.BRANCH_ID.eq(Branch.BRANCH.ID))
                 .where(condition)
-                .groupBy(Movie.MOVIE.ID, Hall.HALL.ID)
+                .groupBy(Movie.MOVIE.ID, Hall.HALL.ID, Screening.SCREENING.ID)
                 .fetch();
 
         System.out.println(result);
