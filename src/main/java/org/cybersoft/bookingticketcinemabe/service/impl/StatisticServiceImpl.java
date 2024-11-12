@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.cybersoft.bookingticketcinemabe.dto.statistic.*;
 import org.cybersoft.bookingticketcinemabe.enums.Roles;
 import org.cybersoft.bookingticketcinemabe.enums.ScreeningSeatStatus;
+import org.cybersoft.bookingticketcinemabe.enums.ScreeningStatus;
 import org.cybersoft.bookingticketcinemabe.jooq.entity.tables.*;
 import org.cybersoft.bookingticketcinemabe.payload.request.statistic.StatisticCriteria;
 import org.cybersoft.bookingticketcinemabe.service.StatisticService;
@@ -132,6 +133,7 @@ public class StatisticServiceImpl implements StatisticService {
                         sum(when(ScreeningSeat.SCREENING_SEAT.IS_BOOKED.eq(ScreeningSeatStatus.EMPTY.getStatus()), 1).otherwise(0)).as("total_seats_empty"),
                         sum(when(ScreeningSeat.SCREENING_SEAT.IS_BOOKED.eq(ScreeningSeatStatus.BOOK.getStatus()), 1).otherwise(0)).as("total_seats_booked"),
                         Screening.SCREENING.ID.as("id"),
+                        Screening.SCREENING.STATUS.as("status"),
                         Movie.MOVIE.NAME.as("movieName"),
                         Hall.HALL.NAME.as("hallName"),
                         Branch.BRANCH.NAME.as("branchName"),
@@ -146,11 +148,9 @@ public class StatisticServiceImpl implements StatisticService {
                 .on(Screening.SCREENING.HALL_ID.eq(Hall.HALL.ID))
                 .join(Branch.BRANCH)
                 .on(Hall.HALL.BRANCH_ID.eq(Branch.BRANCH.ID))
-                .where(condition)
+                .where(condition.and(Screening.SCREENING.STATUS.notEqual(ScreeningStatus.CANCELED.name())))
                 .groupBy(Movie.MOVIE.ID, Hall.HALL.ID, Screening.SCREENING.ID)
                 .fetch();
-
-        System.out.println(result);
 
         return result.into(StatisticScreeningDTO.class);
     }

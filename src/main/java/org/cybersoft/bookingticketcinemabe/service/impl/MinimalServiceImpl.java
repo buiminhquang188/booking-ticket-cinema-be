@@ -253,7 +253,7 @@ public class MinimalServiceImpl implements MinimalService {
                                 Branch.BRANCH.ADDRESS.as("branch.address"))
                         .from(Hall.HALL)
                         .join(Branch.BRANCH)
-                        .on(Hall.HALL.ID.eq(Branch.BRANCH.ID))
+                        .on(Hall.HALL.BRANCH_ID.eq(Branch.BRANCH.ID))
                         .where(condition),
                 new Field[]{Hall.HALL.ID},
                 minimalCriteria.getPageLimit(),
