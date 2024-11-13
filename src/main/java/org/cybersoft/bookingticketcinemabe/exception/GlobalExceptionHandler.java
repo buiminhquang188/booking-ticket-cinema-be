@@ -32,7 +32,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(BaseResponse.builder()
                 .message(exception.getMessage())
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .build(), HttpStatus.OK);
+                .build(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {ExistedException.class})
@@ -40,23 +40,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(BaseResponse.builder()
                 .message(exception.getMessage())
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .build(), HttpStatus.OK);
+                .build(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = {BadRequestException.class})
+    //    @ExceptionHandler(value = {BadRequestException.class})
     ResponseEntity<?> handlingUserException(BadRequestException exception) {
         return new ResponseEntity<>(BaseResponse.builder()
                 .message(exception.getMessage())
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .build(), HttpStatus.OK);
+                .build(), HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException validException, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
         HttpServletRequest servletRequest = ((ServletWebRequest) request).getRequest();
-        List<String> errorDetails = validException.getBindingResult().getAllErrors().stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
+        List<String> errorDetails = validException.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
         ErrorResponse<Object> errorResponse = this.createValidExceptionResponse(
                 validException,
                 servletRequest,
@@ -103,7 +106,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {
-            org.cybersoft.bookingticketcinemabe.exception.runtime.BadRequestException.class
+            org.cybersoft.bookingticketcinemabe.exception.runtime.BadRequestException.class,
+            BadRequestException.class
     })
     public ResponseEntity<Object> handleBadRequestException(RuntimeException runtimeException, HttpServletRequest request) {
         ErrorResponse<Object> errorResponse = this.createExceptionResponse(
@@ -135,9 +139,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Help generate error exception response
      *
-     * @param runtimeException Provide the runtime exception
-     * @param request          Provide the httpServletRequest
-     * @param httpStatus       Provide the HttpStatus enum code
+     * @param runtimeException
+     *         Provide the runtime exception
+     * @param request
+     *         Provide the httpServletRequest
+     * @param httpStatus
+     *         Provide the HttpStatus enum code
      * @return ErrorResponse
      */
     public ErrorResponse<Object> createExceptionResponse(RuntimeException runtimeException, HttpServletRequest request, HttpStatus httpStatus, String message, Object details) {

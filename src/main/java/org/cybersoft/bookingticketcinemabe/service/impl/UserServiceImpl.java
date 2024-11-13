@@ -180,7 +180,7 @@ public class UserServiceImpl implements UserService {
 
                     userMapper.update(user, request);
 
-                    if (request.password() != null) user.setPassword(passwordEncoder.encode(request.password()));
+//                    if (request.password() != null) user.setPassword(passwordEncoder.encode(request.password()));
 
                     return userMapper.toDTO(this.userRepository.save(user));
                 }
