@@ -2,11 +2,12 @@ package org.cybersoft.bookingticketcinemabe.service;
 
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.branch.BranchDTO;
-import org.cybersoft.bookingticketcinemabe.payload.request.BranchCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.BranchUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchUpdateRequest;
 
 public interface BranchService {
-    PageableDTO<?> getBranches(int pageNo, int pageLimit, String sortBy);
+    PageableDTO<?> getBranches(BranchCriteria branchCriteria);
 
     BranchDTO getBranch(Integer id);
 

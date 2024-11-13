@@ -1,25 +1,25 @@
 package org.cybersoft.bookingticketcinemabe.controller;
 
-import org.cybersoft.bookingticketcinemabe.payload.request.BranchCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.BranchUpdateRequest;
+import jakarta.validation.Valid;
+import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.branch.BranchUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping
 public interface BranchController {
     @GetMapping("/branches")
-    ResponseEntity<?> getBranches(@RequestParam(defaultValue = "0") int pageNo,
-                                  @RequestParam(defaultValue = "10") int pageLimit,
-                                  @RequestParam(defaultValue = "id") String sortBy);
+    ResponseEntity<?> getBranches(BranchCriteria branchCriteria);
 
     @GetMapping("/branch/{id}")
     ResponseEntity<?> getBranch(@PathVariable Integer id);
 
     @PostMapping("/branch")
-    ResponseEntity<?> createBranch(@RequestBody BranchCreationRequest request);
+    ResponseEntity<?> createBranch(@RequestBody @Valid BranchCreationRequest request);
 
     @PutMapping("/branch/{id}")
-    ResponseEntity<?> updateBranch(@PathVariable Integer id, @RequestBody BranchUpdateRequest request);
+    ResponseEntity<?> updateBranch(@PathVariable Integer id, @RequestBody @Valid BranchUpdateRequest request);
 
     @DeleteMapping("/branch/{id}")
     ResponseEntity<?> deleteBranch(@PathVariable Integer id);

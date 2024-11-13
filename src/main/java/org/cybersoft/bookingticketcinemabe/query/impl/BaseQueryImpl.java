@@ -1,9 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.query.impl;
 
-import jakarta.persistence.criteria.CommonAbstractCriteria;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Path;
-import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.*;
 import jakarta.persistence.metamodel.SingularAttribute;
 import org.cybersoft.bookingticketcinemabe.query.BaseQuery;
 import org.cybersoft.bookingticketcinemabe.query.QueryPredicate;
@@ -55,6 +52,12 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
     }
 
     @Override
+    public <J, V> Q equal(SingularAttribute<J, V> attribute, V value, ListJoin<R, J> root) {
+        predicates.add((criteria, cb, preRoot) -> cb.equal(root.get(attribute), value));
+        return self();
+    }
+
+    @Override
     public <V> Q notEqual(SingularAttribute<R, V> attribute, V value) {
         predicates.add((criteria, cb, root) -> cb.notEqual(root.get(attribute), value));
         return self();
@@ -83,6 +86,12 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
                 .get(attribute2)
                 .get(attribute3)
                 .get(attribute4), value));
+        return self();
+    }
+
+    @Override
+    public <J, V> Q notEqual(SingularAttribute<J, V> attribute, V value, ListJoin<R, J> root) {
+        predicates.add((criteria, cb, preRoot) -> cb.notEqual(root.get(attribute), value));
         return self();
     }
 
@@ -119,6 +128,12 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
     }
 
     @Override
+    public <J> Q isTrue(SingularAttribute<J, Boolean> attribute, ListJoin<R, J> root) {
+        predicates.add(((criteria, cb, preRoot) -> cb.isTrue(root.get(attribute))));
+        return self();
+    }
+
+    @Override
     public Q isFalse(SingularAttribute<R, Boolean> attribute) {
         predicates.add(((criteria, cb, root) -> cb.isFalse(root.get(attribute))));
         return self();
@@ -147,6 +162,12 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
                 .get(attribute2)
                 .get(attribute3)
                 .get(attribute4))));
+        return self();
+    }
+
+    @Override
+    public <J> Q isFalse(SingularAttribute<J, Boolean> attribute, ListJoin<R, J> root) {
+        predicates.add(((criteria, cb, preRoot) -> cb.isFalse(root.get(attribute))));
         return self();
     }
 
@@ -183,6 +204,12 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
     }
 
     @Override
+    public <J, V> Q isNull(SingularAttribute<J, V> attribute, ListJoin<R, J> root) {
+        predicates.add(((criteria, cb, preRoot) -> cb.isNull(root.get(attribute))));
+        return self();
+    }
+
+    @Override
     public <V> Q isNotNull(SingularAttribute<R, V> attribute) {
         predicates.add(((criteria, cb, root) -> cb.isNotNull(root.get(attribute))));
         return self();
@@ -211,6 +238,12 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
                 .get(attribute2)
                 .get(attribute3)
                 .get(attribute4))));
+        return self();
+    }
+
+    @Override
+    public <J, V> Q isNotNull(SingularAttribute<J, V> attribute, ListJoin<R, J> root) {
+        predicates.add(((criteria, cb, preRoot) -> cb.isNotNull(root.get(attribute))));
         return self();
     }
 
@@ -251,6 +284,12 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
     }
 
     @Override
+    public <J, V extends Comparable<? super V>> Q greaterThan(SingularAttribute<J, V> attribute, V value, ListJoin<R, J> root) {
+        predicates.add((criteria, cb, preRoot) -> cb.greaterThan(root.get(attribute), value));
+        return self();
+    }
+
+    @Override
     public <V extends Comparable<? super V>> Q lessThan(SingularAttribute<R, V> attribute, V value) {
         predicates.add((criteria, cb, root) -> cb.lessThan(root.get(attribute), value));
         return self();
@@ -287,6 +326,12 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
     }
 
     @Override
+    public <J, V extends Comparable<? super V>> Q lessThan(SingularAttribute<J, V> attribute, V value, ListJoin<R, J> root) {
+        predicates.add((criteria, cb, preRoot) -> cb.lessThan(root.get(attribute), value));
+        return self();
+    }
+
+    @Override
     public Q like(SingularAttribute<R, String> attribute, String value) {
         predicates.add((criteria, cb, root) -> cb.like(root.get(attribute), "%" + value + "%"));
         return self();
@@ -316,6 +361,12 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
                 .get(attribute2)
                 .get(attribute3)
                 .get(attribute4), "%" + value + "%"));
+        return self();
+    }
+
+    @Override
+    public <J> Q like(SingularAttribute<J, String> attribute, String value, ListJoin<R, J> root) {
+        predicates.add((criteria, cb, preRoot) -> cb.like(root.get(attribute), "%" + value + "%"));
         return self();
     }
 
@@ -364,6 +415,18 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
                     .map(partQuery -> cb.and(buildPredicates(criteria, partQuery.predicates, cb, root.get(attribute1)
                             .get(attribute2)
                             .get(attribute3))))
+                    .toArray(Predicate[]::new);
+            return cb.and(predicates);
+        });
+        return self();
+    }
+
+    @SafeVarargs
+    @Override
+    public final <J> Q and(ListJoin<R, J> root, QueryPart<J>... partQueries) {
+        predicates.add((criteria, cb, preRoot) -> {
+            Predicate[] predicates = Arrays.stream(partQueries)
+                    .map(partQuery -> cb.and(buildPredicates(criteria, partQuery.predicates, cb, root)))
                     .toArray(Predicate[]::new);
             return cb.and(predicates);
         });
@@ -423,6 +486,18 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
     }
 
     @Override
+    public <J> Q or(ListJoin<R, J> root, QueryPart<J>... partQueries) {
+        predicates.add((criteria, cb, preRoot) -> {
+            Predicate[] predicates = Arrays.stream(partQueries)
+                    .map(partQuery -> cb.and(buildPredicates(criteria, partQuery.predicates, cb, root)))
+                    .toArray(Predicate[]::new);
+            return cb.or(predicates);
+        });
+        return self();
+    }
+
+
+    @Override
     public <V> Q in(SingularAttribute<R, V> attribute, Collection<V> values) {
         predicates.add((criteria, cb, root) -> root.get(attribute)
                 .in(values));
@@ -443,6 +518,13 @@ public abstract class BaseQueryImpl<R, Q extends BaseQueryImpl<R, Q>> implements
         predicates.add((criteria, cb, root) -> root.get(attribute1)
                 .get(attribute2)
                 .get(attribute3)
+                .in(values));
+        return self();
+    }
+
+    @Override
+    public <J, V> Q in(SingularAttribute<J, V> attribute, Collection<V> values, ListJoin<R, J> root) {
+        predicates.add((criteria, cb, preRoot) -> root.get(attribute)
                 .in(values));
         return self();
     }

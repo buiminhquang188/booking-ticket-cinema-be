@@ -17,4 +17,12 @@ public interface ScreeningRepository extends JpaRepository<ScreeningEntity, Inte
             @Param("endTime") LocalDateTime endTime,
             @Param("hallId") Integer hallId
     );
+
+    @Query(value = "SELECT s FROM screening s WHERE s.hall.id = :hallId AND ((s.startTime <= :startTime AND s.endTime >= :startTime) OR (s.startTime <= :endTime AND s.endTime >= :endTime) OR (s.startTime >= :startTime AND s.endTime <= :endTime)) AND s.id != :screeningId")
+    List<ScreeningEntity> findScreeningOverlapTimerInHallExcludeItSelf(
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime,
+            @Param("hallId") Integer hallId,
+            @Param("screeningId") Integer screeningId
+    );
 }

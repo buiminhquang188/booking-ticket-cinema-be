@@ -2,9 +2,9 @@ package org.cybersoft.bookingticketcinemabe.service;
 
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.cinema.CinemaDetailDTO;
-import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.CinemaCriteria;
-import org.cybersoft.bookingticketcinemabe.payload.request.CinemaUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.cinema.CinemaCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.cinema.CinemaCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.cinema.CinemaUpdateRequest;
 
 public interface CinemaService {
     PageableDTO<?> getCinemas(CinemaCriteria cinemaCriteria);

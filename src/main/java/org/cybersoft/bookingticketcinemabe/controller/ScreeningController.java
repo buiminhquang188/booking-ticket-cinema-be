@@ -1,25 +1,25 @@
 package org.cybersoft.bookingticketcinemabe.controller;
 
-import org.cybersoft.bookingticketcinemabe.payload.request.ScreeningCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.ScreeningUpdateRequest;
+import jakarta.validation.Valid;
+import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping
 public interface ScreeningController {
     @GetMapping("/screenings")
-    public ResponseEntity<?> getScreenings(@RequestParam(defaultValue = "0") int pageNo,
-                                           @RequestParam(defaultValue = "10") int pageLimit,
-                                           @RequestParam(defaultValue = "id") String sortBy);
+    ResponseEntity<?> getScreenings(ScreeningCriteria screeningCriteria);
 
     @GetMapping("/screening/{id}")
-    public ResponseEntity<?> getScreening(@PathVariable Integer id);
+    ResponseEntity<?> getScreening(@PathVariable Integer id);
 
     @PostMapping("/screening")
-    ResponseEntity<?> createScreening(@RequestBody ScreeningCreationRequest request);
+    ResponseEntity<?> createScreening(@RequestBody @Valid ScreeningCreationRequest request);
 
     @PutMapping("/screening/{id}")
-    ResponseEntity<?> updateScreening(@PathVariable Integer id, @RequestBody ScreeningUpdateRequest request);
+    ResponseEntity<?> updateScreening(@PathVariable Integer id, @RequestBody @Valid ScreeningUpdateRequest request);
 
     @DeleteMapping("/screening/{id}")
     ResponseEntity<?> deleteScreening(@PathVariable Integer id);

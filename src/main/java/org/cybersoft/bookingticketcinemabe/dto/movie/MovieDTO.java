@@ -1,5 +1,6 @@
 package org.cybersoft.bookingticketcinemabe.dto.movie;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,9 +22,10 @@ public class MovieDTO {
 
     private Integer time;  // Time in minutes or another appropriate unit
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime startDate;
 
-    private String movieName;
+    private String name;
 
     private String poster;
 

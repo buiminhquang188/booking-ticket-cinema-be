@@ -2,17 +2,17 @@ package org.cybersoft.bookingticketcinemabe.service;
 
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningDTO;
-import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningMinimalDTO;
-import org.cybersoft.bookingticketcinemabe.payload.request.ScreeningCreationRequest;
-import org.cybersoft.bookingticketcinemabe.payload.request.ScreeningUpdateRequest;
+import org.cybersoft.bookingticketcinemabe.dto.screening.ScreeningDetailDTO;
+import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCreationRequest;
+import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningCriteria;
+import org.cybersoft.bookingticketcinemabe.payload.request.screening.ScreeningUpdateRequest;
 
 public interface ScreeningService {
-    PageableDTO<?> getScreenings(int pageNo, int pageLimit, String sortBy);
+    PageableDTO<?> getScreenings(ScreeningCriteria screeningCriteria);
 
-    ScreeningDTO getScreening(Integer id);
+    ScreeningDetailDTO getScreening(Integer id);
 
-
-    ScreeningMinimalDTO createScreening(ScreeningCreationRequest request);
+    ScreeningDTO createScreening(ScreeningCreationRequest request);
 
     ScreeningDTO updateScreening(Integer id, ScreeningUpdateRequest request);
 

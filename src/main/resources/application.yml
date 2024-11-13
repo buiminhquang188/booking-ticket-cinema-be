@@ -8,7 +8,7 @@ spring:
       ddl-auto: validate
     show-sql: true
   datasource:
-    url: jdbc:mysql://localhost:3306/${MYSQL_DATABASE}
+    url: ${MYSQL_URL}/${MYSQL_DATABASE}?allowMultiQueries=true
     username: root
     password: ${MYSQL_ROOT_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -17,11 +17,27 @@ spring:
       base-path: /api
       default-page-size: 10
       default-media-type: application/json
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 10MB
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss
+    serialization:
+      write-date-keys-as-timestamps: false
 management:
   endpoints:
     web:
       exposure:
         include: '*'
 jwt:
-  key:
-  expirationMs: 5 * 60 * 1000
+  key: RWy4_RjrkCv8j4qGN4sThqZDJlNgjtivkD8dCZ5yodCSohS9LCzYAsIdd62EWD7qupjeQ0AxAKKQJuPHLWivSA
+  expirationMs: 28800000 # 8*60*60*1000
+cloudflare:
+  r2:
+    access-key: ${R2_ACCESS_KEY}
+    secret-key: ${R2_SECRET_KEY}
+    region: ${R2_REGION}
+    endpoint: ${R2_ENDPOINT}
+    bucket: ${R2_BUCKET}
+    public-path: ${R2_PUBLIC_PATH}

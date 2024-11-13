@@ -1,35 +1,25 @@
 package org.cybersoft.bookingticketcinemabe.dto.screening;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.cybersoft.bookingticketcinemabe.dto.ReservationDTO;
-import org.cybersoft.bookingticketcinemabe.dto.SeatReservationDTO;
-import org.cybersoft.bookingticketcinemabe.dto.hall.HallDTO;
+import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailDTO;
 import org.cybersoft.bookingticketcinemabe.dto.movie.MovieDetailDTO;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ScreeningDTO {
-
     private Integer id;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime startTime;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime endTime;
-
-    private HallDTO hall;
-
+    private HallDetailDTO hall;
     private MovieDetailDTO movie;
-
-    private List<ReservationDTO> reservations;
-
-    private List<SeatReservationDTO> seatReservations;
-
 }

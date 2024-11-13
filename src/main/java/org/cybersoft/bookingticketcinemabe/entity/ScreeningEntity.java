@@ -22,6 +22,9 @@ public class ScreeningEntity extends BaseEntity {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
+    @Column(name = "status")
+    private String status;
+
     @ManyToOne
     @JoinColumn(name = "hall_id")
     private HallEntity hall;
@@ -36,6 +39,8 @@ public class ScreeningEntity extends BaseEntity {
     @OneToMany(mappedBy = "screening")
     private List<SeatReservationEntity> seatReservations;
 
+    @OneToMany(mappedBy = "screening")
+    private List<ScreeningSeatEntity> screeningSeats;
 
     public void addReservation(ReservationEntity reservation) {
         this.reservations.add(reservation);
@@ -45,6 +50,16 @@ public class ScreeningEntity extends BaseEntity {
     public void removeReservation(ReservationEntity reservation) {
         this.reservations.remove(reservation);
         reservation.setScreening(null);
+    }
+
+    public void addScreeningSeat(ScreeningSeatEntity screeningSeat) {
+        this.screeningSeats.add(screeningSeat);
+        screeningSeat.setScreening(this);
+    }
+
+    public void removeScreeningSeat(ScreeningSeatEntity screeningSeat) {
+        this.screeningSeats.remove(screeningSeat);
+        screeningSeat.setScreening(null);
     }
 
     public void addSeatReservation(SeatReservationEntity seatReservation) {

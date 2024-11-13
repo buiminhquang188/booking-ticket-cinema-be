@@ -2,6 +2,7 @@ package org.cybersoft.bookingticketcinemabe.service;
 
 import org.cybersoft.bookingticketcinemabe.dto.PageableDTO;
 import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailDTO;
+import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailSeatDTO;
 import org.cybersoft.bookingticketcinemabe.dto.hall.HallDetailSeatLayoutDTO;
 import org.cybersoft.bookingticketcinemabe.payload.request.hall.HallCreationRequest;
 import org.cybersoft.bookingticketcinemabe.payload.request.hall.HallCriteria;
@@ -12,7 +13,7 @@ import java.util.List;
 public interface HallService {
     PageableDTO<?> getHalls(HallCriteria hallCriteria);
 
-    HallDetailDTO getHall(Integer id);
+    HallDetailSeatDTO getHall(Integer id);
 
     HallDetailDTO createHall(HallCreationRequest request);
 

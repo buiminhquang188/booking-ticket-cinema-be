@@ -7,5 +7,5 @@ public class HallDetailDTO {
     private Integer id;
     private String name;
     private Integer totalSeats;
-    private HallDetailBranchDTO branch;
+    private HallBranchDTO branch;
 }

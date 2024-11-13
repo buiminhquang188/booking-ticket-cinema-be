@@ -1,5 +1,6 @@
 SET NAMES utf8mb4;
-INSERT INTO capstone.movie (rating, time, created_at, start_date, updated_at, movie_name, poster, trailer)
+
+INSERT INTO capstone.movie (rating, time, created_at, start_date, updated_at, name, poster, trailer)
 VALUES (7.5, 105, '2024-01-01 10:00:00', '2024-02-01', '2024-02-01 10:00:00', 'The Adventures of Time',
         'https://m.media-amazon.com/images/M/MV5BMjEyNjQ3MDQ1OF5BMl5BanBnXkFtZTgwODAxMDM2MDE@._V1_.jpg',
         'https://www.youtube.com/watch?v=8ugaeA-nMTc'),
